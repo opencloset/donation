@@ -22,6 +22,7 @@
     "bootstrap": "~3.3.6",
     "font-awesome": "~4.5.0",
     "bootstrap-validator": "~0.9.0",
-    "bootstrap-datepicker": "~1.5.1"
+    "bootstrap-datepicker": "~1.5.1",
+    "opencloset.css": "https://github.com/opencloset/opencloset.css.git"
   }
 }
