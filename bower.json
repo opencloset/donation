@@ -1,0 +1,27 @@
+{
+  "name": "donation",
+  "homepage": "https://github.com/opencloset/donation",
+  "authors": [
+    "Hyungsuk Hong <aanoaa@gmail.com>"
+  ],
+  "description": "opencloset donation webservice",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.2.0",
+    "underscore": "~1.8.3",
+    "bootstrap": "~3.3.6",
+    "font-awesome": "~4.5.0",
+    "bootstrap-validator": "~0.9.0",
+    "bootstrap-datepicker": "~1.5.1"
+  }
+}
