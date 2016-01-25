@@ -1,2 +1,210 @@
 % title '정장기증 신청';
 % layout 'default';
+
+<div id="donation-new">
+  <h1><%= title %></h1>
+  <h2>기증방법</h2>
+  <ol>
+    <li>
+      <p>
+        아래 양식을 작성해 주시면 원하시는 곳으로 기증박스를 보내드립니다.
+      </p>
+      <p>
+        기증박스가 잘 도착 할 수 있도록, 이름과 주소, 전화번호를 정확히 작성해주세요.
+        기증박스가 도착하면 기증하실 의류를 박스에 넣어 열린옷장으로 반송해주시면 됩니다.
+      </p>
+    </li>
+    <li>
+      <p>기증박스를 받지 않으시고, 바로 기증해 주실 분은 아래 주소로 택배를 보내주세요.</p>
+      <address>
+        <blockquote>
+          <p>
+            서울특별시 광진구 아차산로 213 (화양동 48-3) 웅진빌딩 403호 열린옷장 앞
+          </p>
+          <p>
+            <abbr title="우편번호"><i class="fa fa-hand-o-right"></i></abbr> 05019<br>
+            <abbr title="전화번호"><i class="fa fa-phone"></i></abbr> 070-4325-7521
+          </p>
+        </blockquote>
+      </address>
+      <p>
+        기증의류와 함께 옷에 담긴 이야기나, 대여하시는 분에게 전하고 싶은 메시지를 적어
+        함께 보내주시면, 옷과 함께 더 따뜻하게 공유됩니다.
+        (선불/착불 모두 가능합니다. 편하게 보내주세요)
+      </p>
+    </li>
+    <li>
+      <p>
+        카카오톡으로도 문의와 신청을 받고 있습니다.
+        친구검색에서 <abbr title="카카오톡">열린옷장</abbr>을 검색하세요.
+      </p>
+    </li>
+  </ol>
+
+  <form>
+    <fieldset>
+      <legend>기증자 정보</legend>
+      <div class="form-group">
+        <label for="name" class="control-label">성함</label>
+        <div>
+          <input id="name" class="form-control" name="name" type="text" placeholder="홍길동">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ever-sent" class="control-label">예전에 열린옷장에 기증하신 적이 있나요?</label>
+        <div class="radio">
+          <label>
+            <input name="ever-sent" type="radio" value="0"> 아니요, 처음입니다.
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input name="ever-sent" type="radio" value="1"> 네, 기증한 적이 있습니다.
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="birthdate" class="control-label">생년월일</label>
+        <div>
+          <input id="birthdate" class="form-control" name="birthdate" type="text" placeholder="1990-01-01">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="gender" class="control-label">성별</label>
+        <div class="radio">
+          <label>
+            <input name="gender" type="radio" value="1"> 남성
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input name="gender" type="radio" value="2"> 여성
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone" class="control-label">전화번호</label>
+        <div>
+          <input id="phone" class="form-control" name="phone" type="text" placeholder="010-1234-5678">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="control-label">이메일</label>
+        <div>
+          <input id="email" class="form-control" name="email" type="email" placeholder="email@example.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address" class="control-label">
+          주소
+          <small class="text-muted">기증박스를 받으실 주소를 정확히 입력해주세요</small>
+        </label>
+        <div>
+          <textarea class="form-control" name="address"></textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>기증의류 정보</legend>
+
+      <div class="form-group">
+        <label for="category" class="control-label">보내실 의류 종류</label>
+        <div class="checkbox">
+          <label>
+            <input name="category" type="checkbox" value="남성용 의류"> 남성용 의류
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input name="category" type="checkbox" value="여성용 의류"> 여성용 의류
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input name="category" type="checkbox" value="구두"> 구두
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input name="category" type="checkbox" value="기타"> 기타
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity" class="control-label">보내실 의류 수량</label>
+        <div class="radio">
+          <label>
+            <input name="quantity" type="radio" value="1~2"> 1 ~ 2벌
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input name="quantity" type="radio" value="3~9"> 3 ~ 9벌
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input name="quantity" type="radio" value="10~"> 10벌 이상
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input name="quantity" type="radio" value="unknown"> 기타
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="terms" class="control-label">
+          기증하신 정장이 열린옷장에서 사용되기에 부적합한 경우 다음과 같이 쓰이는 것에 동의하십니까?
+          <small class="text-muted">1&gt;의미있게 쓰일 곳으로 재기증 2&gt;업싸이클링을 통해 새로운 물건으로 재탄생</small>
+        </label>
+        <div class="radio">
+          <label>
+            <input name="terms" type="radio" value="1"> 동의합니다.
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input name="terms" type="radio" value="0"> 동의하지 않습니다.
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="talent-donation" class="control-label">
+          새로운 시작을 계획하며 열린옷장을 찾아오는 분들에게 본인이 가진 재능까지 나눌 의사가 있으십니까?
+          <small class="text-muted">전문적인 분야의 재능도 좋고, 선배로서의 경험도 좋습니다. 재능나눔을 할 수 있는 자리가 마련된다면 참여할 의사가 있으신가요?</small>
+        </label>
+        <div class="radio">
+          <label>
+            <input name="talent-donation" type="radio" value="1"> 재능나눔까지 하고 싶습니다
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input name="talent-donation" type="radio" value="0"> 의류기증만 하고 싶습니다
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="talent" class="control-label">재능나눔 의사가 있으시다면, 어떤 분야 혹은 어떤 회사에서 일하고 계신지 상세히 알려주세요</label>
+        <div>
+          <textarea class="form-control" name="talent"></textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <button class="btn btn-danger" type="reset">다시 입력하겠습니다</button>
+    <button class="btn btn-primary" type="submit">정장을 기증하겠습니다</button>
+  </form>
+</div>
