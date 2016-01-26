@@ -41,7 +41,7 @@
     </li>
   </ol>
 
-  <form>
+  <form action="<%= url_for('create') %>" method="POST">
     <fieldset>
       <legend>기증자 정보</legend>
       <div class="form-group">
@@ -66,9 +66,9 @@
       </div>
 
       <div class="form-group">
-        <label for="birthdate" class="control-label">생년월일</label>
+        <label for="birth-date" class="control-label">생년월일</label>
         <div>
-          <input id="birthdate" class="form-control" name="birthdate" type="text" placeholder="1990-01-01">
+          <input id="birth-date" class="form-control" name="birth-date" type="text" placeholder="1990-01-01">
         </div>
       </div>
 
@@ -89,7 +89,7 @@
       <div class="form-group">
         <label for="phone" class="control-label">전화번호</label>
         <div>
-          <input id="phone" class="form-control" name="phone" type="text" placeholder="010-1234-5678">
+          <input id="phone" class="form-control" name="phone" type="text" placeholder="01012345678">
         </div>
       </div>
 
