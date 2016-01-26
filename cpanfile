@@ -1,3 +1,4 @@
+requires 'Email::Valid';
 requires 'Mojolicious';
 requires 'Mojolicious::Plugin::Config';
 

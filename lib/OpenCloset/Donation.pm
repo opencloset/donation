@@ -21,6 +21,7 @@ sub startup {
     $self->_assets;
     $self->_public_routes;
     $self->_private_routes;
+    $self->_extend_validator;
 }
 
 sub _assets {
@@ -40,5 +41,16 @@ sub _public_routes {
 }
 
 sub _private_routes { }
+
+sub _extend_validator {
+    my $self = shift;
+
+    $self->validator->add_check(
+        email => sub {
+            my ( $v, $name, $value ) = @_;
+            return not Email::Valid->address($value);
+        }
+    );
+}
 
 1;
