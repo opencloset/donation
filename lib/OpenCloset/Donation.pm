@@ -1,6 +1,17 @@
 package OpenCloset::Donation;
 use Mojo::Base 'Mojolicious';
 
+use Email::Valid ();
+
+use OpenCloset::Schema;
+
+has schema => sub {
+    my $self = shift;
+    my $conf = $self->config->{database};
+    OpenCloset::Schema->connect(
+        { dsn => $conf->{dsn}, user => $conf->{user}, password => $conf->{pass}, %{ $conf->{opts} }, } );
+};
+
 =head1 METHODS
 
 =head2 startup
