@@ -49,6 +49,7 @@ sub _public_routes {
 
     $r->get('/new')->to('root#add')->name('add');
     $r->post('/')->to('root#create')->name('create');
+    $r->get('/done')->to('root#done')->name('done');
 }
 
 sub _private_routes { }
