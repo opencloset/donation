@@ -23,6 +23,7 @@
     "font-awesome": "~4.5.0",
     "bootstrap-validator": "~0.9.0",
     "bootstrap-datepicker": "~1.5.1",
-    "opencloset.css": "https://github.com/opencloset/opencloset.css.git"
+    "opencloset.css": "https://github.com/opencloset/opencloset.css.git",
+    "jquery-mask-plugin": "jQuery-Mask-Plugin#^1.13.4"
   }
 }
