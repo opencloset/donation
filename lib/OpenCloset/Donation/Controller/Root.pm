@@ -31,7 +31,9 @@ sub create {
     $v->optional('birth-date')->like(qr/\d{4}-\d{2}-\d{2}/);    # YYYY-mm-dd
     $v->optional('phone')->like(qr/^01[0-9]{9}$/);
     $v->optional('email')->email;
-    $v->optional('address');
+    $v->optional('address1');
+    $v->optional('address2');
+    $v->optional('address3');
     $v->optional('category');
     $v->optional('quantity');
     $v->optional('terms');
@@ -48,7 +50,9 @@ sub create {
     my $birth_date      = $v->param('birth-date');
     my $phone           = $v->param('phone');
     my $email           = $v->param('email');
-    my $address         = $v->param('address');
+    my $address1        = $v->param('address1');
+    my $address2        = $v->param('address2');
+    my $address3        = $v->param('address3');
     my $categories      = $v->every_param('category');
     my $quantity        = $v->param('quantity');
     my $terms           = $v->param('terms');
@@ -62,7 +66,9 @@ sub create {
             birth_date      => $birth_date,
             phone           => $phone,
             email           => $email,
-            address         => $address,
+            address1        => $address1,
+            address2        => $address2,
+            address3        => $address3,
             category        => join( '|', @$categories ),
             quantity        => $quantity,
             terms           => $terms,

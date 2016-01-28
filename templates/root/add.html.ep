@@ -1,5 +1,9 @@
 % title '정장기증 신청';
-% layout 'default';
+% layout 'default', jses => [
+%   '/assets/components/jquery-mask-plugin/dist/jquery.mask.min.js',
+%   '//cdn.poesis.kr/post/search.min.js',
+%   '/assets/dist/js/add.min.js'
+% ];
 
 <div id="donation-new">
   <h2><%= title %></h2>
@@ -101,19 +105,27 @@
       </div>
 
       <div class="form-group">
-        <label for="address" class="control-label">
+        <label class="control-label">
           주소
           <small class="text-muted">기증박스를 받으실 주소를 정확히 입력해주세요</small>
         </label>
+        <button id="address-search" class="btn btn-primary btn-sm" type="button">
+          <i class="fa fa-search"></i>
+          주소검색
+        </button>
         <div>
-          <textarea class="form-control" name="address"></textarea>
+          <small>도로명주소</small>
+          <input class="form-control postcodify_address" name="address1" type="text" readonly>
+          <small>지번주소</small>
+          <input class="form-control postcodify_jibeon_address" name="address2" type="text" readonly>
+          <small>상세주소</small>
+          <input class="form-control" name="address3" type="text">
         </div>
       </div>
     </fieldset>
 
     <fieldset>
       <legend>기증의류 정보</legend>
-
       <div class="form-group">
         <label for="category" class="control-label">보내실 의류 종류</label>
         <div class="checkbox">
