@@ -2,8 +2,8 @@
 % layout 'default';
 
 <div id="donation-new">
-  <h1><%= title %></h1>
-  <h2>기증방법</h2>
+  <h2><%= title %></h2>
+  <h3>기증방법</h3>
   <ol>
     <li>
       <p>
