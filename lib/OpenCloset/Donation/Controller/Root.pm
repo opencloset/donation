@@ -74,7 +74,7 @@ sub create {
     return $self->error( 500, 'Failed to create a donation' ) unless $form;
 
     $self->flash( name => $name );
-    $self->redirect_to( $self->url_for('done') );
+    $self->redirect_to('done');
 }
 
 =head2 done
@@ -87,6 +87,8 @@ sub create {
 sub done {
     my $self = shift;
     my $name = $self->flash('name') || '';
+
+    return $self->redirect_to('add') unless $name;
 
     $self->render( name => $name );
 }
