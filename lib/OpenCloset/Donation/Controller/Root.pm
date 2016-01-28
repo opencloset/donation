@@ -26,14 +26,14 @@ sub create {
     my $self = shift;
     my $v    = $self->validation;
 
-    $v->optional('name');
+    $v->required('name');
     $v->optional('ever-sent');
     $v->optional('birth-date')->like(qr/\d{4}-\d{2}-\d{2}/);    # YYYY-mm-dd
-    $v->optional('phone')->like(qr/^01[0-9]{9}$/);
-    $v->optional('email')->email;
-    $v->optional('address1');
-    $v->optional('address2');
-    $v->optional('address3');
+    $v->required('phone')->like(qr/^01[0-9]{9}$/);
+    $v->required('email')->email;
+    $v->required('address1');
+    $v->required('address2');
+    $v->required('address3');
     $v->optional('category');
     $v->optional('quantity');
     $v->optional('terms');
