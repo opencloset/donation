@@ -1,0 +1,60 @@
+% title $id;
+% layout 'default';
+% my $email  = $form->email;
+
+<h2>
+  <%= $form->name %>
+  <small>
+    <a href="mailto: <%= $email %>"><%= $email %></a>
+  </small>
+</h2>
+% if(defined $form->gender) {
+  <p>
+  % if($form->gender) {
+    <i class="fa fa-male"></i> 남성
+  % } else {
+    <i class="fa fa-female"></i> 여성
+  % }
+  </p>
+% }
+<p>
+  <%= $form->phone %>
+</p>
+<p>
+  %= $form->birth_date ? $form->birth_date->ymd : ''
+</p>
+<p><%= $form->address1 %> <%= $form->address3 %></p>
+<hr>
+<ul>
+  <li>
+    <p><strong>예전에 열린옷장에 기증하신 적이 있나요?</strong></p>
+    <p><%= $form->ever_sent ? '예' : '아니오' %></p>
+  </li>
+  <li>
+    <p><strong>의류종류</strong></p>
+    <p>
+      % my @categories = split /\|/, $form->category;
+      %= join(', ', @categories)
+    </p>
+  </li>
+  <li>
+    <p><strong>수량</strong></p>
+    <p><%= $form->quantity %>벌</p>
+  </li>
+  <li>
+    <p><strong>기증하신 정장이 열린옷장에서 사용되기에 부적합한 경우 다음과 같이 쓰이는 것에 동의하십니까?</strong></p>
+    <p>
+      <p><%= $form->terms ? '동의합니다' : '동의하지 않습니다' %></p>
+    </p>
+  </li>
+  <li>
+    <p><strong>재능나눔</strong></p>
+    <p><%= $form->talent_donation ? '재능나눔까지 하고 싶습니다' : '의류기증만 하고 싶습니다' %></p>
+  </li>
+  % if ($form->talent_donation) {
+    <li>
+      <p><strong>재능나눔 의사가 있으시다면, 어떤 분야 혹은 어떤 회사에서 일하고 계신지 상세히 알려주세요</strong></p>
+      <p><%= $form->talent || '' %></p>
+    </li>
+  % }
+</ul>
