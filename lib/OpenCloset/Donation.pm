@@ -54,7 +54,12 @@ sub _public_routes {
     $r->get('/done')->to('root#done')->name('done');
 }
 
-sub _private_routes { }
+sub _private_routes {
+    my $self = shift;
+    my $r    = $self->routes->under('/forms')->to('user#auth')->name('auth');
+
+    $r->get('/:id')->to('form#form')->name('form');
+}
 
 sub _extend_validator {
     my $self = shift;
