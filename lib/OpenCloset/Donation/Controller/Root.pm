@@ -29,6 +29,7 @@ sub create {
     $v->required('name');
     $v->optional('ever-sent');
     $v->optional('birth-date')->like(qr/\d{4}-\d{2}-\d{2}/);    # YYYY-mm-dd
+    $v->optional('gender');
     $v->required('phone')->like(qr/^01[0-9]{9}$/);
     $v->required('email')->email;
     $v->required('address1');
@@ -48,6 +49,7 @@ sub create {
     my $name            = $v->param('name');
     my $ever_sent       = $v->param('ever-sent');
     my $birth_date      = $v->param('birth-date');
+    my $gender          = $v->param('gender');
     my $phone           = $v->param('phone');
     my $email           = $v->param('email');
     my $address1        = $v->param('address1');
@@ -64,6 +66,7 @@ sub create {
             name            => $name,
             ever_sent       => $ever_sent,
             birth_date      => $birth_date,
+            gender          => $gender,
             phone           => $phone,
             email           => $email,
             address1        => $address1,
