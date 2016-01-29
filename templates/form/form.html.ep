@@ -8,22 +8,24 @@
     <a href="mailto: <%= $email %>"><%= $email %></a>
   </small>
 </h2>
-% if(defined $form->gender) {
-  <p>
-  % if($form->gender) {
-    <i class="fa fa-male"></i> 남성
-  % } else {
-    <i class="fa fa-female"></i> 여성
+<div class="well">
+  % if(defined $form->gender) {
+    <p>
+    % if($form->gender) {
+      <i class="fa fa-male"></i> 남성
+    % } else {
+      <i class="fa fa-female"></i> 여성
+    % }
+    </p>
   % }
+  <p>
+    <%= $form->phone %>
   </p>
-% }
-<p>
-  <%= $form->phone %>
-</p>
-<p>
-  %= $form->birth_date ? $form->birth_date->ymd : ''
-</p>
-<p><%= $form->address1 %> <%= $form->address3 %></p>
+  <p>
+    %= $form->birth_date ? $form->birth_date->ymd : ''
+  </p>
+  <p><%= $form->address1 %> <%= $form->address3 %></p>
+</div>
 <hr>
 <ul>
   <li>
