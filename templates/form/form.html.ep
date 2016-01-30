@@ -1,4 +1,4 @@
-% title $id;
+% title "기증신청서 · $id";
 % layout 'default';
 % my $email  = $form->email;
 
