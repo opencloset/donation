@@ -25,6 +25,7 @@
     %= $form->birth_date ? $form->birth_date->ymd : ''
   </p>
   <p><%= $form->address1 %> <%= $form->address3 %></p>
+  <p><%= $form->address2 %> <%= $form->address3 %></p>
 </div>
 <hr>
 <ul>
