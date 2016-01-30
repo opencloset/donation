@@ -58,6 +58,7 @@ sub _private_routes {
     my $self = shift;
     my $r    = $self->routes->under('/forms')->to('user#auth')->name('auth');
 
+    $r->get('/')->to('form#list')->name('forms');
     $r->get('/:id')->to('form#form')->name('form');
 }
 

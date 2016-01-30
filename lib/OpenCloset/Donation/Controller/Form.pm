@@ -5,6 +5,20 @@ has schema => sub { shift->app->schema };
 
 =head1 METHODS
 
+=head2 list
+
+    # forms
+    GET /forms
+
+=cut
+
+sub list {
+    my $self  = shift;
+    my $forms = $self->schema->resultset('DonationForm')->search;
+
+    $self->render( forms => $forms );
+}
+
 =head2 form
 
     # form
