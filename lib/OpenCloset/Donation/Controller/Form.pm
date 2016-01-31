@@ -52,4 +52,34 @@ sub form {
     $self->render( form => $form );
 }
 
+=head2 update_form
+
+    # form.update
+    POST /forms/:id
+
+=cut
+
+sub update_form {
+    my $self = shift;
+    my $id   = $self->param('id');
+
+    my $form = $self->schema->resultset('DonationForm')->find($id);
+    return $self->error( 404, "Form not found: $id" ) unless $form;
+
+    my $v = $self->validation;
+    $v->optional('parcel-service');
+    $v->optional('waybill')->like(qr/^\d+$/);
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $parcel_service = $v->param('parcel-service');
+    my $waybill        = $v->param('waybill');
+
+    $form->update( { parcel_service => $parcel_service, waybill => $waybill, status => 'sent' } );
+    $self->redirect_to('form');
+}
+
 1;
