@@ -1,13 +1,37 @@
 % title "기증신청서 · $id";
-% layout 'default';
+% layout 'private';
 % my $email  = $form->email;
 
-<h2>
+<h2>기증신청서 내역</h2>
+
+<h3>
   <%= $form->name %>
   <small>
     <a href="mailto: <%= $email %>"><%= $email %></a>
   </small>
-</h2>
+</h3>
+<p>
+  <%= status2label($form->status) %>
+</p>
+<p title="신청일"><%= $form->create_date->ymd %></p>
+
+% unless ($form->status) {
+<form class="form-inline" action="<%= url_for('form.update', id => $form->id) %>" method="POST">
+  <div class="form-group">
+    <select class="form-control" name="parcel-service">
+      <option value="CJ대한통운">CJ대한통운</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <input class="form-control" name="waybill" type="text" placeholder="운송장번호">
+  </div>
+  <button class="btn btn-primary" type="submit">입력</button>
+</form>
+<hr>
+% } elsif ($form->waybill) {
+<a href="<%= parcel($form->parcel_service, $form->waybill) || '#' %>">배송조회</a>
+% }
+
 <div class="well">
   % if(defined $form->gender) {
     <p>

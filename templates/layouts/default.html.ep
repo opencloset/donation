@@ -17,7 +17,8 @@
     <div class="container">
       <div id="content">
         %= include '_includes/header';
-        <%= content %>
+        <hr>
+        %= content
       </div>
     </div>
     <script src="/assets/components/jquery/dist/jquery.min.js"></script>
