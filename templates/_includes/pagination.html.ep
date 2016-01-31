@@ -1,0 +1,40 @@
+<nav>
+  <ul class="pagination">
+    <!-- Previous -->
+    % if ($pageset->previous_page) {
+    <li>
+      <a href="<%= url_with->query([p => $pageset->previous_page]) %>" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    % } else {
+    <li class="disabled">
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    % }
+    <!-- pages -->
+    % for my $p (@{ $pageset->pages_in_set }) {
+      % if ($p == $pageset->current_page) {
+    <li class="active"><a href="#"><%= $p %></a></li>
+      % } else {
+    <li><a href="<%= url_with->query([p => $p]) %>"><%= $p %></a></li>
+      % }
+    % }
+    <!-- Next -->
+    % if ($pageset->next_page) {
+    <li>
+      <a href="<%= url_with->query([p => $pageset->next_page]) %>" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    % } else {
+    <li class="disabled">
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+    % }
+  </ul>
+</nav>

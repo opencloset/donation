@@ -30,5 +30,11 @@
       <td><%= $form->create_date->ymd %></td>
     </tr>
     % }
+    % unless ($forms->count) {
+    <tr>
+      <td colspan="6" class="text-center">No items</td>
+    </tr>
+    % }
   </tbody>
 </table>
+%= include '_includes/pagination', pageset => $pageset;

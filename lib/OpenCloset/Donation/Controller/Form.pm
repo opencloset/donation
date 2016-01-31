@@ -1,6 +1,8 @@
 package OpenCloset::Donation::Controller::Form;
 use Mojo::Base 'Mojolicious::Controller';
 
+use Data::Pageset;
+
 has schema => sub { shift->app->schema };
 
 =head1 METHODS
@@ -13,10 +15,23 @@ has schema => sub { shift->app->schema };
 =cut
 
 sub list {
-    my $self  = shift;
-    my $forms = $self->schema->resultset('DonationForm')->search;
+    my $self = shift;
+    my $p = $self->param('p') || 1;
 
-    $self->render( forms => $forms );
+    my $rs = $self->schema->resultset('DonationForm')
+        ->search( undef, { page => $p, rows => 20, } );
+
+    my $pager   = $rs->pager;
+    my $pageset = Data::Pageset->new(
+        {
+            total_entries    => $pager->total_entries,
+            entries_per_page => $pager->entries_per_page,
+            pages_per_set    => 5,
+            current_page     => $p,
+        }
+    );
+
+    $self->render( forms => $rs, pageset => $pageset );
 }
 
 =head2 form

@@ -1,3 +1,4 @@
+requires 'Data::Pageset';
 requires 'Email::Valid';
 requires 'Mojolicious';
 requires 'Mojolicious::Plugin::Config';
