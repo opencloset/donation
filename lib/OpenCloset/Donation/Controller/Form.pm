@@ -20,7 +20,7 @@ sub list {
     my $s    = $self->param('s') || undef;
 
     my $rs = $self->schema->resultset('DonationForm')
-        ->search( { status => $s }, { page => $p, rows => 20, } );
+        ->search( { status => $s }, { page => $p, rows => 20, order_by => { -desc => 'update_date' } } );
 
     my $pager   = $rs->pager;
     my $pageset = Data::Pageset->new(
