@@ -16,10 +16,11 @@ has schema => sub { shift->app->schema };
 
 sub list {
     my $self = shift;
-    my $p = $self->param('p') || 1;
+    my $p    = $self->param('p') || 1;
+    my $s    = $self->param('s') || undef;
 
     my $rs = $self->schema->resultset('DonationForm')
-        ->search( undef, { page => $p, rows => 20, } );
+        ->search( { status => $s }, { page => $p, rows => 20, } );
 
     my $pager   = $rs->pager;
     my $pageset = Data::Pageset->new(

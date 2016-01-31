@@ -1,6 +1,15 @@
 % title "기증신청서 목록";
 % layout 'default';
 
+<h2>기증신청서 목록</h2>
+<ul class="list-inline">
+  <li><a href="<%= url_for->query(s => '') %>"><%= status2label %></a></li>
+  <li><a href="<%= url_for->query(s => 'accept') %>"><%= status2label('accept') %></a></li>
+  <li><a href="<%= url_for->query(s => 'sent') %>"><%= status2label('sent') %></a></li>
+  <li><a href="<%= url_for->query(s => 'return') %>"><%= status2label('return') %></a></li>
+  <li><a href="<%= url_for->query(s => 'done') %>"><%= status2label('done') %></a></li>
+  <li><a href="<%= url_for->query(s => 'cancel') %>"><%= status2label('cancel') %></a></li>
+</ul>
 <table class="table table-bordered">
   <thead>
     <tr>
