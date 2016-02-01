@@ -24,8 +24,9 @@
         <ul class="list-inline">
           <li><a href="<%= url_for('forms') %>"><span class="label label-info">전체보기</span></a></li>
           <li><a href="<%= url_for('forms')->query(s => 'null') %>"><%= status2label %></a></li>
+          % my $status = param('s') || '';
           % for my $s (qw/accepted waiting delivering delivered returning returned cancel/) {
-          <li><a href="<%= url_for('forms')->query(s => $s) %>"><%= status2label($s) %></a></li>
+          <li><a href="<%= url_for('forms')->query(s => $s) %>"><%= status2label($s, $status eq $s) %></a></li>
           % }
         </ul>
         <hr>
