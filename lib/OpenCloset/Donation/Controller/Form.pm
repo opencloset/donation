@@ -17,10 +17,13 @@ has schema => sub { shift->app->schema };
 sub list {
     my $self = shift;
     my $p    = $self->param('p') || 1;
-    my $s    = $self->param('s') || undef;
+    my $s    = $self->param('s') || '';
+
+    my $cond = $s eq '' ? {} : { status => $s };
+    $s = undef if $s eq 'null';
 
     my $rs = $self->schema->resultset('DonationForm')
-        ->search( { status => $s }, { page => $p, rows => 20, order_by => { -desc => 'update_date' } } );
+        ->search( $cond, { page => $p, rows => 20, order_by => { -desc => 'update_date' } } );
 
     my $pager   = $rs->pager;
     my $pageset = Data::Pageset->new(
