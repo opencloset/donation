@@ -27,7 +27,10 @@
 <p title="신청일"><%= $form->create_date->ymd %></p>
 
 % if ($form->waybill) {
-<a href="<%= parcel($form->parcel_service, $form->waybill) %>">배송조회</a>
+<a class="btn btn-link btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
+  <i class="fa fa-external-link"></i>
+  배송조회
+</a>
 <button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">변경</button>
 % } else {
 <button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장입력</button>
