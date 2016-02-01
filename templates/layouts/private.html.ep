@@ -17,6 +17,10 @@
     <div class="container">
       <div id="content">
         %= include '_includes/header';
+        <form class="form-inline pull-right" action="<%= url_for('forms') %>" method="GET">
+          <input class="form-control" name="q" type="text" placeholder="이름, 전화번호, 이메일">
+          <button class="btn btn-primary" type="submit">검색</button>
+        </form>
         <ul class="list-inline">
           <li><a href="<%= url_for('forms') %>"><span class="label label-info">전체보기</span></a></li>
           <li><a href="<%= url_for('forms')->query(s => 'null') %>"><%= status2label %></a></li>
