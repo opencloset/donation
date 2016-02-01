@@ -34,6 +34,7 @@
 % }
 
 <form id="form-parcel" class="form-inline hide" action="<%= url_for('form.update', id => $form->id) %>" method="POST">
+  <input name="status" type="hidden" value="delivering">
   <div class="form-group">
     <select class="form-control" name="parcel-service">
       <option value="CJ대한통운">CJ대한통운</option>

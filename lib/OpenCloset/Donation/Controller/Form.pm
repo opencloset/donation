@@ -82,11 +82,10 @@ sub update_form {
         return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
     }
 
-    my $output = $v->output;
-    $output->{parcel_service} = delete $output->{'parcel-service'} if defined $output->{'parcel-service'};
-    $output = { status => undef } unless keys %$output;
+    my $input = $v->input;
+    $input->{parcel_service} = delete $input->{'parcel-service'} if defined $input->{'parcel-service'};
 
-    $form->update($output);
+    $form->update($input);
     $self->res->headers->location( $self->url_for( 'form', id => $id ) );
     $self->respond_to( html => sub { shift->redirect_to('form') }, json => { json => { $form->get_columns } } );
 }
