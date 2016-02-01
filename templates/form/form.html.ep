@@ -5,7 +5,7 @@
 <h2>기증신청서 내역</h2>
 
 <h3>
-  <%= $form->name %>
+  <a href="<%= url_for('forms')->query(q => $form->name) %>"><%= $form->name %></a>
   <small>
     <a href="mailto: <%= $email %>"><%= $email %></a>
   </small>
