@@ -1,3 +1,5 @@
+@opencloset-basic-color: #fedc00;
+
 body {
     padding-bottom: 50px;
 }
@@ -18,22 +20,31 @@ body {
     }
 }
 h1 {
-    background-color: #fedc00;
+    background-color: @opencloset-basic-color;
     padding: 1em;
     color: black;
 }
-.status-accept {
+.status-accepted {
     background-color: #87b87f;
 }
-.status-sent {
+.status-waiting {
+    background-color: #bb8800;
+}
+.status-delivering {
     background-color: #428bca;
 }
-.status-return {
-    background-color: #d15b47;
+.status-delivered {
+    background-color: #ee15fb;
 }
-.status-done {
-    background-color: #ffb752;
+.status-returning {
+    background-color: #b1bb23;
+}
+.status-returned {
+    background-color: #d15b47;
 }
 .status-cancel {
     background-color: #abbac3;
+}
+.active {
+    color: @opencloset-basic-color;
 }

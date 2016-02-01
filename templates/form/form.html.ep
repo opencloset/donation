@@ -10,9 +10,20 @@
     <a href="mailto: <%= $email %>"><%= $email %></a>
   </small>
 </h3>
-<p>
-  <%= status2label($form->status) %>
-</p>
+
+% my $status = $form->status || '';
+<ul class="list-inline">
+  % for my $s ('', 'accepted', 'waiting', 'delivering', 'delivered', 'returning', 'returned', 'cancel') {
+  <li>
+    % if ($status eq $s) {
+    <a class="status" href="#"><%= status2label($s, 1) %></a>
+    % } else {
+    <a class="status" href="#"><%= status2label($s) %></a>
+    % }
+  </li>
+  % }
+</ul>
+
 <p title="신청일"><%= $form->create_date->ymd %></p>
 
 % if ($form->waybill) {

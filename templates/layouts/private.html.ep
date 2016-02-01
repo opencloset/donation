@@ -24,11 +24,9 @@
         <ul class="list-inline">
           <li><a href="<%= url_for('forms') %>"><span class="label label-info">전체보기</span></a></li>
           <li><a href="<%= url_for('forms')->query(s => 'null') %>"><%= status2label %></a></li>
-          <li><a href="<%= url_for('forms')->query(s => 'accept') %>"><%= status2label('accept') %></a></li>
-          <li><a href="<%= url_for('forms')->query(s => 'sent') %>"><%= status2label('sent') %></a></li>
-          <li><a href="<%= url_for('forms')->query(s => 'return') %>"><%= status2label('return') %></a></li>
-          <li><a href="<%= url_for('forms')->query(s => 'done') %>"><%= status2label('done') %></a></li>
-          <li><a href="<%= url_for('forms')->query(s => 'cancel') %>"><%= status2label('cancel') %></a></li>
+          % for my $s (qw/accepted waiting delivering delivered returning returned cancel/) {
+          <li><a href="<%= url_for('forms')->query(s => $s) %>"><%= status2label($s) %></a></li>
+          % }
         </ul>
         <hr>
         %= content
