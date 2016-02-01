@@ -61,7 +61,7 @@ sub _private_routes {
 
     $r->get('/')->to('form#list')->name('forms');
     $r->get('/:id')->to('form#form')->name('form');
-    $r->post('/:id')->to('form#update_form')->name('form.update');
+    $r->any( ['POST', 'PUT'] => '/:id' )->to('form#update_form')->name('form.update');
 }
 
 sub _extend_validator {

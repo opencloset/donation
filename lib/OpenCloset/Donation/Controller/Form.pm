@@ -60,6 +60,7 @@ sub form {
 =head2 update_form
 
     # form.update
+    PUT  /forms/:id
     POST /forms/:id
 
 =cut
@@ -81,11 +82,13 @@ sub update_form {
         return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
     }
 
-    my $parcel_service = $v->param('parcel-service');
-    my $waybill        = $v->param('waybill');
+    my $output = $v->output;
+    $output->{parcel_service} = delete $output->{'parcel-service'} if defined $output->{'parcel-service'};
+    $output = { status => undef } unless keys %$output;
 
-    $form->update( { parcel_service => $parcel_service, waybill => $waybill, status => 'sent' } );
-    $self->redirect_to('form');
+    $form->update($output);
+    $self->res->headers->location( $self->url_for( 'form', id => $id ) );
+    $self->respond_to( html => sub { shift->redirect_to('form') }, json => { json => { $form->get_columns } } );
 }
 
 =head2 _search_cond($q)
