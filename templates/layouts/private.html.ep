@@ -22,9 +22,9 @@
           <button class="btn btn-primary" type="submit">검색</button>
         </form>
         <ul class="list-inline">
-          <li><a href="<%= url_for('forms') %>"><span class="label label-info">전체보기</span></a></li>
-          <li><a href="<%= url_for('forms')->query(s => 'null') %>"><%= status2label %></a></li>
           % my $status = param('s') || '';
+          <li><a href="<%= url_for('forms') %>"><span class="label label-info">전체보기</span></a></li>
+          <li><a href="<%= url_for('forms')->query(s => 'null') %>"><%= status2label(undef, $status eq 'null') %></a></li>
           % for my $s (qw/accepted waiting delivering delivered returning returned cancel/) {
           <li><a href="<%= url_for('forms')->query(s => $s) %>"><%= status2label($s, $status eq $s) %></a></li>
           % }

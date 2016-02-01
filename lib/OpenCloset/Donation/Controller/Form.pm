@@ -20,13 +20,12 @@ sub list {
     my $s    = $self->param('s') || '';
     my $q    = $self->param('q');
 
-    my $cond = $s eq '' ? {} : { status => $s };
+    my $cond = { status => $s eq 'null' ? undef : $s };
     my $attr = { page => $p, rows => 20, order_by => { -desc => 'update_date' } };
-    $s = undef if $s eq 'null';
-
+    $cond = undef unless $s;
     $cond = $self->_search_cond($q) if $q;
-    my $rs = $self->schema->resultset('DonationForm')->search( $cond, $attr );
 
+    my $rs      = $self->schema->resultset('DonationForm')->search( $cond, $attr );
     my $pager   = $rs->pager;
     my $pageset = Data::Pageset->new(
         {
@@ -84,6 +83,7 @@ sub update_form {
 
     my $input = $v->input;
     $input->{parcel_service} = delete $input->{'parcel-service'} if defined $input->{'parcel-service'};
+    $input->{status} = undef if defined $input->{status} && not $input->{status};
 
     $form->update($input);
     $self->res->headers->location( $self->url_for( 'form', id => $id ) );
