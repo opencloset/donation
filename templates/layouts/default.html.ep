@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/assets/components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/components/opencloset.css/dist/css/opencloset.min.css">
     % for my $css (@$csses) {
-      <link rel="stylesheet" href="<%= $css %>">
+    <link rel="stylesheet" href="<%= $css %>">
     % }
     <link rel="stylesheet" href="/assets/dist/css/screen.min.css">
   </head>
@@ -25,7 +25,7 @@
     <script src="/assets/components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/assets/components/underscore/underscore.js"></script>
     % for my $js (@$jses) {
-      <script src="<%= $js %>"></script>
+    <script src="<%= $js %>"></script>
     % }
   </body>
 </html>
