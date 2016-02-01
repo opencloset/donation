@@ -57,7 +57,7 @@ sub status2label {
         }
         elsif ( $status eq 'delivered' ) {
             $class = " status-$status";
-            $str   = '발송완료';
+            $str   = '배송완료';
         }
         elsif ( $status eq 'returning' ) {
             $class = " status-$status";
