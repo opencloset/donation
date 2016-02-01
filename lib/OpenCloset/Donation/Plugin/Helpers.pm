@@ -29,49 +29,66 @@ sub register {
 
 =head1 HELPERS
 
-=head2 status2label
+=head2 status2label($status, $active)
 
     %= status2label($form->status);
     # <span class="label label-default status-accept">승인</span>
+    # <span class="label label-default status-accept active"><i class="fa fa-archive"></i>$str</span>    # $active is true
 
 =cut
 
 sub status2label {
-    my ( $self, $status ) = @_;
+    my ( $self, $status, $active ) = @_;
 
-    my ( $class, $str );
+    my ( $class, $str ) = ( '', '' );
 
     if ($status) {
-        if ( $status eq 'accept' ) {
-            $class = ' status-accept';
+        if ( $status eq 'accepted' ) {
+            $class = " status-$status";
             $str   = '확인';
         }
-        elsif ( $status eq 'sent' ) {
-            $class = ' status-sent';
+        elsif ( $status eq 'waiting' ) {
+            $class = " status-$status";
+            $str   = '발송대기';
+        }
+        elsif ( $status eq 'delivering' ) {
+            $class = " status-$status";
             $str   = '배송중';
         }
-        elsif ( $status eq 'return' ) {
-            $class = ' status-return';
-            $str   = '반송중';
+        elsif ( $status eq 'delivered' ) {
+            $class = " status-$status";
+            $str   = '발송완료';
         }
-        elsif ( $status eq 'done' ) {
-            $class = ' status-done';
-            $str   = '완료';
+        elsif ( $status eq 'returning' ) {
+            $class = " status-$status";
+            $str   = '반송신청';
+        }
+        elsif ( $status eq 'returned' ) {
+            $class = " status-$status";
+            $str   = '반송완료';
         }
         elsif ( $status eq 'cancel' ) {
-            $class = ' status-cancel';
+            $class = " status-$status";
             $str   = '취소';
         }
     }
     else {
-        $class = '';
-        $str   = '없음';
+        $status = '';
+        $str    = '없음';
     }
 
     my $html = Mojo::DOM::HTML->new;
-    $html->parse(qq{<span class="label label-default$class">$str</span>});
-    my $tree = $html->tree;
 
+    if ($active) {
+        $html->parse(
+            qq{<span class="label label-default active $class" data-status="$status"><i class="fa fa-archive"></i>$str</span>}
+        );
+    }
+    else {
+        $html->parse(qq{<span class="label label-default$class" data-status="$status">$str</span>});
+    }
+
+    my $tree = $html->tree;
     return Mojo::ByteStream->new( Mojo::DOM::HTML::_render($tree) );
 }
 
