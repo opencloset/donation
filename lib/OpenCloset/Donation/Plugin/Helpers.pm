@@ -24,7 +24,8 @@ OpenCloset::Donation::Plugin::Helpers - opencloset donation mojo helper
 sub register {
     my ( $self, $app, $conf ) = @_;
 
-    $app->helper( status2label => \&status2label );
+    $app->helper( status2label  => \&status2label );
+    $app->helper( update_status => \&update_status );
 }
 
 =head1 HELPERS
@@ -90,6 +91,64 @@ sub status2label {
 
     my $tree = $html->tree;
     return Mojo::ByteStream->new( Mojo::DOM::HTML::_render($tree) );
+}
+
+=head2 update_status
+
+    $self->update_status($form, $to);
+
+=over
+
+=item $form
+
+L<OpenCloset::Schema::Result::DonationForm>
+
+=item $to
+
+string of status
+
+=over
+
+=item undef
+
+C<undef>
+
+=item accepted
+
+=item waiting
+
+=item delivering
+
+=item delivered
+
+=item returning
+
+=item returned
+
+=back cancel
+
+=cut
+
+sub update_status {
+    my ( $self, $form, $to ) = @_;
+    return unless $form;
+
+    $to ||= '';
+    my $from = $form->status || '';
+    return unless $to || $from;
+    return if $to !~ m/^(|accepted|waiting|delivering|delivered|returning|returned|cancel)$/;
+
+    $form->update( { status => $to || undef } );
+
+    if ( $from eq '' ) {
+        if ( $to eq 'delivering' ) {
+            my $msg = $self->render_to_string( 'sms/after-waiting', format => 'txt', form => $form );
+            chomp $msg;
+            $self->sms( $form->phone, $msg );
+        }
+    }
+
+    return 1;
 }
 
 1;
