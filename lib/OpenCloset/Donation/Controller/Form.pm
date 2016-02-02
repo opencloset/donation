@@ -83,7 +83,11 @@ sub update_form {
 
     my $input = $v->input;
     $input->{parcel_service} = delete $input->{'parcel-service'} if defined $input->{'parcel-service'};
-    $input->{status} = undef if defined $input->{status} && not $input->{status};
+
+    if ( defined $input->{status} ) {
+        my $status = delete $input->{status} || undef;
+        $self->update_status( $form, $status );
+    }
 
     $form->update($input);
     $self->res->headers->location( $self->url_for( 'form', id => $id ) );
