@@ -48,6 +48,13 @@
   </div>
   <button class="btn btn-primary" type="submit">입력</button>
   <button id="btn-cancel" class="btn btn-danger" type="button">취소</button>
+  <p class="help-block">
+    <small>
+      운송장 번호를 입력하면 상태가
+      %= status2label('delivering')
+      으로 변경됩니다
+    </small>
+  </p>
 </form>
 
 <hr>
