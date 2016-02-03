@@ -93,8 +93,6 @@ C<undef>
 
 =item cancel
 
-=item discard
-
 =item registered
 
 =back
@@ -136,14 +134,6 @@ sub update_status {
         $form->update( { sms_bitmask => $bitmask | 2**2 } );
     }
 
-    if ( $to eq $OpenCloset::Donation::Status::DISCARD ) {
-        my $msg = $self->render_to_string( 'sms/discard', format => 'txt', form => $form );
-        chomp $msg;
-        $self->sms( $form->phone, $msg );
-        my $bitmask = $form->sms_bitmask;
-        $form->update( { sms_bitmask => $bitmask | 2**3 } );
-    }
-
     return 1;
 }
 
@@ -166,10 +156,6 @@ __END__
 =item 2**2
 
 배송중 -> 반송완료
-
-=item 2**3
-
-전체 -> 폐기
 
 =back
 
