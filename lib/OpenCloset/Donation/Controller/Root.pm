@@ -63,6 +63,12 @@ sub create {
     my $talent_donation = $v->param('talent-donation');
     my $talent          = $v->param('talent');
 
+    my @categories = qw/자켓 팬츠 셔츠 구두 코트 기타/;
+    for ( my $i = 0; $i < @categories; $i++ ) {
+        my $quantity = $categories->[$i] || '0';
+        $categories->[$i] = $categories[$i] . ' ' . $categories->[$i];
+    }
+
     my $form = $self->schema->resultset('DonationForm')->create(
         {
             name            => $name,

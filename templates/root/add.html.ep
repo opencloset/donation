@@ -2,6 +2,7 @@
 % layout 'default', jses => [
 %   '/assets/components/jquery-mask-plugin/dist/jquery.mask.min.js',
 %   '/assets/components/bootstrap-validator/dist/validator.min.js',
+%   '/assets/components/bootstrap-spinner/dist/bootstrap-spinner.min.js',
 %   '//cdn.poesis.kr/post/search.min.js',
 %   '/assets/dist/js/add.min.js'
 % ];
@@ -148,51 +149,107 @@
 
     <fieldset>
       <legend>기증의류 정보</legend>
+      <h4>보내실 의류 종류</h4>
+
       <div class="form-group">
-        <label for="category" class="control-label">보내실 의류 종류</label>
-        <div class="checkbox">
-          <label>
-            <input name="category" type="checkbox" value="남성용 의류"> 남성용 의류
-          </label>
-        </div>
-        <div class="checkbox">
-          <label>
-            <input name="category" type="checkbox" value="여성용 의류"> 여성용 의류
-          </label>
-        </div>
-        <div class="checkbox">
-          <label>
-            <input name="category" type="checkbox" value="구두"> 구두
-          </label>
-        </div>
-        <div class="checkbox">
-          <label>
-            <input name="category" type="checkbox" value="기타"> 기타
-          </label>
+        <label for="jacket-spinner">자켓</label>
+        <div class="input-group col-sm-4">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="decrease" data-target="#jacket-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </span>
+          <input type="text" name="category" data-ride="spinner" id="jacket-spinner" class="form-control input-number" value="0">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="increase" data-target="#jacket-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="quantity" class="control-label">보내실 의류 수량</label>
-        <div class="radio">
-          <label>
-            <input name="quantity" type="radio" value="1~2"> 1 ~ 2벌
-          </label>
+        <label for="pants-spinner">팬츠</label>
+        <div class="input-group col-sm-4">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="decrease" data-target="#pants-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </span>
+          <input type="text" name="category" data-ride="spinner" id="pants-spinner" class="form-control input-number" value="0">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="increase" data-target="#pants-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
         </div>
-        <div class="radio">
-          <label>
-            <input name="quantity" type="radio" value="3~9"> 3 ~ 9벌
-          </label>
+      </div>
+
+      <div class="form-group">
+        <label for="shirt-spinner">셔츠/블라우스</label>
+        <div class="input-group col-sm-4">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="decrease" data-target="#shirt-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </span>
+          <input type="text" name="category" data-ride="spinner" id="shirt-spinner" class="form-control input-number" value="0">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="increase" data-target="#shirt-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
         </div>
-        <div class="radio">
-          <label>
-            <input name="quantity" type="radio" value="10~"> 10벌 이상
-          </label>
+      </div>
+
+      <div class="form-group">
+        <label for="shoes-spinner">구두</label>
+        <div class="input-group col-sm-4">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="decrease" data-target="#shoes-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </span>
+          <input type="text" name="category" data-ride="spinner" id="shoes-spinner" class="form-control input-number" value="0">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="increase" data-target="#shoes-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
         </div>
-        <div class="radio">
-          <label>
-            <input name="quantity" type="radio" value="unknown"> 기타
-          </label>
+      </div>
+
+      <div class="form-group">
+        <label for="coat-spinner">코트</label>
+        <div class="input-group col-sm-4">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="decrease" data-target="#coat-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </span>
+          <input type="text" name="category" data-ride="spinner" id="coat-spinner" class="form-control input-number" value="0">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="increase" data-target="#coat-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="misc-spinner">기타</label>
+        <div class="input-group col-sm-4">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="decrease" data-target="#misc-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </span>
+          <input type="text" name="category" data-ride="spinner" id="misc-spinner" class="form-control input-number" value="0">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="increase" data-target="#misc-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
         </div>
       </div>
 

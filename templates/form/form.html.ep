@@ -99,18 +99,18 @@
 <ul>
   <li>
     <p><strong>예전에 열린옷장에 기증하신 적이 있나요?</strong></p>
-    <p><%= $form->ever_sent ? '예' : '아니오' %></p>
+    <p><%= $form->ever_donate ? '예' : '아니오' %></p>
   </li>
   <li>
-    <p><strong>의류종류</strong></p>
+    <p><strong>예전에 열린옷장에 대여하신 적이 있나요?</strong></p>
+    <p><%= $form->ever_use ? '예' : '아니오' %></p>
+  </li>
+  <li>
+    <p><strong>의류종류 및 수량</strong></p>
     <p>
       % my @categories = split /\|/, $form->category;
       %= join(', ', @categories)
     </p>
-  </li>
-  <li>
-    <p><strong>수량</strong></p>
-    <p><%= $form->quantity %>벌</p>
   </li>
   <li>
     <p><strong>기증하신 정장이 열린옷장에서 사용되기에 부적합한 경우 다음과 같이 쓰이는 것에 동의하십니까?</strong></p>
