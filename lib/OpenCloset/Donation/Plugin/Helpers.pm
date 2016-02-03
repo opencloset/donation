@@ -5,6 +5,8 @@ use Mojo::Base 'Mojolicious::Plugin';
 use Mojo::ByteStream;
 use Mojo::DOM::HTML;
 
+use OpenCloset::Donation::Status;
+
 =encoding utf8
 
 =head1 NAME
@@ -40,38 +42,12 @@ sub register {
 
 sub status2label {
     my ( $self, $status, $active ) = @_;
+    $status ||= '';
 
     my ( $class, $str ) = ( '', '' );
-
-    if ($status) {
-        if ( $status eq 'waiting' ) {
-            $class = " status-$status";
-            $str   = '발송대기';
-        }
-        elsif ( $status eq 'delivering' ) {
-            $class = " status-$status";
-            $str   = '배송중';
-        }
-        elsif ( $status eq 'returned' ) {
-            $class = " status-$status";
-            $str   = '반송완료';
-        }
-        elsif ( $status eq 'cancel' ) {
-            $class = " status-$status";
-            $str   = '취소';
-        }
-        elsif ( $status eq 'discard' ) {
-            $class = " status-$status";
-            $str   = '폐기';
-        }
-        elsif ( $status eq 'registered' ) {
-            $class = " status-$status";
-            $str   = '등록됨';
-        }
-    }
-    else {
-        $status = '';
-        $str    = '신청됨';
+    if ( my $label = $OpenCloset::Donation::Status::LABEL_MAP{$status} ) {
+        $class = " status-$status" if $status;
+        $str = $label;
     }
 
     my $html = Mojo::DOM::HTML->new;
@@ -112,10 +88,6 @@ C<undef>
 =item waiting
 
 =item delivering
-
-=item delivered
-
-=item returning
 
 =item returned
 

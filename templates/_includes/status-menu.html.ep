@@ -1,0 +1,11 @@
+% use OpenCloset::Donation::Status;
+<ul class="list-inline">
+  % my $status = param('s') || '';
+  <li><a href="<%= url_for('forms') %>"><span class="label label-info">전체보기</span></a></li>
+  <li><a href="<%= url_for('forms')->query(s => 'null') %>"><%= status2label(undef, $status eq 'null') %></a></li>
+  % my @all = @OpenCloset::Donation::Status::ALL;
+  % shift @all;
+  % for my $s (@all) {
+  <li><a href="<%= url_for('forms')->query(s => $s) %>"><%= status2label($s, $status eq $s) %></a></li>
+  % }
+</ul>

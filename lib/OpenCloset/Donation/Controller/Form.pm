@@ -3,6 +3,8 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use Data::Pageset;
 
+use OpenCloset::Donation::Status;
+
 has schema => sub { shift->app->schema };
 
 =head1 METHODS
@@ -70,7 +72,7 @@ sub update_form {
     return $self->error( 404, "Form not found: $id" ) unless $form;
 
     my $v = $self->validation;
-    $v->optional('status')->in(qw/waiting delivering delivered returned cancel discard registered/);
+    $v->optional('status')->in(@OpenCloset::Donation::Status::ALL);
     $v->optional('parcel-service');
     $v->optional('waybill')->like(qr/^\d+$/);
 

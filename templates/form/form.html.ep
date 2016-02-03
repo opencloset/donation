@@ -1,5 +1,6 @@
 % title "기증신청서 · $id";
 % layout 'private', jses => ['/assets/dist/js/form.min.js'];
+% use OpenCloset::Donation::Status;
 % my $email  = $form->email;
 
 <div class="pull-right text-muted">
@@ -23,7 +24,7 @@
 
 % my $status = $form->status || '';
 <ul class="list-inline">
-  % for my $s ('', 'waiting', 'delivering', 'returned', 'cancel', 'discard', 'registered') {
+  % for my $s (@OpenCloset::Donation::Status::ALL) {
   <li>
     % if ($status eq $s) {
     <a class="status" href="#"><%= status2label($s, 1) %></a>
