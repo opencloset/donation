@@ -50,7 +50,7 @@
     <fieldset>
       <legend>기증자 정보</legend>
       <div class="form-group">
-        <label for="name" class="control-label">성함</label>
+        <label for="name" class="control-label">이름</label>
         <div>
           <input id="name" class="form-control" name="name" type="text" placeholder="홍길동" required>
           <div class="help-block with-errors"></div>
@@ -185,8 +185,15 @@
       <div class="form-group">
         <label for="terms" class="control-label">
           기증하신 정장이 열린옷장에서 사용되기에 부적합한 경우 다음과 같이 쓰이는 것에 동의하십니까?
-          <small class="text-muted">1&gt;의미있게 쓰일 곳으로 재기증 2&gt;업싸이클링을 통해 새로운 물건으로 재탄생</small>
         </label>
+        <div>
+          <p class="help-block">
+            열린옷장에 기증된 의류는 분류과정을 거쳐 활용이 어려운 기증의류는 의미 있게 쓰일 수 있는 곳으로 재기증 되거나 업싸이클링 작업을 통해 새로운 물건으로 재탄생 됩니다.<br>
+            활용불가 의류 재기증처 옷캔 : 기증된 의류를 제 3세계로 보내 판매한 수익금으로 제 3세계 어린이의 교육개선 사업에 지원합니다.<br>
+            업싸이클링 협업 비백 : 활용이 힘들거나 손상으로 폐기할 정장의 원단을 공급하여, 협업을 통해 ‘오픈클로젯 백’을 만들어 판매하고 있으며, 판매 수익금의 일부는 기증자를 위한 활동 등에 의미 있게 사용됩니다.<br>
+            소중한 기증의류가 부득이하게 용도에 따라 분류됨을 양해바랍니다. 위의 분류과정에 동의하십니까?
+          </p>
+        </div>
         <div class="radio">
           <label>
             <input name="terms" type="radio" value="1"> 동의합니다.
@@ -202,8 +209,12 @@
       <div class="form-group">
         <label for="talent-donation" class="control-label">
           새로운 시작을 계획하며 열린옷장을 찾아오는 분들에게 본인이 가진 재능까지 나눌 의사가 있으십니까?
-          <small class="text-muted">전문적인 분야의 재능도 좋고, 선배로서의 경험도 좋습니다. 재능나눔을 할 수 있는 자리가 마련된다면 참여할 의사가 있으신가요?</small>
         </label>
+        <div>
+          <p class="help-block">
+            전문적인 분야의 재능도 좋고, 선배로서의 경험도 좋습니다. 재능나눔을 할 수 있는 자리가 마련된다면 참여할 의사가 있으신가요? 재능나눔 의사가 있으시다면, 어떤 분야 혹은 어떤 회사에서 일하고 계신지 상세히 알려주세요
+          </p>
+        </div>
         <div class="radio">
           <label>
             <input name="talent-donation" type="radio" value="1"> 재능나눔까지 하고 싶습니다
