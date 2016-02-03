@@ -46,6 +46,9 @@
 % } else {
 <button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장입력</button>
 % }
+% if ($status eq 'returned') {
+<a class="btn btn-default btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">새옷</a>
+% }
 
 <form id="form-parcel" class="form-inline hide" action="<%= url_for('form.update', id => $form->id) %>" method="POST">
   <input name="status" type="hidden" value="delivering">

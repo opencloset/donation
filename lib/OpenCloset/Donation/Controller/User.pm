@@ -17,8 +17,8 @@ sub auth {
     my $self = shift;
 
     unless ( $self->session('access_token') ) {
-        my $login = Mojo::URL->new($self->config->{login});
-        $login->query(return => $self->req->url->to_abs);
+        my $login = Mojo::URL->new( $self->config->{opencloset}{login} );
+        $login->query( return => $self->req->url->to_abs );
         $self->redirect_to($login);
         return;
     }

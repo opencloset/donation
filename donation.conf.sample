@@ -15,5 +15,5 @@
     },
     secrets => [$ENV{OPENCLOSET_SECRET}],    # must set secret of staff.theopencloset.net
     cookie_domain => $ENV{OPENCLOSET_DOMAIN} || 'localhost' || '.theopencloset.net',
-    login         => 'http://localhost:5001/login',
+    opencloset => { login => 'http://localhost:5001/login', newclothes => 'http://localhost:5001/new-clothes' }
 };
