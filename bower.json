@@ -25,6 +25,7 @@
     "bootstrap-datepicker": "~1.5.1",
     "opencloset.css": "https://github.com/opencloset/opencloset.css.git",
     "jquery-mask-plugin": "jQuery-Mask-Plugin#^1.13.4",
-    "growl": "^1.3.1"
+    "growl": "^1.3.1",
+    "bootstrap-spinner": "^1.1.1"
   }
 }
