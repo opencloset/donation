@@ -4,12 +4,15 @@
 % my $email  = $form->email;
 
 <div class="pull-right text-muted">
-  <p><i class="fa fa-lightbulb-o"></i> SMS 가 전송될때</p>
+  <span>
+    <i class="fa fa-lightbulb-o"></i>
+    <small>SMS 가 전송될때</small>
+  </span>
   <ul class="sms-help">
-    <li title="<%= include('sms/null2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label %> <i class="fa fa-arrow-right"></i> <%= status2label('delivering') %></li>
-    <li title="<%= include('sms/waiting2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label('waiting') %> <i class="fa fa-arrow-right"></i> <%= status2label('delivering') %></li>
-    <li title="<%= include('sms/returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label('returned') %></li>
-    <li title="<%= include('sms/discard', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label('discard') %></li>
+    <li title="<%= include('sms/null2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %></li>
+    <li title="<%= include('sms/waiting2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label('waiting') %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %></li>
+    <li title="<%= include('sms/returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::RETURNED) %></li>
+    <li title="<%= include('sms/discard', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DISCARD) %></li>
   </ul>
 </div>
 
@@ -38,16 +41,22 @@
 <p title="신청일"><%= $form->create_date->ymd %></p>
 
 % if ($form->waybill) {
-<a class="btn btn-link btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
+<a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
   <i class="fa fa-external-link"></i>
   배송조회
 </a>
-<button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">변경</button>
+<button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장변경</button>
 % } else {
 <button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장입력</button>
 % }
-% if ($status eq 'returned') {
-<a class="btn btn-default btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">새옷</a>
+% if ($status eq $OpenCloset::Donation::Status::RETURNED) {
+<a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">새옷</a>
+% }
+% if ($status eq $OpenCloset::Donation::Status::DELIVERING) {
+<button id="btn-returning" class="btn btn-info btn-sm" type="button" title="<%= include('sms/returning', format => 'txt', form => $form) %>">
+  <i class="fa fa-envelope-o"></i>
+  반송신청문자전송
+</button>
 % }
 
 <form id="form-parcel" class="form-inline hide" action="<%= url_for('form.update', id => $form->id) %>" method="POST">
@@ -65,7 +74,7 @@
   <p class="help-block">
     <small>
       운송장 번호를 입력하면 상태가
-      %= status2label('delivering')
+      %= status2label($OpenCloset::Donation::Status::DELIVERING)
       으로 변경됩니다
     </small>
   </p>
