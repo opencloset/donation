@@ -44,21 +44,13 @@ sub status2label {
     my ( $class, $str ) = ( '', '' );
 
     if ($status) {
-        if ( $status eq 'accepted' ) {
-            $class = " status-$status";
-            $str   = '확인';
-        }
-        elsif ( $status eq 'waiting' ) {
+        if ( $status eq 'waiting' ) {
             $class = " status-$status";
             $str   = '발송대기';
         }
         elsif ( $status eq 'delivering' ) {
             $class = " status-$status";
             $str   = '배송중';
-        }
-        elsif ( $status eq 'delivered' ) {
-            $class = " status-$status";
-            $str   = '배송완료';
         }
         elsif ( $status eq 'returning' ) {
             $class = " status-$status";
@@ -83,7 +75,7 @@ sub status2label {
     }
     else {
         $status = '';
-        $str    = '없음';
+        $str    = '신청됨';
     }
 
     my $html = Mojo::DOM::HTML->new;
@@ -121,8 +113,6 @@ string of status
 
 C<undef>
 
-=item accepted
-
 =item waiting
 
 =item delivering
@@ -154,12 +144,17 @@ sub update_status {
 
     $form->update( { status => $to || undef } );
 
-    if ( $from eq '' ) {
-        if ( $to eq 'delivering' ) {
-            my $msg = $self->render_to_string( 'sms/null2waiting', format => 'txt', form => $form );
-            chomp $msg;
-            $self->sms( $form->phone, $msg );
-        }
+
+    if ( $from eq '' && $to eq 'delivering' ) {
+        my $msg = $self->render_to_string( 'sms/null2delivering', format => 'txt', form => $form );
+        chomp $msg;
+        $self->sms( $form->phone, $msg );
+    }
+
+    if ( $from eq 'waiting' && $to eq 'delivering' ) {
+        my $msg = $self->render_to_string( 'sms/waiting2delivering', format => 'txt', form => $form );
+        chomp $msg;
+        $self->sms( $form->phone, $msg );
     }
 
     if ( $to eq 'returning' ) {
