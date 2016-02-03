@@ -72,6 +72,14 @@ sub status2label {
             $class = " status-$status";
             $str   = '취소';
         }
+        elsif ( $status eq 'discard' ) {
+            $class = " status-$status";
+            $str   = '폐기';
+        }
+        elsif ( $status eq 'registered' ) {
+            $class = " status-$status";
+            $str   = '등록됨';
+        }
     }
     else {
         $status = '';
@@ -125,7 +133,13 @@ C<undef>
 
 =item returned
 
-=back cancel
+=item cancel
+
+=item discard
+
+=item registered
+
+=back
 
 =cut
 

@@ -70,7 +70,7 @@ sub update_form {
     return $self->error( 404, "Form not found: $id" ) unless $form;
 
     my $v = $self->validation;
-    $v->optional('status')->in(qw/accepted waiting delivering delivered returning returned cancel/);
+    $v->optional('status')->in(qw/accepted waiting delivering delivered returning returned cancel discard registered/);
     $v->optional('parcel-service');
     $v->optional('waybill')->like(qr/^\d+$/);
 

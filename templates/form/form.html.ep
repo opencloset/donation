@@ -13,7 +13,7 @@
 
 % my $status = $form->status || '';
 <ul class="list-inline">
-  % for my $s ('', 'accepted', 'waiting', 'delivering', 'delivered', 'returning', 'returned', 'cancel') {
+  % for my $s ('', 'accepted', 'waiting', 'delivering', 'delivered', 'returning', 'returned', 'cancel', 'discard', 'registered') {
   <li>
     % if ($status eq $s) {
     <a class="status" href="#"><%= status2label($s, 1) %></a>
