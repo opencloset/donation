@@ -48,7 +48,7 @@ sub _public_routes {
     my $self = shift;
     my $r    = $self->routes;
 
-    $r->get('/')->to( cb => sub { shift->redirect_to('add') } );
+    $r->get('/')->to('root#index')->name('home');
 
     $r->get('/new')->to('root#add')->name('add');
     $r->post('/')->to('root#create')->name('create');

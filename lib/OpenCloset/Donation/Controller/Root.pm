@@ -5,6 +5,16 @@ has schema => sub { shift->app->schema };
 
 =head1 METHODS
 
+=head2 index
+
+    # home
+    GET /
+
+=cut
+
+sub home {
+}
+
 =head2 add
 
     # add
