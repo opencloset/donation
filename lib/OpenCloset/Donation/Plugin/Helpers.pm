@@ -150,7 +150,6 @@ sub update_status {
     $to ||= '';
     my $from = $form->status || '';
     return unless $to || $from;
-    return if $to !~ m/^(|accepted|waiting|delivering|delivered|returning|returned|cancel)$/;
     return if $from eq $to;
 
     $form->update( { status => $to || undef } );
@@ -171,6 +170,12 @@ sub update_status {
 
     if ( $to eq 'returned' ) {
         my $msg = $self->render_to_string( 'sms/returned', format => 'txt', form => $form );
+        chomp $msg;
+        $self->sms( $form->phone, $msg );
+    }
+
+    if ( $to eq 'discard' ) {
+        my $msg = $self->render_to_string( 'sms/discard', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
     }
