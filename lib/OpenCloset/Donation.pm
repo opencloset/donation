@@ -57,14 +57,16 @@ sub _public_routes {
 
 sub _private_routes {
     my $self = shift;
-    my $r    = $self->routes->under('/forms')->to('user#auth')->name('auth');
+    my $r    = $self->routes;
+    my $form = $r->under('/forms')->to('user#auth')->name('auth');
+    my $api  = $r->under('/api')->to('user#auth');
 
-    $r->get('/')->to('form#list')->name('forms');
-    $r->get('/:id')->to('form#form')->name('form');
-    $r->any( ['POST', 'PUT'] => '/:id' )->to('form#update_form')->name('form.update');
+    $form = $form->under('/')->to('form#prefetch');
+    $form->get('/')->to('form#list')->name('forms');
+    $form->get('/:id')->to('form#form')->name('form');
+    $form->any( ['POST', 'PUT'] => '/:id' )->to('form#update_form')->name('form.update');
 
-    $r = $self->routes->under('/api')->to('user#auth')->name('auth');
-    $r->post('/sms')->to('API#create_sms')->name('sms.create');
+    $api->post('/sms')->to('API#create_sms')->name('sms.create');
 }
 
 sub _extend_validator {

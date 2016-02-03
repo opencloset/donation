@@ -9,6 +9,20 @@ has schema => sub { shift->app->schema };
 
 =head1 METHODS
 
+=head2 prefetch
+
+    under /forms
+
+=cut
+
+sub prefetch {
+    my $self = shift;
+
+    my $new = $self->schema->resultset('DonationForm')->search( { status => undef } )->count;
+    $self->stash( new => $new );
+    return 1;
+}
+
 =head2 list
 
     # forms
