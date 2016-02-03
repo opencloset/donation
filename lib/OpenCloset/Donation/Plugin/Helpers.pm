@@ -143,10 +143,22 @@ sub update_status {
 
     if ( $from eq '' ) {
         if ( $to eq 'delivering' ) {
-            my $msg = $self->render_to_string( 'sms/after-waiting', format => 'txt', form => $form );
+            my $msg = $self->render_to_string( 'sms/null2waiting', format => 'txt', form => $form );
             chomp $msg;
             $self->sms( $form->phone, $msg );
         }
+    }
+
+    if ( $to eq 'returning' ) {
+        my $msg = $self->render_to_string( 'sms/returning', format => 'txt', form => $form );
+        chomp $msg;
+        $self->sms( $form->phone, $msg );
+    }
+
+    if ( $to eq 'returned' ) {
+        my $msg = $self->render_to_string( 'sms/returned', format => 'txt', form => $form );
+        chomp $msg;
+        $self->sms( $form->phone, $msg );
     }
 
     return 1;
