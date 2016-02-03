@@ -27,7 +27,8 @@ sub create {
     my $v    = $self->validation;
 
     $v->required('name');
-    $v->optional('ever-sent');
+    $v->optional('ever-donate');
+    $v->optional('ever-use');
     $v->optional('birth-date')->like(qr/\d{4}-\d{2}-\d{2}/);    # YYYY-mm-dd
     $v->optional('gender');
     $v->required('phone')->like(qr/^01[0-9]{9}$/);
@@ -47,7 +48,8 @@ sub create {
     }
 
     my $name            = $v->param('name');
-    my $ever_sent       = $v->param('ever-sent');
+    my $ever_donate     = $v->param('ever-donate');
+    my $ever_use        = $v->param('ever-use');
     my $birth_date      = $v->param('birth-date');
     my $gender          = $v->param('gender');
     my $phone           = $v->param('phone');
@@ -64,7 +66,8 @@ sub create {
     my $form = $self->schema->resultset('DonationForm')->create(
         {
             name            => $name,
-            ever_sent       => $ever_sent,
+            ever_donate     => $ever_donate,
+            ever_use        => $ever_use,
             birth_date      => $birth_date,
             gender          => $gender,
             phone           => $phone,

@@ -58,15 +58,29 @@
       </div>
 
       <div class="form-group">
-        <label for="ever-sent" class="control-label">예전에 열린옷장에 기증하신 적이 있나요?</label>
+        <label for="ever-donate" class="control-label">예전에 열린옷장에 기증하신 적이 있나요?</label>
         <div class="radio">
           <label>
-            <input name="ever-sent" type="radio" value="0"> 아니요, 처음입니다.
+            <input name="ever-donate" type="radio" value="0"> 아니요, 처음입니다.
           </label>
         </div>
         <div class="radio">
           <label>
-            <input name="ever-sent" type="radio" value="1"> 네, 기증한 적이 있습니다.
+            <input name="ever-donate" type="radio" value="1"> 네, 기증한 적이 있습니다.
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ever-use" class="control-label">예전에 열린옷장에 대여하신 적이 있나요?</label>
+        <div class="radio">
+          <label>
+            <input name="ever-use" type="radio" value="0"> 아니요, 처음입니다.
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input name="ever-use" type="radio" value="1"> 네, 대여한 적이 있습니다.
           </label>
         </div>
       </div>
