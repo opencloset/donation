@@ -7,7 +7,6 @@
   <ul class="sms-help">
     <li title="<%= include('sms/null2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label %> <i class="fa fa-arrow-right"></i> <%= status2label('delivering') %></li>
     <li title="<%= include('sms/waiting2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label('waiting') %> <i class="fa fa-arrow-right"></i> <%= status2label('delivering') %></li>
-    <li title="<%= include('sms/returning', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label('returning') %></li>
     <li title="<%= include('sms/returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label('returned') %></li>
     <li title="<%= include('sms/discard', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label('discard') %></li>
   </ul>
@@ -24,7 +23,7 @@
 
 % my $status = $form->status || '';
 <ul class="list-inline">
-  % for my $s ('', 'waiting', 'delivering', 'returning', 'returned', 'cancel', 'discard', 'registered') {
+  % for my $s ('', 'waiting', 'delivering', 'returned', 'cancel', 'discard', 'registered') {
   <li>
     % if ($status eq $s) {
     <a class="status" href="#"><%= status2label($s, 1) %></a>

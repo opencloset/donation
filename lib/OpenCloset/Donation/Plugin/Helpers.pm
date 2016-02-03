@@ -52,10 +52,6 @@ sub status2label {
             $class = " status-$status";
             $str   = '배송중';
         }
-        elsif ( $status eq 'returning' ) {
-            $class = " status-$status";
-            $str   = '반송신청';
-        }
         elsif ( $status eq 'returned' ) {
             $class = " status-$status";
             $str   = '반송완료';
@@ -153,12 +149,6 @@ sub update_status {
 
     if ( $from eq 'waiting' && $to eq 'delivering' ) {
         my $msg = $self->render_to_string( 'sms/waiting2delivering', format => 'txt', form => $form );
-        chomp $msg;
-        $self->sms( $form->phone, $msg );
-    }
-
-    if ( $to eq 'returning' ) {
-        my $msg = $self->render_to_string( 'sms/returning', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
     }
