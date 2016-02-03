@@ -112,29 +112,36 @@ sub update_status {
 
     $form->update( { status => $to || undef } );
 
-
-    if ( $from eq '' && $to eq 'delivering' ) {
+    if ( $from eq $OpenCloset::Donation::Status::NULL && $to eq $OpenCloset::Donation::Status::DELIVERING ) {
         my $msg = $self->render_to_string( 'sms/null2delivering', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
+        my $bitmask = $form->sms_bitmask;
+        $form->update( { sms_bitmask => $bitmask | 2**0 } );
     }
 
-    if ( $from eq 'waiting' && $to eq 'delivering' ) {
+    if ( $from eq $OpenCloset::Donation::Status::WAITING && $to eq $OpenCloset::Donation::Status::DELIVERING ) {
         my $msg = $self->render_to_string( 'sms/waiting2delivering', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
+        my $bitmask = $form->sms_bitmask;
+        $form->update( { sms_bitmask => $bitmask | 2**0 } );
     }
 
-    if ( $to eq 'returned' ) {
+    if ( $from eq $OpenCloset::Donation::Status::DELIVERING && $to eq $OpenCloset::Donation::Status::RETURNED ) {
         my $msg = $self->render_to_string( 'sms/returned', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
+        my $bitmask = $form->sms_bitmask;
+        $form->update( { sms_bitmask => $bitmask | 2**2 } );
     }
 
-    if ( $to eq 'discard' ) {
+    if ( $to eq $OpenCloset::Donation::Status::DISCARD ) {
         my $msg = $self->render_to_string( 'sms/discard', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
+        my $bitmask = $form->sms_bitmask;
+        $form->update( { sms_bitmask => $bitmask | 2**3 } );
     }
 
     return 1;
@@ -143,6 +150,28 @@ sub update_status {
 1;
 
 __END__
+
+=head2 SMS BITMASK
+
+=over
+
+=item 2**0
+
+신청됨|발송대기 -> 배송중
+
+=item 2**1
+
+반송안내문자
+
+=item 2**2
+
+배송중 -> 반송완료
+
+=item 2**3
+
+전체 -> 폐기
+
+=back
 
 =head1 COPYRIGHT
 

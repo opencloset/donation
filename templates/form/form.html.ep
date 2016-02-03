@@ -4,16 +4,7 @@
 % my $email  = $form->email;
 
 <div class="pull-right text-muted">
-  <span>
-    <i class="fa fa-lightbulb-o"></i>
-    <small>SMS 가 전송될때</small>
-  </span>
-  <ul class="sms-help">
-    <li title="<%= include('sms/null2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %></li>
-    <li title="<%= include('sms/waiting2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label('waiting') %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %></li>
-    <li title="<%= include('sms/returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::RETURNED) %></li>
-    <li title="<%= include('sms/discard', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DISCARD) %></li>
-  </ul>
+  %= include '_includes/sms-help', form => $form;
 </div>
 
 <h2>기증신청서 내역</h2>
@@ -55,7 +46,7 @@
 % if ($status eq $OpenCloset::Donation::Status::DELIVERING) {
 <button id="btn-returning" class="btn btn-info btn-sm" type="button" title="<%= include('sms/returning', format => 'txt', form => $form) %>">
   <i class="fa fa-envelope-o"></i>
-  반송신청문자전송
+  반송안내문자전송
 </button>
 % }
 
