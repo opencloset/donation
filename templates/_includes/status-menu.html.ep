@@ -1,4 +1,8 @@
 % use OpenCloset::Donation::Status;
+<form class="form-inline pull-right" action="<%= url_for('forms') %>" method="GET">
+  <input class="form-control" name="q" type="text" placeholder="이름, 전화번호, 이메일, 운송장번호">
+  <button class="btn btn-primary" type="submit">검색</button>
+</form>
 <ul class="list-inline status-menu">
   % my $status = param('s') || '';
   <li><a href="<%= url_for('forms') %>"><span class="label label-info">전체보기</span></a></li>

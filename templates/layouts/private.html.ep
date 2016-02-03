@@ -17,10 +17,6 @@
     <div class="container">
       <div id="content">
         %= include '_includes/header';
-        <form class="form-inline pull-right" action="<%= url_for('forms') %>" method="GET">
-          <input class="form-control" name="q" type="text" placeholder="이름, 전화번호, 이메일">
-          <button class="btn btn-primary" type="submit">검색</button>
-        </form>
         %= include '_includes/status-menu';
         <hr>
         %= content
