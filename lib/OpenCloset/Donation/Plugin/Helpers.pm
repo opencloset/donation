@@ -137,6 +137,7 @@ sub update_status {
     my $from = $form->status || '';
     return unless $to || $from;
     return if $to !~ m/^(|accepted|waiting|delivering|delivered|returning|returned|cancel)$/;
+    return if $from eq $to;
 
     $form->update( { status => $to || undef } );
 

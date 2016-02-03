@@ -20,10 +20,8 @@ sub list {
     my $s    = $self->param('s') || '';
     my $q    = $self->param('q');
 
-    my $cond = { status => $s eq 'null' ? undef : $s };
+    my $cond = $q ? $self->_search_cond($q) : $s eq '' ? undef : { status => $s eq 'null' ? undef : $s };
     my $attr = { page => $p, rows => 20, order_by => { -desc => 'update_date' } };
-    $cond = undef unless $s;
-    $cond = $self->_search_cond($q) if $q;
 
     my $rs      = $self->schema->resultset('DonationForm')->search( $cond, $attr );
     my $pager   = $rs->pager;
@@ -85,7 +83,7 @@ sub update_form {
     $input->{parcel_service} = delete $input->{'parcel-service'} if defined $input->{'parcel-service'};
 
     if ( defined $input->{status} ) {
-        my $status = delete $input->{status} || undef;
+        my $status = delete $input->{status};
         $self->update_status( $form, $status );
     }
 
