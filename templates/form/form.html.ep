@@ -2,6 +2,16 @@
 % layout 'private', jses => ['/assets/dist/js/form.min.js'];
 % my $email  = $form->email;
 
+<div class="pull-right text-muted">
+  <p><i class="fa fa-lightbulb-o"></i> SMS 가 전송될때</p>
+  <ul class="sms-help">
+    <li title="<%= include('sms/null2waiting', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <%= status2label %> <i class="fa fa-arrow-right"></i> <%= status2label('delivering') %></li>
+    <li title="<%= include('sms/returning', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label('returning') %></li>
+    <li title="<%= include('sms/returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label('returned') %></li>
+    <li title="<%= include('sms/discard', format => 'txt', form => $form) %>"><i class="fa fa-envelope-o"></i> <span class="label label-info">전체</span> <i class="fa fa-arrow-right"></i> <%= status2label('discard') %></li>
+  </ul>
+</div>
+
 <h2>기증신청서 내역</h2>
 
 <h3>
