@@ -75,6 +75,7 @@ sub update_form {
     $v->optional('status')->in(@OpenCloset::Donation::Status::ALL);
     $v->optional('parcel-service');
     $v->optional('waybill')->like(qr/^\d+$/);
+    $v->optional('sms_bitmask')->like(qr/^\d+$/);
 
     if ( $v->has_error ) {
         my $failed = $v->failed;

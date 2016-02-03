@@ -1,5 +1,8 @@
 % title "기증신청서 · $id";
-% layout 'private', jses => ['/assets/dist/js/form.min.js'];
+% layout 'private', jses => [
+%   '/assets/components/growl/javascripts/jquery.growl.js',
+%   '/assets/dist/js/form.min.js'
+% ], csses => ['/assets/components/growl/stylesheets/jquery.growl.css'];
 % use OpenCloset::Donation::Status;
 % my $email  = $form->email;
 
@@ -44,7 +47,7 @@
 <a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">새옷</a>
 % }
 % if ($status eq $OpenCloset::Donation::Status::DELIVERING) {
-<button id="btn-returning" class="btn btn-info btn-sm" type="button" title="<%= include('sms/returning', format => 'txt', form => $form) %>">
+<button id="btn-returning" class="btn btn-info btn-sm" type="button" title="<%= include('sms/returning', format => 'txt', form => $form) %>" data-phone="<%= $form->phone %>">
   <i class="fa fa-envelope-o"></i>
   반송안내문자전송
 </button>

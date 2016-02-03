@@ -63,7 +63,8 @@ sub _private_routes {
     $r->get('/:id')->to('form#form')->name('form');
     $r->any( ['POST', 'PUT'] => '/:id' )->to('form#update_form')->name('form.update');
 
-    $r->post('/api/sms')->to('API#create_sms')->name('sms.create');
+    $r = $self->routes->under('/api')->to('user#auth')->name('auth');
+    $r->post('/sms')->to('API#create_sms')->name('sms.create');
 }
 
 sub _extend_validator {
