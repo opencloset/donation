@@ -16,7 +16,7 @@
   <body>
     <div class="container">
       <div id="content">
-        %= include '_includes/header';
+        %= include 'partials/header';
         <hr>
         %= content
       </div>

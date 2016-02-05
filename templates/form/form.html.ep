@@ -7,7 +7,7 @@
 % my $email  = $form->email;
 
 <div class="pull-right text-muted">
-  %= include '_includes/sms-help', form => $form;
+  %= include 'partials/sms-help', form => $form;
 </div>
 
 <h2>기증신청서 내역</h2>

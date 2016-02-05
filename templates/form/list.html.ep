@@ -38,4 +38,4 @@
     % }
   </tbody>
 </table>
-%= include '_includes/pagination', pageset => $pageset;
+%= include 'partials/pagination', pageset => $pageset;
