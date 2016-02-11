@@ -94,6 +94,8 @@ C<undef>
 
 =item cancel
 
+=item do-not-return
+
 =item registered
 
 =back
