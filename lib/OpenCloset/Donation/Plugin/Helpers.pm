@@ -90,6 +90,8 @@ C<undef>
 
 =item delivering
 
+=item delivered
+
 =item returned
 
 =item cancel
