@@ -90,6 +90,7 @@ sub update_form {
     $v->optional('parcel-service');
     $v->optional('waybill')->like(qr/^\d+$/);
     $v->optional('sms_bitmask')->like(qr/^\d+$/);
+    $v->optional('comment');
 
     if ( $v->has_error ) {
         my $failed = $v->failed;

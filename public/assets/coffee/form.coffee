@@ -1,11 +1,12 @@
 $ ->
   $('#btn-toggle-parcel').click (e) ->
-    $(@).hide()
     $('#form-parcel').removeClass('hide')
 
-  $('#btn-cancel').click (e) ->
-    $('#form-parcel').addClass('hide')
-    $('#btn-toggle-parcel').show()
+  $('#btn-comment').click (e) ->
+    $('#form-comment').removeClass('hide')
+
+  $('.btn-cancel').click (e) ->
+    $(@).closest('form').addClass('hide')
 
   $('a.status').click (e) ->
     e.preventDefault()
