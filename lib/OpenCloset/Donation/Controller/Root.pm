@@ -1,6 +1,11 @@
 package OpenCloset::Donation::Controller::Root;
 use Mojo::Base 'Mojolicious::Controller';
 
+use Email::Sender::Simple qw(sendmail);
+use Email::Sender::Transport::SMTP qw();
+use Email::Simple;
+use Encode qw/encode_utf8/;
+
 has schema => sub { shift->app->schema };
 
 =head1 METHODS
@@ -100,6 +105,22 @@ sub create {
     );
 
     return $self->error( 500, 'Failed to create a donation' ) unless $form;
+
+    my $content = Email::Simple->create(
+        header => [
+            From    => $self->config->{email}{notify}{from},
+            To      => $self->config->{email}{notify}{to},
+            Subject => sprintf(
+                "[열린옷장] 새로운 기증신청서 - %s님", $name
+            ),
+        ],
+        body => $self->url_for( "form", id => $form->id )->to_abs,
+    );
+
+    $self->log->debug( $content->as_string );
+
+    my $transport = Email::Sender::Transport::SMTP->new( { host => $self->config->{smtp}{host} } );
+    sendmail( encode_utf8( $content->as_string ), { transport => $transport } );
 
     $self->flash( name => $name );
     $self->redirect_to('done');
