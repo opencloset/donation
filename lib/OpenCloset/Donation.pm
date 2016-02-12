@@ -9,7 +9,11 @@ has schema => sub {
     my $self = shift;
     my $conf = $self->config->{database};
     OpenCloset::Schema->connect(
-        { dsn => $conf->{dsn}, user => $conf->{user}, password => $conf->{pass}, %{ $conf->{opts} }, } );
+        {
+            dsn => $conf->{dsn}, user => $conf->{user}, password => $conf->{pass},
+            %{ $conf->{opts} },
+        }
+    );
 };
 
 =head1 METHODS
@@ -64,7 +68,7 @@ sub _private_routes {
     $form = $form->under('/')->to('form#prefetch');
     $form->get('/')->to('form#list')->name('forms');
     $form->get('/:id')->to('form#form')->name('form');
-    $form->any( ['POST', 'PUT'] => '/:id' )->to('form#update_form')->name('form.update');
+    $form->any( [ 'POST', 'PUT' ] => '/:id' )->to('form#update_form')->name('form.update');
 
     $api->post('/sms')->to('API#create_sms')->name('sms.create');
 }

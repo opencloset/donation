@@ -54,12 +54,10 @@ sub status2label {
 
     if ($active) {
         $html->parse(
-            qq{<span class="label label-default active status$class" title="$status" data-status="$status"><i class="fa fa-archive"></i>$str</span>}
-        );
+            qq{<span class="label label-default active status$class" title="$status" data-status="$status"><i class="fa fa-archive"></i>$str</span>});
     }
     else {
-        $html->parse(
-            qq{<span class="label label-default status$class" title="$status" data-status="$status">$str</span>});
+        $html->parse(qq{<span class="label label-default status$class" title="$status" data-status="$status">$str</span>});
     }
 
     my $tree = $html->tree;
