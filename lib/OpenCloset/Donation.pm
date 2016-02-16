@@ -53,6 +53,8 @@ sub _public_routes {
     my $r    = $self->routes;
 
     $r->get('/')->to('root#index')->name('home');
+    $r->get('/guide1')->to('root#guide1');
+    $r->get('/guide2')->to('root#guide2');
 
     $r->get('/new')->to('root#add')->name('add');
     $r->post('/')->to('root#create')->name('create');

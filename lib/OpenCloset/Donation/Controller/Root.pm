@@ -20,6 +20,24 @@ has schema => sub { shift->app->schema };
 sub home {
 }
 
+=head2 guide1
+
+    GET /guide1
+
+=cut
+
+sub guide1 {
+}
+
+=head2 guide2
+
+    GET /guide2
+
+=cut
+
+sub guide2 {
+}
+
 =head2 add
 
     # add
