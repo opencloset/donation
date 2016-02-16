@@ -36,6 +36,8 @@ sub startup {
     $self->sessions->cookie_name('opencloset');
     $self->sessions->default_expiration(86400);
 
+    push @{ $self->commands->namespaces }, 'OpenCloset::Donation::Command';
+
     $self->_assets;
     $self->_public_routes;
     $self->_private_routes;
