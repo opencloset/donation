@@ -7,6 +7,7 @@
 <ul class="sms-help" data-mask="<%= $mask %>">
   <li title="<%= include('sms/null2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**0 ? '' : '-o' %>"></i> <%= status2label %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %></li>
   <li title="<%= include('sms/waiting2delivering', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**0 ? '' : '-o' %>"></i> <%= status2label($OpenCloset::Donation::Status::WAITING) %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %></li>
-  <li title="<%= include('sms/returning', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**1 ? '' : '-o' %>"></i> <span class="label label-info">반송안내</span>
-  <li title="<%= include('sms/returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**2 ? '' : '-o' %>"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::RETURNED) %></li>
+  <li title="<%= include('sms/delivering2delivered', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**1 ? '' : '-o' %>"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERED) %></li>
+  <li title="<%= include('sms/returning', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**2 ? '' : '-o' %>"></i> <span class="label label-info" title="반송안내문자전송">반송안내</span>
+  <li title="<%= include('sms/returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**3 ? '' : '-o' %>"></i> <%= status2label($OpenCloset::Donation::Status::DELIVERING) %> <i class="fa fa-arrow-right"></i> <%= status2label($OpenCloset::Donation::Status::RETURNED) %></li>
 </ul>
