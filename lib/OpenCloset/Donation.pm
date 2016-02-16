@@ -61,6 +61,9 @@ sub _public_routes {
     $r->get('/new')->to('root#add')->name('add');
     $r->post('/')->to('root#create')->name('create');
     $r->get('/done')->to('root#done')->name('done');
+
+    $r->get('/forms/:id/return')->to('form#sendback')->name('form.return');
+    $r->post('/forms/:id/return')->to('form#create_sendback');
 }
 
 sub _private_routes {

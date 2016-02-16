@@ -110,6 +110,35 @@ sub update_form {
     $self->respond_to( html => sub { shift->redirect_to('form') }, json => { json => { $form->get_columns } } );
 }
 
+=head2 sendback
+
+    # form.return
+    GET /forms/:id/return
+
+=cut
+
+sub sendback {
+    my $self       = shift;
+    my $id         = $self->param('id');
+    my $authorized = $self->param('authorized');
+
+    return $self->error( 401, "Authorize required" ) unless $authorized;
+
+    my $form = $self->schema->resultset('DonationForm')->find($id);
+    return $self->error( 404, "Form not found: $id" ) unless $form;
+
+    $self->render( form => $form );
+}
+
+=head2 create_sendback
+
+    POST /forms/:id/return
+
+=cut
+
+sub create_sendback {
+}
+
 =head2 _search_cond($q)
 
 =cut
