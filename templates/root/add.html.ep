@@ -9,44 +9,6 @@
 
 <div id="donation-new">
   <h2><%= title %></h2>
-  <h3>기증방법</h3>
-  <ol>
-    <li>
-      <p>
-        아래 양식을 작성해 주시면 원하시는 곳으로 기증박스를 보내드립니다.
-      </p>
-      <p>
-        기증박스가 잘 도착 할 수 있도록, 이름과 주소, 전화번호를 정확히 작성해주세요.
-        기증박스가 도착하면 기증하실 의류를 박스에 넣어 열린옷장으로 반송해주시면 됩니다.
-      </p>
-    </li>
-    <li>
-      <p>기증박스를 받지 않으시고, 바로 기증해 주실 분은 아래 주소로 택배를 보내주세요.</p>
-      <address>
-        <blockquote>
-          <p>
-            서울특별시 광진구 아차산로 213 (화양동 48-3) 웅진빌딩 403호 열린옷장 앞
-          </p>
-          <p>
-            <abbr title="우편번호"><i class="fa fa-hand-o-right"></i></abbr> 05019<br>
-            <abbr title="전화번호"><i class="fa fa-phone"></i></abbr> 070-4325-7521
-          </p>
-        </blockquote>
-      </address>
-      <p>
-        기증의류와 함께 옷에 담긴 이야기나, 대여하시는 분에게 전하고 싶은 메시지를 적어
-        함께 보내주시면, 옷과 함께 더 따뜻하게 공유됩니다.
-        (선불/착불 모두 가능합니다. 편하게 보내주세요)
-      </p>
-    </li>
-    <li>
-      <p>
-        카카오톡으로도 문의와 신청을 받고 있습니다.
-        친구검색에서 <abbr title="카카오톡">열린옷장</abbr>을 검색하세요.
-      </p>
-    </li>
-  </ol>
-
   <form action="<%= url_for('create') %>" method="POST" data-toggle="validator">
     <fieldset>
       <legend>기증자 정보</legend>
