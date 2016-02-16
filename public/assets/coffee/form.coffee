@@ -34,14 +34,13 @@ $ ->
         $('.sms-help li:nth-child(3) i').removeClass('fa-envelope-o')
           .addClass('fa-envelope')
 
-      mask = $('.sms-help').data('mask')
-      $.ajax "#{location.href}",
-        type: 'PUT'
-        dataType: 'json'
-        data: { sms_bitmask: mask | 2**1 }
-        error: (jqXHR, textStatus, errorThrown) ->
-          $.growl.error({ message: textStatus });
-
+        mask = $('.sms-help').data('mask')
+        $.ajax "#{location.href}",
+          type: 'PUT'
+          dataType: 'json'
+          data: { sms_bitmask: mask | 2**1 }
+          error: (jqXHR, textStatus, errorThrown) ->
+            $.growl.error({ message: textStatus });
       error: (jqXHR, textStatus, errorThrown) ->
         error = jqXHR.responseJSON?.error
         error = textStatus unless error
