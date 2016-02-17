@@ -17,6 +17,13 @@
   % my @all = @OpenCloset::Donation::Status::ALL;
   % shift @all;
   % for my $s (@all) {
-  <li><a href="<%= url_for('forms')->query(s => $s) %>"><%= status2label($s, $status eq $s) %></a></li>
+  <li>
+    % if ($return_requested && $s eq $OpenCloset::Donation::Status::RETURN_REQUESTED) {
+    <a href="<%= url_for('forms')->query(s => $s) %>"><%= status2label($s, $status eq $s) %></a>
+    <i class="fa fa-star new"></i>
+    % } else {
+    <a href="<%= url_for('forms')->query(s => $s) %>"><%= status2label($s, $status eq $s) %></a>
+    % }
+  </li>
   % }
 </ul>

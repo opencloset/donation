@@ -19,8 +19,9 @@ has schema => sub { shift->app->schema };
 sub prefetch {
     my $self = shift;
 
-    my $new = $self->schema->resultset('DonationForm')->search( { status => undef } )->count;
-    $self->stash( new => $new );
+    my $new       = $self->schema->resultset('DonationForm')->search( { status => undef } )->count;
+    my $requested = $self->schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::RETURN_REQUESTED } )->count;
+    $self->stash( new => $new, return_requested => $requested );
     return 1;
 }
 
