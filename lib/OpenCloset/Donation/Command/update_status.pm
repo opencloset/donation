@@ -43,23 +43,28 @@ sub run {
         return;
     }
 
+    say "[$from] -> [$to]\n";
+
     if ( $from eq $OpenCloset::Donation::Status::DELIVERING ) {
         if ( $to eq $OpenCloset::Donation::Status::DELIVERED ) {
-            say "[$from] -> [$to]\n";
             $self->delivering2delivered();
         }
     }
     elsif ( $from eq $OpenCloset::Donation::Status::RETURN_REQUESTED ) {
         if ( $to eq $OpenCloset::Donation::Status::RETURNING ) {
-            say "[$from] -> [$to]\n";
             $self->returnrequested2returning();
+        }
+    }
+    elsif ( $from eq $OpenCloset::Donation::Status::RETURNING ) {
+        if ( $to eq $OpenCloset::Donation::Status::RETURNED ) {
+            $self->returning2returned();
         }
     }
 }
 
 =head2 delivering2delivered
 
-delivering 상태의 item 을 체크해서 배송이 완료되었다면 delivered 로 변경합니다
+배송중(delivering) 상태의 item 을 체크해서 배송이 완료되었다면 배송완료(delivered) 로 변경합니다
 
 =cut
 
@@ -113,6 +118,34 @@ sub returnrequested2returning {
         $self->app->update_status( $row, $OpenCloset::Donation::Status::RETURNING );
         printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::RETURN_REQUESTED,
             $OpenCloset::Donation::Status::RETURNING;
+    }
+}
+
+=head2 returning2returned
+
+반송중(returning) 상태의 item 을 체크해서 배송이 완료되었다면 반송완료(returned) 로 변경합니다
+
+=cut
+
+sub returning2returned {
+    my $self = shift;
+
+    my $schema = $self->app->schema;
+    my $driver = 'KR::CJKorea';
+    my $rs     = $schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::RETURNING } );
+    while ( my $row = $rs->next ) {
+        my $return_waybill = $row->return_waybill;
+        next unless $return_waybill;
+
+        my $tracker = Parcel::Track->new( $driver, $row->return_waybill );
+        my $result = $tracker->track;
+        next unless $result;
+
+        my $latest = pop @{ $result->{descs} };
+        next unless $latest =~ /배달완료/;
+
+        $self->app->update_status( $row, $OpenCloset::Donation::Status::RETURNED );
+        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::RETURNING, $OpenCloset::Donation::Status::RETURNED;
     }
 }
 
