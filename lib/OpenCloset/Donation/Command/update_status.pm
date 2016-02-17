@@ -49,6 +49,12 @@ sub run {
             $self->delivering2delivered();
         }
     }
+    elsif ( $from eq $OpenCloset::Donation::Status::RETURN_REQUESTED ) {
+        if ( $to eq $OpenCloset::Donation::Status::RETURNING ) {
+            say "[$from] -> [$to]\n";
+            $self->returnrequested2returning();
+        }
+    }
 }
 
 =head2 delivering2delivered
@@ -76,6 +82,37 @@ sub delivering2delivered {
 
         $self->app->update_status( $row, $OpenCloset::Donation::Status::DELIVERED );
         printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::DELIVERING, $OpenCloset::Donation::Status::DELIVERED;
+    }
+}
+
+=head2 returnrequested2returning
+
+반송요청(return-requested) 상태의 item 을 체크해서 반품배송장을 저장하고 반송중(returning)으로 변경합니다
+
+=cut
+
+sub returnrequested2returning {
+    my $self = shift;
+
+    my $schema = $self->app->schema;
+    my $driver = 'KR::CJKorea';
+    my $rs     = $schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::RETURN_REQUESTED } );
+    while ( my $row = $rs->next ) {
+        my $waybill = $row->waybill;
+        next unless $waybill;
+
+        my $tracker = Parcel::Track->new( $driver, $row->waybill );
+        my $result = $tracker->track;
+        next unless $result;
+
+        my $html = shift @{ $result->{htmls} ||= [] };
+        my ($return_waybill) = $html =~ /반품:(\d+)/;
+        return unless $return_waybill;
+
+        $row->update( { return_waybill => $return_waybill } );
+        $self->app->update_status( $row, $OpenCloset::Donation::Status::RETURNING );
+        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::RETURN_REQUESTED,
+            $OpenCloset::Donation::Status::RETURNING;
     }
 }
 

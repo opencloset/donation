@@ -141,8 +141,8 @@ sub update_status {
         $form->update( { sms_bitmask => $bitmask | 2**1 } );
     }
 
-    if ( $from eq $OpenCloset::Donation::Status::DELIVERED && $to eq $OpenCloset::Donation::Status::RETURN_REQUESTED ) {
-        my $msg = $self->render_to_string( 'sms/delivered2returnrequested', format => 'txt', form => $form );
+    if ( $from eq $OpenCloset::Donation::Status::RETURN_REQUESTED && $to eq $OpenCloset::Donation::Status::RETURNING ) {
+        my $msg = $self->render_to_string( 'sms/returnrequested2returning', format => 'txt', form => $form );
         chomp $msg;
         $self->log->debug($msg);
         $self->sms( $form->phone, $msg );
@@ -171,7 +171,7 @@ __END__
 
 =item 2**2
 
-배송완료(delivered) -> 반송신청(return-requested)
+반송신청(return-requested) -> 반송중(returning)
 
 =back
 

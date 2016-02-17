@@ -43,6 +43,12 @@
 % } else {
 <button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장입력</button>
 % }
+% if ($form->return_waybill) {
+<a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->return_waybill) %>" target="_blank">
+  <i class="fa fa-external-link"></i>
+  반송조회
+</a>
+% }
 <button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
 % if ($status eq $OpenCloset::Donation::Status::RETURNED) {
 <a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">새옷</a>
