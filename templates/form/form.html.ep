@@ -47,12 +47,6 @@
 % if ($status eq $OpenCloset::Donation::Status::RETURNED) {
 <a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">새옷</a>
 % }
-% if ($status eq $OpenCloset::Donation::Status::DELIVERING || $status eq $OpenCloset::Donation::Status::DELIVERED) {
-<button id="btn-returning" class="btn btn-info btn-sm" type="button" title="<%= include('sms/returning', format => 'txt', form => $form) %>" data-phone="<%= $form->phone %>">
-  <i class="fa fa-envelope-o"></i>
-  반송안내문자전송
-</button>
-% }
 
 <p class="help-block">
   %= $form->comment || ''
