@@ -141,12 +141,21 @@ sub update_status {
         $form->update( { sms_bitmask => $bitmask | 2**1 } );
     }
 
+    if ( $from eq $OpenCloset::Donation::Status::DELIVERED && $to eq $OpenCloset::Donation::Status::RETURN_REQUESTED ) {
+        my $msg = $self->render_to_string( 'sms/delivered2returnrequested', format => 'txt', form => $form );
+        chomp $msg;
+        $self->log->debug($msg);
+        $self->sms( $form->phone, $msg );
+        my $bitmask = $form->sms_bitmask;
+        $form->update( { sms_bitmask => $bitmask | 2**2 } );
+    }
+
     if ( $from eq $OpenCloset::Donation::Status::DELIVERING && $to eq $OpenCloset::Donation::Status::RETURNED ) {
         my $msg = $self->render_to_string( 'sms/returned', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
         my $bitmask = $form->sms_bitmask;
-        $form->update( { sms_bitmask => $bitmask | 2**2 } );
+        $form->update( { sms_bitmask => $bitmask | 2**3 } );
     }
 
     return 1;
@@ -170,7 +179,7 @@ __END__
 
 =item 2**2
 
-반송안내문자
+배송완료(delivered) -> 반송신청(return-requested)
 
 =item 2**3
 

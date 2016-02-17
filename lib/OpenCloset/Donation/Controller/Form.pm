@@ -2,6 +2,7 @@ package OpenCloset::Donation::Controller::Form;
 use Mojo::Base 'Mojolicious::Controller';
 
 use Data::Pageset;
+use DateTime;
 
 use OpenCloset::Donation::Status;
 
@@ -127,7 +128,8 @@ sub sendback {
     my $form = $self->schema->resultset('DonationForm')->find($id);
     return $self->error( 404, "Form not found: $id" ) unless $form;
 
-    $self->render( form => $form );
+    my $now = DateTime->now( time_zone => 'Asia/Seoul' );
+    $self->render( form => $form, holidays => [ $self->holidays( $now->year ) ] );
 }
 
 =head2 create_sendback
@@ -137,6 +139,58 @@ sub sendback {
 =cut
 
 sub create_sendback {
+    my $self = shift;
+    my $id   = $self->param('id');
+
+    my $form = $self->schema->resultset('DonationForm')->find($id);
+    return $self->error( 404, "Form not found: $id" ) unless $form;
+
+    my $v = $self->validation;
+    $v->required('return-date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $input = $v->input;
+    $input->{return_date} = delete $input->{'return-date'} if defined $input->{'return-date'};
+    $form->update($input);
+
+    ## This method can also be used to refresh from storage, retrieving any
+    ## changes made since the row was last read from storage.
+    $form->discard_changes;
+
+    $self->update_status( $form, $OpenCloset::Donation::Status::RETURN_REQUESTED );
+    $self->res->headers->location( $self->url_for( 'form', id => $id ) );
+    $self->respond_to(
+        html => sub {
+            my $self = shift;
+            my $url = $self->url_for('form.return.done')->query( 'authorized' => 1 );
+            $self->redirect_to($url);
+        },
+        json => { json => { return_date => $form->return_date } }
+    );
+}
+
+=head2 sendback_done
+
+    # form.return.done
+    POST /forms/:id/return/done
+
+=cut
+
+sub sendback_done {
+    my $self       = shift;
+    my $id         = $self->param('id');
+    my $authorized = $self->param('authorized');
+
+    return $self->error( 401, "Authorize required" ) unless $authorized;
+
+    my $form = $self->schema->resultset('DonationForm')->find($id);
+    return $self->error( 404, "Form not found: $id" ) unless $form;
+
+    $self->render( form => $form );
 }
 
 =head2 _search_cond($q)

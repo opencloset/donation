@@ -64,6 +64,7 @@ sub _public_routes {
 
     $r->get('/forms/:id/return')->to('form#sendback')->name('form.return');
     $r->post('/forms/:id/return')->to('form#create_sendback');
+    $r->get('/forms/:id/return/done')->to('form#sendback_done')->name('form.return.done');
 }
 
 sub _private_routes {
