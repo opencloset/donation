@@ -2,6 +2,7 @@ package OpenCloset::Donation::Command::update_status;
 
 use Mojo::Base 'Mojolicious::Command';
 
+use DateTime;
 use OpenCloset::Donation::Status;
 use Parcel::Track;
 
@@ -50,6 +51,11 @@ sub run {
             $self->delivering2delivered();
         }
     }
+    elsif ( $from eq $OpenCloset::Donation::Status::DELIVERED ) {
+        if ( $to eq $OpenCloset::Donation::Status::DO_NOT_RETURN ) {
+            $self->delivered2donotreturn();
+        }
+    }
     elsif ( $from eq $OpenCloset::Donation::Status::RETURN_REQUESTED ) {
         if ( $to eq $OpenCloset::Donation::Status::RETURNING ) {
             $self->returnrequested2returning();
@@ -65,6 +71,8 @@ sub run {
 =head2 delivering2delivered
 
 배송중(delivering) 상태의 item 을 체크해서 배송이 완료되었다면 배송완료(delivered) 로 변경합니다
+
+30분마다
 
 =cut
 
@@ -92,7 +100,9 @@ sub delivering2delivered {
 
 =head2 returnrequested2returning
 
-반송요청(return-requested) 상태의 item 을 체크해서 반품배송장을 저장하고 반송중(returning)으로 변경합니다
+반송신청(return-requested) 상태의 item 을 체크해서 반품배송장을 저장하고 반송중(returning)으로 변경합니다
+
+30분마다
 
 =cut
 
@@ -125,6 +135,8 @@ sub returnrequested2returning {
 
 반송중(returning) 상태의 item 을 체크해서 배송이 완료되었다면 반송완료(returned) 로 변경합니다
 
+1시간마다
+
 =cut
 
 sub returning2returned {
@@ -146,6 +158,34 @@ sub returning2returned {
 
         $self->app->update_status( $row, $OpenCloset::Donation::Status::RETURNED );
         printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::RETURNING, $OpenCloset::Donation::Status::RETURNED;
+    }
+}
+
+=head2 delivered2donotreturn
+
+2주이상 배송완료(delivered) 상태인 item 을 반송안함(do-not-return) 으로 변경합니다
+
+24시간마다
+
+=cut
+
+sub delivered2donotreturn {
+    my $self = shift;
+
+    my $dt = DateTime->now;
+    $dt->subtract( days => 14 );
+
+    my $parser = $self->app->schema->storage->datetime_parser;
+    my $rs     = $self->app->schema->resultset('DonationForm')->search(
+        {
+            status      => $OpenCloset::Donation::Status::DELIVERING,
+            update_date => { '<' => $parser->format_datetime($dt) }
+        }
+    );
+
+    while ( my $row = $rs->next ) {
+        $row->update( { status => $OpenCloset::Donation::Status::DO_NOT_RETURN } );
+        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::DELIVERING, $OpenCloset::Donation::Status::DO_NOT_RETURN;
     }
 }
 
