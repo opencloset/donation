@@ -17,7 +17,7 @@
   <small>
     <a href="mailto: <%= $email %>"><%= $email %></a>
     % if ($user) {
-    <a class="btn btn-default btn-xs" href="https://staff.theopencloset.net/user/<%= $user->id %>" target="_blank">
+    <a class="btn btn-default btn-sm" href="<%= config->{opencloset}{root} %>/user/<%= $user->id %>" target="_blank">
       <i class="fa fa-external-link"></i>
       사용자정보
     </a>
@@ -38,7 +38,7 @@
   % }
 </ul>
 
-<p title="신청일"><%= $form->create_date->ymd %></p>
+<p title="신청일">신청일 <%= $form->create_date->ymd %></p>
 
 % if ($form->waybill) {
 <a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
@@ -57,7 +57,10 @@
 % }
 <button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
 % if ($status eq $OpenCloset::Donation::Status::RETURNED) {
-<a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">새옷</a>
+<a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">
+  <i class="fa fa-external-link"></i>
+  새옷
+</a>
 % }
 
 <p class="help-block">
