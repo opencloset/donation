@@ -1,5 +1,6 @@
 % title "기증신청서 목록";
 % layout 'private';
+% my $q = param('q');
 
 <h2>기증신청서 목록</h2>
 <table class="table table-bordered">
@@ -20,7 +21,7 @@
       <td>
         <a href="<%= url_for('form', id => $form->id) %>"><%= $form->id %></a>
       </td>
-      <td><%= $form->name %></td>
+      <td><%= emphasis($form->name, $q) %></td>
       <td>
         % my @categories = split /\|/, $form->category;
         %= join(', ', @categories)
@@ -39,7 +40,7 @@
         % if (my $waybill = $form->waybill) {
         <a class="btn btn-link btn-xs" href="<%= parcel($form->parcel_service, $waybill) %>" target="_blank">
           <i class="fa fa-external-link"></i>
-          %= $waybill
+          %= emphasis($waybill, $q)
         </a>
         % }
       </td>

@@ -28,6 +28,7 @@ sub register {
 
     $app->helper( status2label  => \&status2label );
     $app->helper( update_status => \&update_status );
+    $app->helper( emphasis      => \&emphasis );
 }
 
 =head1 HELPERS
@@ -158,6 +159,26 @@ sub update_status {
     }
 
     return 1;
+}
+
+=head2 emphasis($text, $search)
+
+    %= emphasis('1234', '12');
+    # <em>12</em>34
+
+    %= emphasis('1234', '5678');
+    # 1234
+
+=cut
+
+sub emphasis {
+    my ( $self, $text, $search ) = @_;
+
+    return '' unless $text;
+    return $text unless $search;
+
+    $text =~ s/$search/<em>$search<\/em>/g;
+    return Mojo::ByteStream->new($text);
 }
 
 1;
