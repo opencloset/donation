@@ -35,7 +35,14 @@
       <td>
         %= status2label($form->status)
       </td>
-      <td><%= $form->waybill || '' %></td>
+      <td>
+        % if (my $waybill = $form->waybill) {
+        <a class="btn btn-link btn-xs" href="<%= parcel($form->parcel_service, $waybill) %>" target="_blank">
+          <i class="fa fa-external-link"></i>
+          %= $waybill
+        </a>
+        % }
+      </td>
       <td><%= $form->create_date->ymd %></td>
     </tr>
     % }
