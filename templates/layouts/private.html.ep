@@ -22,6 +22,7 @@
         %= content
       </div>
     </div>
+    %= footer
     <script src="/assets/components/jquery/dist/jquery.min.js"></script>
     <script src="/assets/components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/assets/components/underscore/underscore.js"></script>
