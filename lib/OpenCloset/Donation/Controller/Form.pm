@@ -69,7 +69,9 @@ sub form {
     my $form = $self->schema->resultset('DonationForm')->find($id);
     return $self->error( 404, "Form not found: $id" ) unless $form;
 
-    $self->render( form => $form );
+    my $user = $self->schema->resultset('User')->find( { email => $form->email } );
+    $user = $self->schema->resultset('UserInfo')->find( { phone => $form->phone } ) unless $user;
+    $self->render( form => $form, user => $user );
 }
 
 =head2 update_form

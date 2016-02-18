@@ -16,6 +16,12 @@
   <a href="<%= url_for('forms')->query(q => $form->name) %>"><%= $form->name %></a>
   <small>
     <a href="mailto: <%= $email %>"><%= $email %></a>
+    % if ($user) {
+    <a class="btn btn-default btn-xs" href="https://staff.theopencloset.net/user/<%= $user->id %>" target="_blank">
+      <i class="fa fa-external-link"></i>
+      사용자정보
+    </a>
+    % }
   </small>
 </h3>
 
