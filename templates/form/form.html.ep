@@ -1,0 +1,153 @@
+% title "기증신청서 · $id";
+% layout 'private', jses => [
+%   '/assets/components/growl/javascripts/jquery.growl.js',
+%   '/assets/dist/js/form.min.js'
+% ], csses => ['/assets/components/growl/stylesheets/jquery.growl.css'];
+% use OpenCloset::Donation::Status;
+% my $email  = $form->email;
+
+<div class="pull-right text-muted">
+  %= include 'partials/sms-help', form => $form;
+</div>
+
+<h2>기증신청서 내역</h2>
+
+<h3>
+  <a href="<%= url_for('forms')->query(q => $form->name) %>"><%= $form->name %></a>
+  <small>
+    <a href="mailto: <%= $email %>"><%= $email %></a>
+    % if ($user) {
+    <a class="btn btn-default btn-sm" href="<%= config->{opencloset}{root} %>/user/<%= $user->id %>" target="_blank">
+      <i class="fa fa-external-link"></i>
+      사용자정보
+    </a>
+    % }
+  </small>
+</h3>
+
+% my $status = $form->status || '';
+<ul class="list-inline">
+  % for my $s (@OpenCloset::Donation::Status::ALL) {
+  <li>
+    % if ($status eq $s) {
+    <a class="status" href="#"><%= status2label($s, 1) %></a>
+    % } else {
+    <a class="status" href="#"><%= status2label($s) %></a>
+    % }
+  </li>
+  % }
+</ul>
+
+<p title="신청일">신청일 <%= $form->create_date->ymd %></p>
+
+% if ($form->waybill) {
+<a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
+  <i class="fa fa-external-link"></i>
+  배송조회
+</a>
+<button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장변경</button>
+% } else {
+<button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장입력</button>
+% }
+% if ($form->return_waybill) {
+<a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->return_waybill) %>" target="_blank">
+  <i class="fa fa-external-link"></i>
+  반송조회
+</a>
+% }
+<button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
+% if ($status eq $OpenCloset::Donation::Status::RETURNED) {
+<a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">
+  <i class="fa fa-external-link"></i>
+  새옷
+</a>
+% }
+
+<p class="help-block">
+  %= $form->comment || ''
+</p>
+
+<form id="form-parcel" class="form-inline hide" action="<%= url_for('form.update', id => $form->id) %>" method="POST">
+  <input name="status" type="hidden" value="delivering">
+  <div class="form-group">
+    <select class="form-control" name="parcel-service">
+      <option value="CJ대한통운">CJ대한통운</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <input class="form-control" name="waybill" type="text" value="<%= $form->waybill || '' %>" placeholder="운송장번호">
+  </div>
+  <button class="btn btn-primary" type="submit">입력</button>
+  <button class="btn btn-danger btn-cancel" type="button">취소</button>
+  <p class="help-block">
+    <small>
+      운송장 번호를 입력하면 상태가
+      %= status2label($OpenCloset::Donation::Status::DELIVERING)
+      으로 변경됩니다
+    </small>
+  </p>
+</form>
+
+<form id="form-comment" class="hide" action="<%= url_for('form.update', id => $form->id) %>" method="POST">
+  <div class="form-group">
+    <textarea id="comment" name="comment" class="form-control" placeholder="Comment"><%= $form->comment || '' %></textarea>
+  </div>
+  <button class="btn btn-primary" type="submit">입력</button>
+  <button class="btn btn-danger btn-cancel" type="button">취소</button>
+</form>
+
+<hr>
+
+<div class="well">
+  % if(defined $form->gender) {
+    <p>
+    % if($form->gender) {
+      <i class="fa fa-male"></i> 남성
+    % } else {
+      <i class="fa fa-female"></i> 여성
+    % }
+    </p>
+  % }
+  <p>
+    <%= $form->phone %>
+  </p>
+  <p>
+    %= $form->birth_date ? $form->birth_date->ymd : ''
+  </p>
+  <p><%= $form->address1 %> <%= $form->address3 %></p>
+  <p><%= $form->address2 %> <%= $form->address3 %></p>
+</div>
+<hr>
+<ul>
+  <li>
+    <p><strong>예전에 열린옷장에 기증하신 적이 있나요?</strong></p>
+    <p><%= $form->ever_donate ? '예' : '아니오' %></p>
+  </li>
+  <li>
+    <p><strong>예전에 열린옷장에 대여하신 적이 있나요?</strong></p>
+    <p><%= $form->ever_use ? '예' : '아니오' %></p>
+  </li>
+  <li>
+    <p><strong>의류종류 및 수량</strong></p>
+    <p>
+      % my @categories = split /\|/, $form->category;
+      %= join(', ', @categories)
+    </p>
+  </li>
+  <li>
+    <p><strong>기증하신 정장이 열린옷장에서 사용되기에 부적합한 경우 다음과 같이 쓰이는 것에 동의하십니까?</strong></p>
+    <p>
+      <p><%= $form->terms ? '동의합니다' : '동의하지 않습니다' %></p>
+    </p>
+  </li>
+  <li>
+    <p><strong>재능나눔</strong></p>
+    <p><%= $form->talent_donation ? '재능나눔까지 하고 싶습니다' : '의류기증만 하고 싶습니다' %></p>
+  </li>
+  % if ($form->talent_donation) {
+    <li>
+      <p><strong>재능나눔 의사가 있으시다면, 어떤 분야 혹은 어떤 회사에서 일하고 계신지 상세히 알려주세요</strong></p>
+      <p><%= $form->talent || '' %></p>
+    </li>
+  % }
+</ul>

@@ -1,0 +1,87 @@
+@opencloset-basic-color: #fedc00;
+
+body {
+    padding-bottom: 50px;
+}
+.fa.fixed {
+    width: 15px;
+}
+ol {
+    background-color: #f5f5f5;
+    padding-bottom: 10px;
+    padding-top: 20px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    border: 1px solid;
+}
+blockquote {
+    font-size: 14px;
+}
+h1 {
+    background-color: @opencloset-basic-color;
+    padding: 1em;
+    color: black;
+}
+.table ul {
+    padding-left: 20px;
+}
+.status-waiting {
+    background-color: #87b87f;
+}
+.status-delivering {
+    background-color: #428bca;
+}
+.status-delivered {
+    background-color: #259d14;
+}
+.status-return-requested {
+    background-color: #114466;
+}
+.status-returning {
+    background-color: #6666ee;
+}
+.status-returned {
+    background-color: #d15b47;
+}
+.status-cancel {
+    background-color: #abbac3;
+}
+.status-do-not-return {
+    background-color: darken(#abbac3, 10%);
+}
+.status-registered {
+    background-color: #ff3020;
+}
+.active {
+    color: @opencloset-basic-color;
+    text-shadow: @opencloset-basic-color 0 0 10px;
+}
+.sms-help {
+    list-style: none;
+    padding-left: 0;
+    .label {
+        display: inline-block;
+        width: 60px;
+    }
+}
+#form-parcel, #form-comment {
+    padding-top: 1em;
+}
+.status-menu {
+    .new {
+        color: @opencloset-basic-color;
+        text-shadow: #000 0 0 10px;
+        display: flex;
+        margin-left: -6px;
+        margin-top: -26px;
+    }
+    a:hover {
+        text-decoration: none;
+    }
+}
+em {
+    font-style: normal;
+    text-decoration: none;
+    text-weight: bold;
+    background-color: lighten(yellow, 30%);
+}

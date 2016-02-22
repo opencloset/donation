@@ -1,0 +1,40 @@
+% title "반송신청";
+% layout 'default', jses => [
+%   '/assets/components/bootstrap-validator/dist/validator.min.js',
+%   '/assets/components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
+%   '/assets/components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.kr.min.js',
+%   '/assets/dist/js/form-return.min.js'
+% ], csses => [
+%   '/assets/components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css'
+% ];
+
+<h2>반송신청 <small><%= $form->name %>님</small></h2>
+<p>
+  안녕하세요.<br>
+  원하시는 날짜를 선택하시면, 지정된 날짜에 택배기사님이 방문하여 의류상자를 수거해갑니다.
+</p>
+<p>택배사 사정에 따라서 방문이 지연될 수 있습니다.</p>
+<p class="text-muted">
+  <i class="fa fa-phone fixed"></i>
+  070-4325-7521<br>
+  <i class="fa fa-question-circle fixed"></i>
+  <a href="mailto: info@theopencloset.net" title="문의">도움이 필요하시면 메일을 보내주세요</a>
+</p>
+
+<hr>
+
+<form action="<%= url_for('form.return') %>" method="POST" class="form-inline" data-toggle="validator">
+  <div class="form-group">
+    <label for="return-date">반송 희망일</label>
+    <input type="text"
+           id="return-date"
+           class="form-control"
+           name="return-date"
+           data-date-format="yyyy-mm-dd"
+           data-holidays="['<%= join('\',\'', @$holidays) %>']"
+           required>
+    <button type="submit" class="btn btn-primary">신청</button>
+    <div class="help-block">반송예약은 3일 후 부터 가능합니다.</div>
+    <div class="help-block with-errors"></div>
+  </div>
+</form>

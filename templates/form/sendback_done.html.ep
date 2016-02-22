@@ -1,0 +1,12 @@
+% title "반송신청완료";
+% layout 'default';
+
+<h2>반송예정일: <%= $form->return_date->ymd %></h2>
+
+<p>
+  <strong><%= $form->name %></strong>님, 반송신청이 정상적으로 접수되었습니다.
+</p>
+
+<p>
+  감사합니다.
+</p>
