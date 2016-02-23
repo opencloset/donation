@@ -16,13 +16,24 @@
   <a href="<%= url_for('forms')->query(q => $form->name) %>"><%= $form->name %></a>
   <small>
     <a href="mailto: <%= $email %>"><%= $email %></a>
-    % if ($user) {
-    <a class="btn btn-default btn-sm" href="<%= config->{opencloset}{root} %>/user/<%= $user->id %>" target="_blank">
-      <i class="fa fa-external-link"></i>
-      사용자정보
-    </a>
-    % }
   </small>
+  % if ($user) {
+  <a class="btn btn-default btn-sm" href="<%= config->{opencloset}{root} %>/user/<%= $user->id %>" target="_blank">
+    <i class="fa fa-external-link"></i>
+    사용자정보
+  </a>
+  <p class="text-muted">
+    <small>
+      <%= $user->donations->count %> 건의 기부와
+      <%= $user->orders->count %> 건의 대여이력이 있습니다
+    </small>
+  </p>
+  % } else {
+  <button id="btn-user-add" class="btn btn-info btn-sm" type="button">
+    사용자등록
+  </button>
+  <p class="text-muted"><small>대여나 기부이력이 없습니다</small></p>
+  % }
 </h3>
 
 % my $status = $form->status || '';

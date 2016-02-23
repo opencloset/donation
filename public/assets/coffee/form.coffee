@@ -19,3 +19,16 @@ $ ->
         location.reload()
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
+
+  $("#btn-user-add:not('disabled')").click (e) ->
+    $this = $(@)
+    $this.addClass('disabled')
+    $.ajax "/user",
+      type: 'POST'
+      data: { form_id: location.pathname.split('/').pop() }
+      dataType: 'json'
+      success: (data, textStatus, jqXHR) ->
+        location.reload()
+      error: (jqXHR, textStatus, errorThrown) ->
+      complete: (jqXHR, textStatus) ->
+        $this.removeClass('disabled')
