@@ -70,7 +70,10 @@ sub form {
     return $self->error( 404, "Form not found: $id" ) unless $form;
 
     my $user = $self->schema->resultset('User')->find( { email => $form->email } );
-    $user = $self->schema->resultset('UserInfo')->find( { phone => $form->phone } ) unless $user;
+    unless ($user) {
+        my $user_info = $self->schema->resultset('UserInfo')->find( { phone => $form->phone } );
+        $user = $user_info->user if $user_info;
+    }
     $self->render( form => $form, user => $user );
 }
 
