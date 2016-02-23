@@ -67,6 +67,7 @@
 </a>
 % }
 <button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
+<button id="btn-sms" class="btn btn-default btn-sm" type="button">SMS</button>
 % if ($status eq $OpenCloset::Donation::Status::RETURNED) {
 <a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">
   <i class="fa fa-external-link"></i>
@@ -104,6 +105,15 @@
     <textarea id="comment" name="comment" class="form-control" placeholder="Comment"><%= $form->comment || '' %></textarea>
   </div>
   <button class="btn btn-primary" type="submit">입력</button>
+  <button class="btn btn-danger btn-cancel" type="button">취소</button>
+</form>
+
+<form id="form-sms" class="hide" action="<%= url_for('sms.create') %>" method="POST">
+  <input type="hidden" name="to" value="<%= $form->phone %>">
+  <div class="form-group">
+    <textarea name="text" class="form-control" placeholder="SMS 내용"></textarea>
+  </div>
+  <button class="btn btn-primary" type="submit">전송</button>
   <button class="btn btn-danger btn-cancel" type="button">취소</button>
 </form>
 

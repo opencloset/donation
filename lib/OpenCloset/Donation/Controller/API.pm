@@ -32,7 +32,7 @@ sub create_sms {
     my $sms = $self->sms( $to, $text );
     return $self->error( 500, 'Failed to send a sms' ) unless $sms;
 
-    $self->render( json => { $sms->columns } );
+    $self->render( json => { $sms->get_columns } );
 }
 
 =head2 create_user
