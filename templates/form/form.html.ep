@@ -122,7 +122,7 @@
 <div class="well">
   % if(defined $form->gender) {
     <p>
-    % if($form->gender) {
+    % if($form->gender == 1) {
       <i class="fa fa-male"></i> 남성
     % } else {
       <i class="fa fa-female"></i> 여성
