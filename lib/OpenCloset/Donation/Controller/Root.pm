@@ -64,7 +64,7 @@ sub create {
     $v->optional('ever-use');
     $v->optional('birth-date')->like(qr/\d{4}-\d{2}-\d{2}/); # YYYY-mm-dd
     $v->optional('gender');
-    $v->required('phone')->like(qr/^01[0-9]{9}$/);
+    $v->required('phone')->like(qr/^01[0-9]{3}-\d{4}-\d{4}$/);
     $v->required('email')->email;
     $v->required('address1');
     $v->required('address2');
@@ -96,6 +96,7 @@ sub create {
     my $talent_donation = $v->param('talent-donation');
     my $talent          = $v->param('talent');
 
+    $phone =~ s/-//g;
     my @categories = qw/자켓 팬츠 셔츠 구두 코트 기타/;
     for ( my $i = 0; $i < @categories; $i++ ) {
         my $quantity = $categories->[$i] || '0';
