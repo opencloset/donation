@@ -224,7 +224,7 @@ sub _search_cond {
         }
     }
     elsif ( $q =~ m/^[ㄱ-힣]+$/ ) {
-        push @or, { name => { like => "$q%" } };
+        push @or, { name => { like => "%$q%" } };
     }
 
     return { -or => [@or] };

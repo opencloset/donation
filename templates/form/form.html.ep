@@ -18,6 +18,7 @@
     <a href="mailto: <%= $email %>"><%= $email %></a>
   </small>
   % if ($user) {
+    % my $user_info = $user->user_info;
   <a class="btn btn-default btn-sm" href="<%= config->{opencloset}{root} %>/user/<%= $user->id %>" target="_blank">
     <i class="fa fa-external-link"></i>
     사용자정보
@@ -28,6 +29,15 @@
       <%= $user->orders->count %> 건의 대여이력이 있습니다
     </small>
   </p>
+    % if ($user->email ne $form->email) {
+    <span class="text-danger">
+      이메일이 다릅니다 <strong><%= $user->email %></strong>
+    </span>
+    % } elsif ($user_info->phone ne $form->phone) {
+    <p class="text-danger">
+      <small>폰번호가 다릅니다 <strong><%= $user_info->phone %></strong></small>
+    </p>
+    % }
   % } else {
   <button id="btn-user-add" class="btn btn-info btn-sm" type="button">
     사용자등록
@@ -122,7 +132,7 @@
 <div class="well">
   % if(defined $form->gender) {
     <p>
-    % if($form->gender) {
+    % if($form->gender == 1) {
       <i class="fa fa-male"></i> 남성
     % } else {
       <i class="fa fa-female"></i> 여성
