@@ -64,7 +64,7 @@ sub create {
     $v->optional('ever-use');
     $v->optional('birth-date')->like(qr/\d{4}-\d{2}-\d{2}/); # YYYY-mm-dd
     $v->optional('gender');
-    $v->required('phone')->like(qr/^01[0-9]{3}-\d{4}-\d{4}$/);
+    $v->required('phone')->like(qr/^01[0-9]-\d{4}-\d{4}$/);
     $v->required('email')->email;
     $v->required('address1');
     $v->required('address2');
