@@ -67,9 +67,6 @@ sub _public_routes {
     $r->get('/forms/:id/return')->to('form#sendback')->name('form.return');
     $r->post('/forms/:id/return')->to('form#create_sendback');
     $r->get('/forms/:id/return/done')->to('form#sendback_done')->name('form.return.done');
-
-    $r->get('/terms')->to('root#terms')->name('terms');       # terms of service
-    $r->get('/privacy')->to('root#privacy')->name('privacy'); # privacy policy
 }
 
 sub _private_routes {
