@@ -6,7 +6,7 @@
 2. '나의 정장 기증이야기'를 작성한다.
 3. 아래 링크로 기증상자를 수거해갈 날짜를 선택한다.
 
-<%= url_for('form.return')->query(authorized => 1)->to_abs %>
+<%= url_for('form.return', id => $form->id)->query(authorized => 1)->to_abs->scheme('https')->host('donation.theopencloset.net') %>
 
 4. 해당 날짜에 방문한 기사님에게 상자를 전달한다.
 

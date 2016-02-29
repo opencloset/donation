@@ -34,9 +34,9 @@
       이메일이 다릅니다 <strong><%= $user->email %></strong>
     </span>
     % } elsif ($user_info->phone ne $form->phone) {
-    <p class="text-danger">
+    <span class="text-danger">
       <small>폰번호가 다릅니다 <strong><%= $user_info->phone %></strong></small>
-    </p>
+    </span>
     % }
   % } else {
   <button id="btn-user-add" class="btn btn-info btn-sm" type="button">
