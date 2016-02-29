@@ -1,5 +1,8 @@
 % title '기증';
-% layout 'default';
+% layout 'default', jses => [
+%   '/assets/components/bootstrap-validator/dist/validator.min.js',
+%   '/assets/dist/js/guide2.min.js'
+% ];
 
 <h2>기증품목 안내</h2>
 <p>
@@ -196,6 +199,103 @@
   </tbody>
 </table>
 
-<p class="text-center">
-  <a class="btn btn-primary btn-lg" href="<%= url_for('add') %>">기증신청서 작성</a>
-</p>
+<hr>
+
+<form action="<%= url_for('add') %>" method="GET" data-toggle="validator">
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" required>
+      <a href="#agree-privacy" data-toggle="modal" class="agree">열린옷장 서비스 개인정보수집 &middot; 이용 &middot; 제공 동의서</a>
+    </label>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" required>
+      <a href="#agree-message" data-toggle="modal" class="agree">기증 메세지 작성 동의</a>
+    </label>
+  </div>
+  <p class="text-center">
+    <button class="btn btn-lg btn-primary" type="submit">기증신청서 작성</button>
+  </p>
+</form>
+
+<div id="agree-privacy" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">서비스 개인정보수집 &middot; 이용 &middot; 제공 동의서</h4>
+      </div>
+      <div class="modal-body">
+        <pre>열린옷장 서비스 개인정보수집‧이용‧제공 동의서
+
+열린옷장은 개인정보보호법, 정보통신망법 등 관련 법령에 따라 열린옷장 웹사이트를 통하여 옷을 기증하고자 하는 분께 수집하는 개인정보의 항목, 개인정보의 수집 및 이용목적, 개인정보의 보유 및 이용기간 등을 안내 드리오니 자세히 읽은 후 동의하여 주시기 바랍니다. 
+
+1. 수집하는 개인정보의 항목
+(1) 열린옷장은 상담, 서비스 신청 등을 위해 아래와 같은 개인정보를 수집하고 있습니다.
+- 필수항목 : 아이디, 비밀번호, 성명, 생년월일, 성별, 전화번호, 이메일, 주소
+- 선택항목 : 기증경험 여부, 대여경험 여부, 기증편지
+
+(2) 서비스 이용과정이나 사업 처리 과정에서 아래와 같은 정보들이 생성되어 수집될 수 있습니다.
+- 서비스 이용기록, 접속 로그, 쿠키, 접속 IP 정보, 결제기록, 이용정지 기록
+
+2. 개인정보 수집방법
+열린옷장은 다음과 같은 방법으로 개인정보를 수집합니다.
+- 홈페이지, 서면양식
+- 생성정보 수집 툴을 통한 수집
+
+3. 개인정보의 수집 및 이용 목적
+'열린옷장 홈페이지'는 개인정보를 다음의 목적을 위해 처리합니다. 처리한 개인정보는 다음의 목적 이외의 용도로는 사용되지 않으며 이용 목적이 변경될 시에는 사전동의를 구할 예정입니다.
+
+가. 서비스 제공에 관한 계약 이행 및 서비스 제공에 따른 요금 정산
+(1) 정장기증 업무
+기증자의 정보 및 신원 확인, 연락 및 안내, 소식지 전달 등
+(2) 정장대여 업무
+대여자의 예약 및 안내, 신체치수 측정, 기증 정장의 손·망실 방지 등
+
+나. 회원관리
+본인확인, 개인식별, 불량회원의 부정 이용 방지와 비인가 사용 방지, 가입 의사 확인, 가입 및 가입횟수 제한, 만14세 미만 아동 개인정보 수집 시 법정 대리인 동의여부 확인, 추후 법정 대리인 본인확인, 분쟁 조정을 위한 기록보존, 불만처리 등 민원처리, 고지사항 전달
+
+다. 마케팅 및 광고에 활용
+신규 서비스(제품) 개발 및 특화, 인구통계학적 특성에 따른 서비스 제공 및 광고 게재, 접속 빈도 파악, 회원의 서비스 이용에 대한 통계, 이벤트 등 광고성 정보 전달
+
+라. 기증편지 및 감사편지 공개
+
+4. 개인정보의 제3자 제공
+열린옷장은 이용자의 개인정보를 원칙적으로 외부에 제공하지 않습니다.
+다만, 아래의 경우에는 예외로 합니다.
+- 이용자들이 사전에 동의한 경우
+- 법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우
+
+5. 개인정보의 취급위탁
+열린옷장은 서비스 이행을 위하여 아래와 같이 개인정보 취급 업무를 외부 전문업체에 위탁하여 운영하고 있습니다.
+
+수탁자 : KG이니시스
+위탁업무 내용 : 결제처리업무(카드결제 및 현금영수증 등)
+
+수탁자 : 사일렉스
+위탁업무 : 개인정보 데이터베이스화, 관리 및 보관</pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="agree-message" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">기증 메세지 작성 동의</h4>
+      </div>
+      <div class="modal-body">
+        <p>기증 절차 진행 시 온라인 상 또는 서면으로 '기증편지 또는 감사편지는 SNS 및 웹사이트에 공개될 수 있습니다. 공개를 원치 않으시는 경우 이를 알려주시면 공개하지 않겠으며, 이미 공개된 경우라면 SNS 및 웹사이트에서 삭제하겠습니다.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
