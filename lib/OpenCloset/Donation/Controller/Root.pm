@@ -161,4 +161,22 @@ sub done {
     $self->render( name => $name );
 }
 
+=head2 terms
+
+    # terms
+    GET /terms
+
+=cut
+
+sub terms { }
+
+=head2 privacy
+
+    # privacy
+    GET /privacy
+
+=cut
+
+sub privacy { }
+
 1;
