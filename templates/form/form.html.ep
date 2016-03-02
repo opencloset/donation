@@ -60,6 +60,9 @@
 </ul>
 
 <p title="신청일">신청일 <%= $form->create_date->ymd %></p>
+% if ($status eq $OpenCloset::Donation::Status::RETURN_REQUESTED) {
+<p title="반송일">반송일 <%= $form->return_date ? $form->return_date->ymd : '' %></p>
+% }
 
 % if ($form->waybill) {
 <a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
