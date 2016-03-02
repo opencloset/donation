@@ -13,6 +13,7 @@
       <th>상태</th>
       <th>운송장번호</th>
       <th>신청일</th>
+      <th>반송일</th>
     </tr>
   </thead>
   <tbody>
@@ -45,11 +46,16 @@
         % }
       </td>
       <td><%= $form->create_date->ymd %></td>
+      <td>
+        % if (my $return_date = $form->return_date) {
+          %= $return_date->ymd
+        % }
+      </td>
     </tr>
     % }
     % unless ($forms->count) {
     <tr>
-      <td colspan="7" class="text-center">No items</td>
+      <td colspan="8" class="text-center">No items</td>
     </tr>
     % }
   </tbody>

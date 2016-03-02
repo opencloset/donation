@@ -41,6 +41,10 @@ sub list {
     my $cond = $q ? $self->_search_cond($q) : $s eq '' ? undef : { status => $s eq 'null' ? undef : $s };
     my $attr = { page => $p, rows => 20, order_by => { -desc => 'update_date' } };
 
+    if ( $s eq $OpenCloset::Donation::Status::RETURN_REQUESTED ) {
+        $attr->{order_by} = 'return_date';
+    }
+
     my $rs      = $self->schema->resultset('DonationForm')->search( $cond, $attr );
     my $pager   = $rs->pager;
     my $pageset = Data::Pageset->new(
