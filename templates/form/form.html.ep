@@ -31,7 +31,7 @@
   </p>
     % if ($user->email ne $form->email) {
     <span class="text-danger">
-      이메일이 다릅니다 <strong><%= $user->email %></strong>
+      <small>이메일이 다릅니다 <strong><%= $user->email %></strong></small>
     </span>
     % } elsif ($user_info->phone ne $form->phone) {
     <span class="text-danger">
@@ -60,8 +60,8 @@
 </ul>
 
 <p title="신청일">신청일 <%= $form->create_date->ymd %></p>
-% if ($status eq $OpenCloset::Donation::Status::RETURN_REQUESTED) {
-<p title="반송일">반송일 <%= $form->return_date ? $form->return_date->ymd : '' %></p>
+% if (my $return_date = $form->return_date) {
+<p title="반송일">반송일 <%= $return_date->ymd %></p>
 % }
 
 % if ($form->waybill) {
