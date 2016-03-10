@@ -27,13 +27,19 @@
 </p>
 
 <p class="text-muted">
-  열린옷장은 버려지는 의류를 재활용하는 곳이 아닙니다.<br>
-  입사면접, 졸업식, 결혼식, 사진촬영 등 삶의 특별한 순간을 위해 정장이 필요한 이들을 응원하기 위한 곳입니다.<br>
-  그래서 조금 깐깐하게 기증받습니다. 누군가의 멋진 모습을 위해 좋은 옷만 필요하기 때문입니다.
+  누구나 멋질 권리가 있다!<br><br>
+
+  열린옷장은 삶의 특별한 순간, 정장이 필요한 이들을 응원하기 위한 곳입니다.<br>
+  입사면접, 졸업식, 결혼식, 사진촬영에 적합하다고 판단되는 옷을 보내주세요.<br><br>
+
+  아래 기증품목 상세 안내를 확인해주세요
 </p>
 
-<h3>기증품목 상세 안내</h3>
-<table class="table table-bordered">
+<h3>
+  기증품목 상세 안내
+  <button id="btn-info-detail" class="btn btn-info btn-sm" type="button">자세히</button>
+</h3>
+<table id="info-detail" class="table table-bordered hidden">
   <thead>
     <tr>
       <th></th>
