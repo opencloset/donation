@@ -136,8 +136,6 @@ sub create {
         body => $self->url_for( "form", id => $form->id )->to_abs,
     );
 
-    $self->log->debug( $content->as_string );
-
     my $transport = Email::Sender::Transport::SMTP->new( { host => $self->config->{smtp}{host} } );
     sendmail( encode_utf8( $content->as_string ), { transport => $transport } );
 
