@@ -131,7 +131,7 @@
       </div>
 
       <div class="form-group">
-        <label for="pants-spinner">팬츠</label>
+        <label for="pants-spinner">바지/스커트</label>
         <div class="input-group col-sm-4">
           <span class="input-group-btn">
             <button type="button" class="btn btn-default" data-value="decrease" data-target="#pants-spinner" data-toggle="spinner">
@@ -215,9 +215,10 @@
         </div>
       </div>
 
+      <h4>[의류 분류 절차 및 재기증 동의]</h4>
       <div class="form-group">
         <label for="terms" class="control-label">
-          기증하신 정장이 열린옷장에서 사용되기에 부적합한 경우 다음과 같이 쓰이는 것에 동의하십니까?
+          기증하신 의류가 열린옷장에서 사용되기에 부적합한 경우 다음과 같이 쓰이는 것에 동의하십니까?
         </label>
         <div>
           <p class="help-block">
@@ -239,6 +240,7 @@
         </div>
       </div>
 
+      <h4>[재능나눔 의사 확인]</h4>
       <div class="form-group">
         <label for="talent-donation" class="control-label">
           새로운 시작을 계획하며 열린옷장을 찾아오는 분들에게 본인이 가진 재능까지 나눌 의사가 있으십니까?
