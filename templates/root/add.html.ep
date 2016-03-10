@@ -131,7 +131,7 @@
       </div>
 
       <div class="form-group">
-        <label for="pants-spinner">팬츠</label>
+        <label for="pants-spinner">바지/스커트</label>
         <div class="input-group col-sm-4">
           <span class="input-group-btn">
             <button type="button" class="btn btn-default" data-value="decrease" data-target="#pants-spinner" data-toggle="spinner">
