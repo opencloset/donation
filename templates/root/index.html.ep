@@ -1,31 +1,9 @@
 % title '기증';
 % layout 'default';
 
-<h2>정장기증 안내</h2>
-<p>
-  열린옷장에 기증되는 의류는 입사면접, 혹은 결혼식, 졸업식 등을 앞두고 정장 때문에 고민하는 누군가에게 멋진 모습을 선사하여 그 사람의 소중한 삶을 응원하는 데에 쓰입니다.
-</p>
-
-<ul class="list-inline text-center">
-  <li>
-    <p class="well">
-      <strong>정장기증</strong><br><br>
-      옷장 속에 잠들어있는 사회선배들의 정장 기증
-    </p>
-  </li>
-  <li>
-    <p class="well">
-      <strong>정장대여</strong><br><br>
-      취업면접을 앞둔 청년구직자들에게 저렴한 금액으로 대여
-    </p>
-  </li>
-  <li>
-    <p class="well">
-      <strong>수익나눔</strong><br><br>
-      정장 대여사업을 통해 얻은 수익을 청년들을 위한 나눔사업에 사용
-    </p>
-  </li>
-</ul>
+<div>
+  <img src="/assets/img/intro.png" alt="300x300" class="img-responsive">
+</div>
 
 <p class="text-center">
   <a class="btn btn-default btn-lg" href="<%= url_for('/guide1') %>">다음</a>
