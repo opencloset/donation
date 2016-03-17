@@ -64,24 +64,31 @@ sub _public_routes {
     $r->post('/')->to('root#create')->name('create');
     $r->get('/done')->to('root#done')->name('done');
 
-    $r->get('/forms/:id/return')->to('form#sendback')->name('form.return');
-    $r->post('/forms/:id/return')->to('form#create_sendback');
-    $r->get('/forms/:id/return/done')->to('form#sendback_done')->name('form.return.done');
+    my $prefetch_form = $r->under('/forms/:id')->to('form#prefetch_form');
+    $prefetch_form->get('/return')->to('form#sendback')->name('form.return');
+    $prefetch_form->post('/return')->to('form#create_sendback');
+    $prefetch_form->get('/return/done')->to('form#sendback_done')->name('form.return.done');
 }
 
 sub _private_routes {
-    my $self = shift;
-    my $r    = $self->routes;
-    my $form = $r->under('/forms')->to('user#auth')->name('auth');
-    my $sms  = $r->under('/sms')->to('user#auth');
-    my $user = $r->under('/user')->to('user#auth');
+    my $self  = shift;
+    my $r     = $self->routes;
+    my $forms = $r->under('/forms')->to('user#auth')->name('auth');
+    my $sms   = $r->under('/sms')->to('user#auth');
+    my $user  = $r->under('/user')->to('user#auth');
 
-    $form = $form->under('/')->to('form#prefetch');
-    $form->get('/')->to('form#list')->name('forms');
-    $form->get('/:id')->to('form#form')->name('form');
-    $form->any( [ 'POST', 'PUT' ] => '/:id' )->to('form#update_form')->name('form.update');
+    $forms = $forms->under('/')->to('form#prefetch');
+    $forms->get('/')->to('form#list')->name('forms');
+
+    my $form = $forms->under('/:id')->to('form#prefetch_form');
+    $form->get('/')->to('form#form')->name('form');
+    $form->any( [ 'POST', 'PUT' ] => '/' )->to('form#update_form')->name('form.update');
+    $form->get('/clothes')->to('clothes#index')->name('clothes');
+    $form->get('/clothes/new')->to('clothes#add')->name('clothes.new');
+    $form->post('/clothes')->to('clothes#create');
 
     $sms->post('/')->to('API#create_sms')->name('sms.create');
+
     $user->post('/')->to('API#create_user')->name('user.create');
 }
 
