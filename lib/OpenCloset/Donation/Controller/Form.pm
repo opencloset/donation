@@ -215,8 +215,9 @@ sub _search_cond {
     my @or;
     if ( $q =~ /^[0-9\-]+$/ ) {
         $q =~ s/-//g;
-        push @or, { 'phone'   => { like => "%$q%" } };
-        push @or, { 'waybill' => { like => "%$q%" } };
+        push @or, { phone   => { like => "%$q%" } };
+        push @or, { waybill => { like => "%$q%" } };
+        push @or, { email   => { like => "%$q%" } };
     }
     elsif ( $q =~ /^[a-zA-Z0-9_\-]+/ ) {
         if ( $q =~ /\@/ ) {
