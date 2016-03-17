@@ -23,6 +23,9 @@
     <i class="fa fa-external-link"></i>
     사용자정보
   </a>
+  <a class="btn btn-default btn-sm" href="<%= url_for('clothes') %>">
+    기부현황
+  </a>
   <p class="text-muted">
     <small>
       <%= $user->donations->count %> 건의 기부와
@@ -84,9 +87,8 @@
 <button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
 <button id="btn-sms" class="btn btn-default btn-sm" type="button">SMS</button>
 % if ($status eq $OpenCloset::Donation::Status::RETURNED) {
-<a class="btn btn-info btn-sm" href="<%= config->{opencloset}{newclothes} %>" target="_blank">
-  <i class="fa fa-external-link"></i>
-  새옷
+<a class="btn btn-info btn-sm" href="<%= url_for('clothes.new') %>">
+  새옷등록
 </a>
 % }
 
