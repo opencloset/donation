@@ -29,6 +29,7 @@ sub register {
     $app->helper( status2label  => \&status2label );
     $app->helper( update_status => \&update_status );
     $app->helper( emphasis      => \&emphasis );
+    $app->helper( clothes2link  => \&clothes2link );
 }
 
 =head1 HELPERS
@@ -179,6 +180,45 @@ sub emphasis {
 
     $text =~ s/$search/<em>$search<\/em>/g;
     return Mojo::ByteStream->new($text);
+}
+
+=head2 clothes2link($clothes, $external?)
+
+    %= clothes2link($clothes)
+    # <a href="https://staff.theopencloset.net/J001">
+    #  <%= $clothes->code %>
+    # </a>
+
+    %= clothes2link($clothes, 1)
+    # <a href="https://staff.theopencloset.net/J001" target="_blank">
+    #  <i class="fa fa-external-link"></i>
+    #  <%= $clothes->code %>
+    # </a>
+
+=cut
+
+sub clothes2link {
+    my ( $self, $clothes, $external ) = @_;
+    return '' unless $clothes;
+
+    my $code = $clothes->code;
+    $code =~ s/^0//;
+    my $prefix = $self->config->{opencloset}{root} . '/clothes';
+    my $html   = Mojo::DOM::HTML->new;
+
+    if ($external) {
+        $html->parse(
+            qq{<a href="$prefix/$code" target="_blank">
+  <span class="label label-primary"><i class="fa fa-external-link"></i> $code</label>
+</a>}
+        );
+    }
+    else {
+        $html->parse(qq{<a href="$prefix/$code"><span class="label label-primary">$code</label></a>});
+    }
+
+    my $tree = $html->tree;
+    return Mojo::ByteStream->new( Mojo::DOM::HTML::_render($tree) );
 }
 
 1;
