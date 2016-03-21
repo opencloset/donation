@@ -10,6 +10,8 @@ has schema => sub { shift->app->schema };
 =head2 auth
 
     under /forms
+    under /sms
+    under /user
 
 =cut
 
