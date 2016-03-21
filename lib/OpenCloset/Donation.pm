@@ -71,8 +71,9 @@ sub _public_routes {
 }
 
 sub _private_routes {
-    my $self  = shift;
-    my $r     = $self->routes;
+    my $self = shift;
+    my $r    = $self->routes;
+
     my $forms = $r->under('/forms')->to('user#auth')->name('auth');
     my $sms   = $r->under('/sms')->to('user#auth');
     my $user  = $r->under('/user')->to('user#auth');
@@ -84,15 +85,12 @@ sub _private_routes {
     $form->get('/')->to('form#form')->name('form');
     $form->any( [ 'POST', 'PUT' ] => '/' )->to('form#update_form')->name('form.update');
 
-    my $clothes = $form->under('/clothes')->to('clothes#prefetch_clothes');
-
-    $clothes->get('/')->to('clothes#index')->name('clothes');
-    $clothes->get('/new')->to('clothes#add')->name('clothes.new');
-    $clothes->post('/')->to('clothes#create');
-
     $sms->post('/')->to('API#create_sms')->name('sms.create');
 
     $user->post('/')->to('API#create_user')->name('user.create');
+
+    $user = $user->under('/:id')->to('user#prefetch_user');
+    $user->get('/donations')->to('user#donations')->name('user.donations');
 }
 
 sub _extend_validator {

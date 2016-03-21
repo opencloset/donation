@@ -23,7 +23,7 @@
     <i class="fa fa-external-link"></i>
     사용자정보
   </a>
-  <a class="btn btn-default btn-sm" href="<%= url_for('clothes') %>">
+  <a class="btn btn-default btn-sm" href="<%= url_for('user.donations', id => $user->id) %>">
     기부현황
   </a>
   <p class="text-muted">

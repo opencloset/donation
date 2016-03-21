@@ -28,4 +28,47 @@ sub auth {
     return 1;
 }
 
+=head2 prefetch_user
+
+    under /users/:id
+
+=cut
+
+sub prefetch_user {
+    my $self = shift;
+    my $id   = $self->param('id');
+
+    my $user = $self->schema->resultset('User')->find( { id => $id } );
+    unless ($user) {
+        $self->error( 404, "User not found" );
+        return;
+    }
+
+    $self->stash( user => $user );
+    return 1;
+}
+
+=head2 donations
+
+    GET /users/:id/donations
+
+=cut
+
+sub donations {
+    my $self = shift;
+    my $user = $self->stash('user');
+
+    my %categories;
+    my $donations = $user->donations( undef, { order_by => { -desc => 'create_date' } } );
+    while ( my $donation = $donations->next ) {
+        my $clothes = $donation->clothes;
+        while ( my $row = $clothes->next ) {
+            my $category = $row->category;
+            $categories{$category}++;
+        }
+    }
+
+    $self->render( categories => \%categories, donations => $donations->reset );
+}
+
 1;

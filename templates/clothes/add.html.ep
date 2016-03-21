@@ -1,9 +1,0 @@
-% title '새옷등록';
-% layout 'default';
-
-<h2><%= $form->name %>님 새옷등록</h2>
-<p><strong>의류종류 및 수량</strong></p>
-<p>
-  % my @categories = split /\|/, $form->category;
-  %= join(', ', @categories)
-</p>
