@@ -55,8 +55,11 @@ sub prefetch_user {
 =cut
 
 sub donations {
-    my $self = shift;
-    my $user = $self->stash('user');
+    my $self      = shift;
+    my $user      = $self->stash('user');
+    my $user_info = $user->user_info;
+
+    my $forms = $self->schema->resultset('DonationForm')->search( { -or => [ { email => $user->email }, { phone => $user_info->phone } ] } );
 
     my %categories;
     my $donations = $user->donations( undef, { order_by => { -desc => 'create_date' } } );
@@ -68,7 +71,7 @@ sub donations {
         }
     }
 
-    $self->render( categories => \%categories, donations => $donations->reset );
+    $self->render( categories => \%categories, donations => $donations->reset, forms => $forms );
 }
 
 1;
