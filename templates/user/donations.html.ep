@@ -36,6 +36,11 @@
     % }
   </a>
   % }
+  % unless ($forms->count) {
+  <li class="list-group-item">
+    No items
+  </li>
+  % }
 </div>
 
 <hr>
@@ -79,6 +84,11 @@
         % }
       </div>
     </div>
+    % }
+    % unless ($donations->count) {
+    <li class="list-group-item">
+      No items
+    </li>
     % }
   </div>
 </div>
