@@ -7,13 +7,13 @@ has schema => sub { shift->app->schema };
 
 =head1 METHODS
 
-=head2 index
+=head2 prefetch_clothes
 
-    GET /forms/:id/clothes
+    under /forms/:id/clothes
 
 =cut
 
-sub index {
+sub prefetch_clothes {
     my $self = shift;
     my $form = $self->stash('form');
 
@@ -23,7 +23,25 @@ sub index {
         $user = $user_info->user if $user_info;
     }
 
-    return $self->error( 404, "User not found" ) unless $user;
+    unless ($user) {
+        $self->error( 404, "User not found" );
+        return;
+    }
+
+    $self->stash( user => $user );
+    return 1;
+}
+
+=head2 index
+
+    GET /forms/:id/clothes
+
+=cut
+
+sub index {
+    my $self = shift;
+    my $form = $self->stash('form');
+    my $user = $self->stash('user');
 
     my %categories;
     my $donations = $user->donations( undef, { order_by => { -desc => 'create_date' } } );
@@ -47,14 +65,7 @@ sub index {
 sub add {
     my $self = shift;
     my $form = $self->stash('form');
-
-    my $user = $self->schema->resultset('User')->find( { email => $form->email } );
-    unless ($user) {
-        my $user_info = $self->schema->resultset('UserInfo')->find( { phone => $form->phone } );
-        $user = $user_info->user if $user_info;
-    }
-
-    return $self->error( 404, "User not found" ) unless $user;
+    my $user = $self->stash('user');
 }
 
 =head2 create

@@ -77,15 +77,18 @@ sub _private_routes {
     my $sms   = $r->under('/sms')->to('user#auth');
     my $user  = $r->under('/user')->to('user#auth');
 
-    $forms = $forms->under('/')->to('form#prefetch');
+    $forms = $forms->under('/')->to('form#prefetch_status');
     $forms->get('/')->to('form#list')->name('forms');
 
     my $form = $forms->under('/:id')->to('form#prefetch_form');
     $form->get('/')->to('form#form')->name('form');
     $form->any( [ 'POST', 'PUT' ] => '/' )->to('form#update_form')->name('form.update');
-    $form->get('/clothes')->to('clothes#index')->name('clothes');
-    $form->get('/clothes/new')->to('clothes#add')->name('clothes.new');
-    $form->post('/clothes')->to('clothes#create');
+
+    my $clothes = $form->under('/clothes')->to('clothes#prefetch_clothes');
+
+    $clothes->get('/')->to('clothes#index')->name('clothes');
+    $clothes->get('/new')->to('clothes#add')->name('clothes.new');
+    $clothes->post('/')->to('clothes#create');
 
     $sms->post('/')->to('API#create_sms')->name('sms.create');
 
