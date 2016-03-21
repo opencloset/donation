@@ -13,10 +13,11 @@
     % }
     <link rel="stylesheet" href="/assets/dist/css/screen.min.css">
   </head>
-  <body>
+  <body class="private">
     <div class="container">
       <div id="content">
         %= include 'partials/header';
+        %= include 'partials/menu';
         %= include 'partials/status-menu';
         <hr>
         %= content

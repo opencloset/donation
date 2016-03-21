@@ -1,0 +1,5 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <a class="btn btn-default navbar-btn" href="<%= url_for('clothes.new') %>">새옷등록</a>
+  </div>
+</nav>
