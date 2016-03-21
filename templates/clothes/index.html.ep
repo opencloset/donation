@@ -34,7 +34,7 @@
       <div class="panel-heading"><%= $donation->create_date->ymd %></div>
       <div class="panel-body">
         <ul class="list-inline">
-          % my $clothes = $donation->clothes;
+          % my $clothes = $donation->clothes(undef, { order_by => 'category' });
           % while ( my $row = $clothes->next ) {
           <li>
             %= clothes2link($row, 1)
