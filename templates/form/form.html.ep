@@ -65,6 +65,8 @@
 % }
 
 % if ($form->waybill) {
+<p title="운송장">운송장 <samp><%= $form->waybill %></samp></p>
+
 <a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
   <i class="fa fa-external-link"></i>
   배송조회
