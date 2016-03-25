@@ -1,5 +1,7 @@
 % title "기증신청서 목록";
-% layout 'private';
+% layout 'private', jses => [
+%   '/assets/dist/js/forms.min.js'
+% ];
 % my $q = param('q');
 
 <h2>기증신청서 목록</h2>
@@ -39,10 +41,15 @@
       </td>
       <td>
         % if (my $waybill = $form->waybill) {
-        <a class="btn btn-link btn-xs" href="<%= parcel($form->parcel_service, $waybill) %>" target="_blank">
-          <i class="fa fa-external-link"></i>
-          %= emphasis($waybill, $q)
-        </a>
+        <div class="btn-group">
+          <a class="btn btn-link btn-xs" href="<%= parcel($form->parcel_service, $waybill) %>" target="_blank">
+            <i class="fa fa-external-link"></i>
+            %= emphasis($waybill, $q)
+          </a>
+          <button type="button" class="btn btn-default btn-xs btn-copy-to-clipboard">
+            <i class="fa fa-clipboard"></i>
+          </button>
+        </div>
         % }
       </td>
       <td><%= $form->create_date->ymd %></td>
