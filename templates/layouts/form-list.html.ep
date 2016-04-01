@@ -18,6 +18,7 @@
       <div id="content">
         %= include 'partials/header';
         %= include 'partials/menu';
+        %= include 'partials/status-menu';
         <hr>
         %= content
       </div>
