@@ -1,1 +1,3 @@
-<h1><a href="<%= url_for('home') %>">열린옷장</a></h1>
+<h1>
+  <a href="<%= url_for('home') %>">열린옷장</a>
+</h1>

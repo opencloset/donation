@@ -1,0 +1,39 @@
+% title $user->name . '님 새로운 기증';
+% layout 'private', jses => ['/assets/dist/js/add_donation.min.js'];
+
+<h3>
+  <%= $user->name %>님
+  <small>새로운 기증 등록</small>
+</h3>
+
+<a class="btn btn-default btn-sm" href="<%= url_for('user.donations') %>">기증현황</a>
+% if ($form) {
+<button class="btn btn-info btn-sm js-toggle-form-info">자세히</button>
+<div class="form-info hide">
+  <hr>
+  <p>
+    <a href="<%= url_for('form', id => $form->id) %>">
+      신청서
+    </a>
+  </p>
+  <p>
+    %= status2label($form->status)
+  </p>
+  % if (my $comment = $form->comment) {
+  <p class="text-muted">
+    %= $comment
+  </p>
+  % }
+  %= include 'partials/form', form => $form
+</div>
+% }
+<hr>
+
+<form method="POST" action="<%= url_for('user.donations.create') %>">
+  % if ($form) {
+  <input name="form_id" type="hidden" value="<%= $form->id %>">
+  % }
+  <textarea class="form-control" cols="30" name="message" rows="10" placeholder="기증 메세지"></textarea>
+  <p></p>
+  <button type="submit" class="btn btn-primary">등록</button>
+</form>

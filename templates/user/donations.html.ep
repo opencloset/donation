@@ -1,4 +1,4 @@
-% title '새옷등록';
+% title $user->name . '님 기증 현황';
 % layout 'private', jses => [
 %   '/assets/components/jquery-timeago/jquery.timeago.js',
 %   '/assets/components/jquery-timeago/locales/jquery.timeago.ko.js',
@@ -6,6 +6,11 @@
 % ];
 
 % my @categories = sort keys %{ $categories };
+
+
+<p class="pull-right">
+  <a href="<%= url_for('user.donations.add') %>" class="btn btn-success">새로운 기증 등록</a>
+</p>
 
 <h2>
   <%= $user->name %>님
@@ -19,6 +24,7 @@
   % while (my $form = $forms->next) {
   <a href="<%= url_for('form', id => $form->id) %>" class="list-group-item">
     <span class="pull-right">
+      % my $status = $form->status || '';
       % my $create_date = $form->create_date;
       <span title="신청일">
         <abbr class="timeago" title="<%= $create_date->ymd %>T<%= $create_date->hms %>Z">
@@ -70,7 +76,11 @@
     <h4>자세히</h4>
     % while (my $donation = $donations->next) {
     <div class="panel panel-default">
-      <div class="panel-heading"><%= $donation->create_date->ymd %></div>
+      <div class="panel-heading">
+        <a href="<%= url_for('user.donation', donation_id => $donation->id) %>">
+          <%= $donation->create_date->ymd %>
+        </a>
+      </div>
       <div class="panel-body">
         <ul class="list-inline">
           % my $clothes = $donation->clothes(undef, { order_by => 'category' });
@@ -78,6 +88,9 @@
           <li>
             %= clothes2link($row, 1)
           </li>
+          % }
+          % unless ($clothes->count) {
+          <a class="btn btn-success btn-sm" href="<%= url_for('user.donation', donation_id => $donation->id) %>">새옷등록</a>
           % }
         </ul>
 

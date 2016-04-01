@@ -8,6 +8,7 @@ requires 'Mojolicious';
 requires 'Mojolicious::Plugin::Config';
 requires 'Parcel::Track';
 requires 'Parcel::Track::KR::CJKorea';
+requires 'Try::Tiny';
 
 # cpan.theopencloset.net
 requires 'OpenCloset::Plugin::Helpers';

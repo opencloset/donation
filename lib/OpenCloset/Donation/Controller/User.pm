@@ -2,6 +2,7 @@ package OpenCloset::Donation::Controller::User;
 use Mojo::Base 'Mojolicious::Controller';
 
 use Mojo::URL;
+use Try::Tiny;
 
 has schema => sub { shift->app->schema };
 
@@ -90,9 +91,115 @@ sub donations {
     $self->render( categories => \%categories, donations => $donations->reset, forms => $forms );
 }
 
+=head2 add_donation
+
+    # user.donations.add
+    GET /users/:id/donations/new
+
+=cut
+
+sub add_donation {
+    my $self    = shift;
+    my $form_id = $self->param('form_id');
+
+    my $form;
+    if ($form_id) {
+        $form = $self->schema->resultset('DonationForm')->find($form_id);
+        return $self->error( 404, "Form not found: $form_id" ) unless $form;
+    }
+
+    $self->render( form => $form );
+}
+
+=head2 create_donation
+
+    # user.donations.create
+    POST /users/:id/donations
+
+=cut
+
+sub create_donation {
+    my $self = shift;
+    my $user = $self->stash('user');
+
+    my $v = $self->validation;
+    $v->optional('message');
+    $v->optional('form_id');
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $message = $v->param('message');
+    my $form_id = $v->param('form_id');
+
+    ## transaction
+    my $guard = $self->schema->txn_scope_guard;
+    my $donation;
+    try {
+        $donation = $self->schema->resultset('Donation')->create(
+            {
+                user_id => $user->id,
+                message => $message,
+            }
+        );
+
+        die "Failed to create a new donation" unless $donation;
+
+        if ($form_id) {
+            my $form = $self->schema->resultset('DonationForm')->find($form_id);
+            die "Form not found: $form_id" unless $form;
+
+            $form->update( { donation_id => $donation->id } );
+        }
+
+        $guard->commit;
+    }
+    catch {
+        my $err = $_;
+        $self->log->error("Transaction error: user.donations.create");
+        $self->log->error($err);
+
+        return $self->error( 500, $err );
+    };
+
+    $self->redirect_to( 'user.donation', donation_id => $donation->id );
+}
+
+=head2 prefetch_donation
+
+    under /users/:id/donations/:donation_id
+
+=cut
+
+sub prefetch_donation {
+    my $self = shift;
+    my $id   = $self->param('donation_id');
+
+    my $donation = $self->schema->resultset('Donation')->find( { id => $id } );
+    unless ($donation) {
+        $self->error( 404, "Donation not found: $id" );
+        return;
+    }
+
+    $self->stash( donation => $donation );
+    return 1;
+}
+
+=head2 donation
+
+    # user.donation
+    GET /users/:id/donations/:donation_id
+
+=cut
+
+sub donation { }
+
 =head2 _search_cond
 
     my $cond = $self->_search_cond($q);
+    my $rs   = $self->schema->resultset('User')->search( $cond, $attr );
 
 =cut
 
