@@ -90,7 +90,7 @@
           </li>
           % }
           % unless ($clothes->count) {
-          <a class="btn btn-success btn-sm" href="<%= url_for('user.donation', donation_id => $donation->id) %>">새옷등록</a>
+          <a class="btn btn-success btn-sm" href="<%= url_for('clothes.add', donation_id => $donation->id) %>">새옷등록</a>
           % }
         </ul>
 

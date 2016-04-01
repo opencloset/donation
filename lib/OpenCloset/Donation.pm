@@ -97,6 +97,8 @@ sub _private_routes {
 
     my $donation = $user->under('/donations/:donation_id')->to('user#prefetch_donation');
     $donation->get('/')->to('user#donation')->name('user.donation');
+    $donation->get('/clothes/new')->to('clothes#add')->name('clothes.add');
+    $donation->post('/clothes')->to('clothes#create')->name('clothes.create');
 }
 
 sub _extend_validator {
