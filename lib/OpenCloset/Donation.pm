@@ -76,7 +76,7 @@ sub _private_routes {
 
     my $forms = $r->under('/forms')->to('user#auth')->name('auth');
     my $sms   = $r->under('/sms')->to('user#auth');
-    my $user  = $r->under('/user')->to('user#auth');
+    my $users = $r->under('/users')->to('user#auth');
 
     $forms = $forms->under('/')->to('form#prefetch_status');
     $forms->get('/')->to('form#list')->name('forms');
@@ -87,9 +87,9 @@ sub _private_routes {
 
     $sms->post('/')->to('API#create_sms')->name('sms.create');
 
-    $user->post('/')->to('API#create_user')->name('user.create');
+    $users->post('/')->to('API#create_user')->name('user.create');
 
-    $user = $user->under('/:id')->to('user#prefetch_user');
+    my $user = $users->under('/:id')->to('user#prefetch_user');
     $user->get('/donations')->to('user#donations')->name('user.donations');
 }
 

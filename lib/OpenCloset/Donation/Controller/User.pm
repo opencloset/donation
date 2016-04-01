@@ -11,7 +11,7 @@ has schema => sub { shift->app->schema };
 
     under /forms
     under /sms
-    under /user
+    under /users
 
 =cut
 

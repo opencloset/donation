@@ -38,7 +38,7 @@ sub create_sms {
 =head2 create_user
 
     # user.create
-    POST /user
+    POST /users
 
 =cut
 
