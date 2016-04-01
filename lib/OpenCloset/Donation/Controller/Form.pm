@@ -71,7 +71,7 @@ sub prefetch_form {
 
     my $form = $self->schema->resultset('DonationForm')->find($id);
     unless ($form) {
-        $self->error( 404, "Form not found: $id" ) unless $form;
+        $self->error( 404, "Form not found: $id" );
         return;
     }
 
