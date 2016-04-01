@@ -26,13 +26,15 @@
         </abbr>
       </span>
     </span>
-    %= status2label($form->status)
+    <span class="col-md-1">
+      %= status2label($form->status)
+    </span>
     % my @categories = split /\|/, $form->category;
     %= join(', ', @categories)
     % if (my $comment = $form->comment) {
-    <i class="fa fa-comment" title="<%= $comment %>"></i>
-    % } else {
-    <i class="fa fa-comment-o"></i>
+    <small class="well-sm text-muted">
+      %= $comment
+    </small>
     % }
   </a>
   % }
@@ -80,6 +82,7 @@
         </ul>
 
         % if (my $message = $donation->message) {
+        <hr>
         <p><%= $message %></p>
         % }
       </div>
