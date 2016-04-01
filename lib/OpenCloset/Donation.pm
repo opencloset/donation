@@ -87,6 +87,7 @@ sub _private_routes {
 
     $sms->post('/')->to('API#create_sms')->name('sms.create');
 
+    $users->get('/')->to('user#list')->name('users');
     $users->post('/')->to('API#create_user')->name('user.create');
 
     my $user = $users->under('/:id')->to('user#prefetch_user');

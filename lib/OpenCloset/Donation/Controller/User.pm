@@ -28,6 +28,22 @@ sub auth {
     return 1;
 }
 
+=head2 list
+
+    GET /users?q=:query
+
+=cut
+
+sub list {
+    my $self = shift;
+    my $q    = $self->param('q');
+
+    my $cond = $self->_search_cond($q);
+    my $rs = $self->schema->resultset('User')->search( $cond, { join => 'user_info', rows => 10 } );
+
+    $self->render( users => $rs );
+}
+
 =head2 prefetch_user
 
     under /users/:id
@@ -72,6 +88,40 @@ sub donations {
     }
 
     $self->render( categories => \%categories, donations => $donations->reset, forms => $forms );
+}
+
+=head2 _search_cond
+
+    my $cond = $self->_search_cond($q);
+
+=cut
+
+sub _search_cond {
+    my $self = shift;
+    my $q = $self->param('q') || '';
+
+    return unless $q;
+    return unless length $q > 1;
+
+    my @or;
+    if ( $q =~ /^[0-9\-]+$/ ) {
+        $q =~ s/-//g;
+        push @or, { 'user_info.phone' => { like => "%$q%" } };
+    }
+    elsif ( $q =~ /^[a-zA-Z0-9_\-]+/ ) {
+        if ( $q =~ /\@/ ) {
+            push @or, { email => { like => "%$q%" } };
+        }
+        else {
+            push @or, { email => { like => "%$q%" } };
+            push @or, { name  => { like => "%$q%" } };
+        }
+    }
+    elsif ( $q =~ m/^[ㄱ-힣]+$/ ) {
+        push @or, { name => { like => "$q%" } };
+    }
+
+    return { -or => [@or] };
 }
 
 1;
