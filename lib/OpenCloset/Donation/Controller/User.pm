@@ -164,7 +164,7 @@ sub create_donation {
         return $self->error( 500, $err );
     };
 
-    $self->redirect_to( 'user.donation', donation_id => $donation->id );
+    $self->redirect_to( 'clothes.add', donation_id => $donation->id );
 }
 
 =head2 prefetch_donation
@@ -186,15 +186,6 @@ sub prefetch_donation {
     $self->stash( donation => $donation );
     return 1;
 }
-
-=head2 donation
-
-    # user.donation
-    GET /users/:id/donations/:donation_id
-
-=cut
-
-sub donation { }
 
 =head2 _search_cond
 

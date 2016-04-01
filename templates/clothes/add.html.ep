@@ -1,4 +1,43 @@
 % title '새옷등록';
 % layout 'private';
 
-<h2>새옷등록</h2>
+<h3><%= $user->name %>님</h3>
+
+<div class="row">
+  <div class="col-md-8">
+    <p>
+      % if ($form) {
+        % my @categories = split /\|/, $form->category;
+        <a href="<%= url_for('form', id => $form->id) %>">
+          <i class="fa fa-file-text-o fa-fw"></i>
+          %= join(', ', @categories)
+        </a>
+      % } else {
+      기증신청서 없이 등록된 의류입니다.
+      % }
+    </p>
+    <hr>
+  </div>
+
+  <div class="col-md-4">
+    <p>
+      <ul class="list-inline">
+        % my $clothes = $donation->clothes(undef, { order_by => 'category' });
+        % while ( my $row = $clothes->next ) {
+        <li>
+          %= clothes2link($row, 1)
+        </li>
+        % }
+        % unless ($clothes->count) {
+        <li>등록된 의류가 없습니다</li>
+        % }
+      </ul>
+
+      % if (my $message = $donation->message) {
+      <hr>
+      <p class="text-muted"><%= $message %></p>
+      % }
+    </p>
+  </div>
+</div>
+

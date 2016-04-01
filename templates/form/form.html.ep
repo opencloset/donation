@@ -87,9 +87,16 @@
 <button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
 <button id="btn-sms" class="btn btn-default btn-sm" type="button">SMS</button>
 % if ($status eq $OpenCloset::Donation::Status::RETURNED && $user) {
-<a class="btn btn-info btn-sm" href="<%= url_for('user.donations.add', id => $user->id)->query(form_id => $form->id) %>">
-  새옷으로 등록
-</a>
+  % if (my $donation = $form->donation) {
+  <a class="btn btn-info btn-sm" href="<%= url_for('clothes.add', id => $user->id, donation_id => $donation->id) %>">
+    새옷등록
+  </a>
+  몇벌이 등록되었는지 종류별로 보여준다면 좋겠다
+  % } else {
+  <a class="btn btn-info btn-sm" href="<%= url_for('user.donations.add', id => $user->id)->query(form_id => $form->id) %>">
+    새로운 기증으로 등록
+  </a>
+  % }
 % }
 
 <p class="help-block">

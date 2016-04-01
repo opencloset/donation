@@ -96,7 +96,6 @@ sub _private_routes {
     $user->post('/donations')->to('user#create_donation')->name('user.donations.create');
 
     my $donation = $user->under('/donations/:donation_id')->to('user#prefetch_donation');
-    $donation->get('/')->to('user#donation')->name('user.donation');
     $donation->get('/clothes/new')->to('clothes#add')->name('clothes.add');
     $donation->post('/clothes')->to('clothes#create')->name('clothes.create');
 }

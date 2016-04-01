@@ -12,7 +12,14 @@ has schema => sub { shift->app->schema };
 
 =cut
 
-sub add { }
+sub add {
+    my $self     = shift;
+    my $user     = $self->stash('user');
+    my $donation = $self->stash('donation');
+
+    my $form = $donation->donation_forms->next;
+    $self->render( form => $form );
+}
 
 =head2 create
 
