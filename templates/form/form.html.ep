@@ -86,9 +86,9 @@
 % }
 <button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
 <button id="btn-sms" class="btn btn-default btn-sm" type="button">SMS</button>
-% if ($status eq $OpenCloset::Donation::Status::RETURNED) {
-<a class="btn btn-info btn-sm" href="<%= url_for('clothes.new') %>">
-  새옷등록
+% if ($status eq $OpenCloset::Donation::Status::RETURNED && $user) {
+<a class="btn btn-info btn-sm" href="<%= url_for('user.donations.add', id => $user->id)->query(form_id => $form->id) %>">
+  새옷으로 등록
 </a>
 % }
 
@@ -156,48 +156,4 @@
   <p><%= $form->address2 %> <%= $form->address3 %></p>
 </div>
 <hr>
-<ul>
-  <li>
-    <p><strong>예전에 열린옷장에 기증하신 적이 있나요?</strong></p>
-    <p><%= $form->ever_donate ? '예' : '아니오' %></p>
-  </li>
-  <li>
-    <p><strong>예전에 열린옷장에 대여하신 적이 있나요?</strong></p>
-    <p><%= $form->ever_use ? '예' : '아니오' %></p>
-  </li>
-  <li>
-    <p><strong>의류종류 및 수량</strong></p>
-    <p>
-      % my @categories = split /\|/, $form->category;
-      %= join(', ', @categories)
-    </p>
-  </li>
-  <li>
-    <p><strong>기증하신 정장이 열린옷장에서 사용되기에 부적합한 경우 다음과 같이 쓰이는 것에 동의하십니까?</strong></p>
-    <p>
-    <p>
-      % if ($form->terms) {
-      동의합니다
-      % } else {
-      <em>동의하지 않습니다</em>
-      % }
-    </p>
-    </p>
-  </li>
-  <li>
-    <p><strong>재능나눔</strong></p>
-    <p>
-      % if ($form->talent_donation) {
-      <em>재능나눔까지 하고 싶습니다</em>
-      % } else {
-      의류기증만 하고 싶습니다
-      % }
-    </p>
-  </li>
-  % if ($form->talent_donation) {
-    <li>
-      <p><strong>재능나눔 의사가 있으시다면, 어떤 분야 혹은 어떤 회사에서 일하고 계신지 상세히 알려주세요</strong></p>
-      <p><em><%= $form->talent || '' %></em></p>
-    </li>
-  % }
-</ul>
+%= include 'partials/form', form => $form
