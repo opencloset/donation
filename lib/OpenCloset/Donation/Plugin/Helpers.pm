@@ -26,10 +26,11 @@ OpenCloset::Donation::Plugin::Helpers - opencloset donation mojo helper
 sub register {
     my ( $self, $app, $conf ) = @_;
 
-    $app->helper( status2label  => \&status2label );
-    $app->helper( update_status => \&update_status );
-    $app->helper( emphasis      => \&emphasis );
-    $app->helper( clothes2link  => \&clothes2link );
+    $app->helper( status2label     => \&status2label );
+    $app->helper( update_status    => \&update_status );
+    $app->helper( emphasis         => \&emphasis );
+    $app->helper( clothes2link     => \&clothes2link );
+    $app->helper( clothes_quantity => \&clothes_quantity );
 }
 
 =head1 HELPERS
@@ -219,6 +220,36 @@ sub clothes2link {
 
     my $tree = $html->tree;
     return Mojo::ByteStream->new( Mojo::DOM::HTML::_render($tree) );
+}
+
+=head2 clothes_quantity
+
+    my $hashref = $self->clothes_quantity($donation);
+
+    $hashref->{jacket};    # 4
+    $hashref->{pants};     # 2
+    $hashref->{tie};       # 1
+
+
+=cut
+
+sub clothes_quantity {
+    my ( $self, $donation ) = @_;
+    return unless $donation;
+
+    ## SELECT category, COUNT(category) FROM clothes WHERE donation_id = 2588 GROUP BY category;
+    my $rs = $donation->clothes( undef, { group_by => 'category', select => [ 'category', { count => 'category', -as => 'quantity' } ] } );
+
+    return unless $rs->count;
+
+    my $hashref = {};
+    while ( my $row = $rs->next ) {
+        my $category = $row->category;
+        my $quantity = $row->get_column('quantity');
+        $hashref->{$category} = $quantity;
+    }
+
+    return $hashref;
 }
 
 1;

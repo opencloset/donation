@@ -3,6 +3,7 @@ v0.0.12    Fri, 25 Mar 2016 18:24:16 +0900
   - 목록에서 운송장번호를 clipboard 에 복사하는 버튼 추가 (#11)
   - Add helper clothes2link
   - 사용자 검색
+  - Add helper clothes_quantity
 
 v0.0.11    Sat, 12 Mar 2016 14:41:58 +0900
   - 기증안내 이미지 추가 (#9)
