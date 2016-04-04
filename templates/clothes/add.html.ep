@@ -21,23 +21,31 @@
 
   <div class="col-md-4">
     <p>
-      <ul class="list-inline">
-        % my $clothes = $donation->clothes(undef, { order_by => 'category' });
-        % while ( my $row = $clothes->next ) {
-        <li>
-          %= clothes2link($row, 1)
-        </li>
-        % }
-        % unless ($clothes->count) {
-        <li>등록된 의류가 없습니다</li>
-        % }
-      </ul>
-
-      % if (my $message = $donation->message) {
-      <hr>
-      <p class="text-muted"><%= $message %></p>
-      % }
+      <i class="fa fa-black-tie fa-fw"></i>
+      등록된 의류
     </p>
+    <ul class="list-inline">
+      % my $clothes = $donation->clothes(undef, { order_by => 'category' });
+      % while ( my $row = $clothes->next ) {
+      <li>
+        %= clothes2link($row, 1)
+      </li>
+      % }
+      % unless ($clothes->count) {
+      <li>의류가 등록되지 않았습니다</li>
+      % }
+    </ul>
+
+    % if (my $message = $donation->message) {
+    <hr>
+    <p>
+      <i class="fa fa-envelope fa-fw"></i>
+      기증 메세지
+    </p>
+    <p class="text-muted">
+      <%= $message %>
+    </p>
+    % }
   </div>
 </div>
 

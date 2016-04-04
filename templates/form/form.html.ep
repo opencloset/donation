@@ -88,10 +88,27 @@
 <button id="btn-sms" class="btn btn-default btn-sm" type="button">SMS</button>
 % if ($status eq $OpenCloset::Donation::Status::RETURNED && $user) {
   % if (my $donation = $form->donation) {
-  <a class="btn btn-info btn-sm" href="<%= url_for('clothes.add', id => $user->id, donation_id => $donation->id) %>">
-    새옷등록
-  </a>
-  몇벌이 등록되었는지 종류별로 보여준다면 좋겠다
+    <a class="btn btn-info btn-sm" href="<%= url_for('clothes.add', id => $user->id, donation_id => $donation->id) %>">
+      새옷등록
+    </a>
+    <hr>
+    % if (my $quantities = clothes_quantity($donation)) {
+    <h4>등록된 의류정보</h4>
+    <ul class="list-group">
+      % for my $category (sort keys %$quantities) {
+      <li class="list-group-item">
+        <span class="badge">
+          %= $quantities->{$category}
+        </span>
+        <span class="label label-primary">
+          %= $category
+        </span>
+      </li>
+      % }
+    </ul>
+    % } else {
+    <p>아직 의류가 등록되지 않았습니다</p>
+    % }
   % } else {
   <a class="btn btn-info btn-sm" href="<%= url_for('user.donations.add', id => $user->id)->query(form_id => $form->id) %>">
     새로운 기증으로 등록
@@ -100,7 +117,10 @@
 % }
 
 <p class="help-block">
-  %= $form->comment || ''
+  % if (my $comment = $form->comment) {
+  <i class="fa fa-comment fa-fw"></i>
+  %= $comment
+  % }
 </p>
 
 <form id="form-parcel" class="form-inline hide" action="<%= url_for('form.update', id => $form->id) %>" method="POST">
