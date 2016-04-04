@@ -1,7 +1,18 @@
 % title '새옷등록';
-% layout 'private';
+% layout 'private', jses => ['/assets/dist/js/clothes-add.min.js'];
+% use OpenCloset::Donation::Category;
 
 <h3><%= $user->name %>님</h3>
+
+<p>의류등록방법</p>
+<ol>
+  <li>종류를 선택합니다.</li>
+  <li>의류코드를 입력합니다.</li>
+  <li>색상을 선택합니다.</li>
+  <li>사이즈를 입력합니다</li>
+  <li>추가 또는 재활용 버튼을 누릅니다.</li>
+  <li>1 ~ 5 반복</li>
+</ol>
 
 <div class="row">
   <div class="col-md-8">
@@ -17,6 +28,145 @@
       % }
     </p>
     <hr>
+    <p>
+      <i class="fa fa-barcode fa-fw"></i>
+      의류의 종류
+    </p>
+    <ul class="list-inline">
+      % while (my $row = $categories->next) {
+      <li>
+        % my $category = $row->category;
+        <button class="btn btn-default btn-sm js-category" data-category="<%= $category %>">
+          %= $OpenCloset::Donation::Category::LABEL_MAP{$category}
+        </button>
+      </li>
+      % }
+    </ul>
+
+    <hr>
+
+    <form id="form-clothes" action="<%= url_for('clothes.create') %>" method="POST">
+      <fieldset>
+        <div class="form-group">
+          <ul class="list-inline">
+            <li>
+              <span class="label label-default label-category label-category-black" data-color="black">블랙</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-blue" data-color="blue">블루</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-brown" data-color="brown">브라운</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-charcoalgray" data-color="charcoalgray">차콜그레이</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-gray" data-color="gray">그레이</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-green" data-color="green">그린</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-navy" data-color="navy">네이비</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-orange" data-color="orange">오렌지</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-pink" data-color="pink">핑크</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-purple" data-color="purple">퍼플</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-red" data-color="red">레드</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-white" data-color="white">화이트</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-yellow" data-color="yellow">옐로우</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-etc" data-color="etc">기타</span>
+            </li>
+          </ul>
+          <input id="color" name="color" type="hidden">
+        </div>
+        <div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="gender" value="male">
+              <i class="fa fa-male fa-fw"></i>
+              남성용
+            </label>
+          </div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="gender" value="female">
+              <i class="fa fa-female fa-fw"></i>
+              여성용
+            </label>
+          </div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="gender" value="">
+              <i class="fa fa-question fa-fw"></i>
+              남녀공용
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <input id="code" class="form-control" name="code" type="text" placeholder="의류코드">
+        </div>
+      </fieldset>
+      
+      <fieldset id="category-toggle">
+        <div class="form-group">
+          <input id="gender" class="form-control" name="gender" type="text" placeholder="성별">
+        </div>
+        <div class="form-group">
+          <input id="neck" class="form-control" name="neck" type="text" placeholder="목둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="bust" class="form-control" name="bust" type="text" placeholder="가슴둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="waist" class="form-control" name="waist" type="text" placeholder="허리둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="hip" class="form-control" name="hip" type="text" placeholder="엉덩이둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="topbelly" class="form-control" name="topbelly" type="text" placeholder="윗배둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="belly" class="form-control" name="belly" type="text" placeholder="배둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="arm" class="form-control" name="arm" type="text" placeholder="팔길이 cm">
+        </div>
+        <div class="form-group">
+          <input id="thigh" class="form-control" name="thigh" type="text" placeholder="허벅지둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="length" class="form-control" name="length" type="text" placeholder="길이 cm">
+        </div>
+        <div class="form-group">
+          <input id="foot" class="form-control" name="foot" type="text" placeholder="발크기 mm">
+        </div>
+      </fieldset>
+
+      <div class="pull-right">
+        <button type="reset" class="btn btn-default">취소</button>
+        <button type="submit" class="btn btn-danger">재활용/폐기</button>
+        <button type="submit" class="btn btn-success">추가</button>
+      </div>
+      <p class="help-block">
+        <strong>재활용/폐기</strong> 되는 의류는 의류코드를 입력할 필요가 없으며, 옷캔이나 비백으로 재기부됩니다
+      </p>
+    </form>
   </div>
 
   <div class="col-md-4">
@@ -48,4 +198,3 @@
     % }
   </div>
 </div>
-

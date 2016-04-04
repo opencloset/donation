@@ -18,7 +18,8 @@ sub add {
     my $donation = $self->stash('donation');
 
     my $form = $donation->donation_forms->next;
-    $self->render( form => $form );
+    my $categories = $self->schema->resultset('Clothes')->search( undef, { group_by => 'category', select => ['category'] } );
+    $self->render( form => $form, categories => $categories );
 }
 
 =head2 create
