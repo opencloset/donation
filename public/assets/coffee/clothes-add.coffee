@@ -7,6 +7,7 @@ $ ->
     $('#form-clothes button').show()
     $(@).addClass('active')
     category = $(@).data('category')
+    $('#category').val(category)
     types = switch category
       when 'jacket'    then [ 'bust', 'arm', 'topbelly', 'belly'         ]
       when 'pants'     then [ 'waist', 'hip', 'thigh', 'length'          ]
@@ -19,11 +20,15 @@ $ ->
       when 'belt'      then [ 'length'                                   ]
       when 'shoes'     then [ 'foot'                                     ]
       else []
-    for type in types
-      $("##{type}").show()
+    $("##{type}").show() for type in types
 
   $('.label-category').click ->
     color = $(@).data('color')
     $('.label-category').removeClass('active')
     $(@).addClass('active')
     $("#color").val(color)
+
+  $('#btn-discard').click (e) ->
+    e.preventDefault()
+    $('#discard').val('1')
+    $(@).closest('form').submit()
