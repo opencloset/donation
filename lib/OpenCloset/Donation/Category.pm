@@ -47,4 +47,18 @@ our %LABEL_MAP = (
     $WAISTCOAT => $LABEL_WAISTCOAT
 );
 
+our %PRICE = (
+    $BELT      => 2000,
+    $BLOUSE    => 5000,
+    $COAT      => 10000,
+    $JACKET    => 10000,
+    $ONEPIECE  => 10000,
+    $PANTS     => 10000,
+    $SHIRT     => 5000,
+    $SHOES     => 5000,
+    $SKIRT     => 10000,
+    $TIE       => 0,
+    $WAISTCOAT => 5000
+);
+
 1;
