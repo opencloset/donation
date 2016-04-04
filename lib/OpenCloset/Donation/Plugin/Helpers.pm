@@ -4,6 +4,7 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 use Mojo::ByteStream;
 use Mojo::DOM::HTML;
+use Math::Fleximal;
 
 use OpenCloset::Donation::Status;
 
@@ -26,11 +27,12 @@ OpenCloset::Donation::Plugin::Helpers - opencloset donation mojo helper
 sub register {
     my ( $self, $app, $conf ) = @_;
 
-    $app->helper( status2label     => \&status2label );
-    $app->helper( update_status    => \&update_status );
-    $app->helper( emphasis         => \&emphasis );
-    $app->helper( clothes2link     => \&clothes2link );
-    $app->helper( clothes_quantity => \&clothes_quantity );
+    $app->helper( status2label          => \&status2label );
+    $app->helper( update_status         => \&update_status );
+    $app->helper( emphasis              => \&emphasis );
+    $app->helper( clothes2link          => \&clothes2link );
+    $app->helper( clothes_quantity      => \&clothes_quantity );
+    $app->helper( generate_discard_code => \&generate_discard_code );
 }
 
 =head1 HELPERS
@@ -250,6 +252,32 @@ sub clothes_quantity {
     }
 
     return $hashref;
+}
+
+=head2 generate_discard_code
+
+    my $code = generate_discard_code('jacket');    # JA17
+
+=cut
+
+sub generate_discard_code {
+    my ( $self, $category ) = @_;
+    return unless $category;
+
+    my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
+    return unless $clothes_code;
+
+    my $code = $clothes_code->code;
+
+    $code =~ s/^0//;
+    my $category_prefix = substr $code, 0, 1;
+    my $rest = substr $code, 1;
+
+    my @digits = ( 0 .. 9, 'A' .. 'Z' );
+    my $number = Math::Fleximal->new( $rest, \@digits );
+    my $last = Math::Fleximal->new(0)->change_flex( \@digits )->add($number)->add( $number->one )->to_str;
+
+    return sprintf( '%s%03s', $category_prefix, $last );
 }
 
 1;
