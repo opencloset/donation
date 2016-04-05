@@ -23,7 +23,15 @@ sub add {
 
     my $form = $donation->donation_forms->next;
     my $categories = $self->schema->resultset('Clothes')->search( undef, { group_by => 'category', select => ['category'] } );
-    $self->render( form => $form, categories => $categories );
+
+    my $clothes1 = $donation->clothes( { status_id => { 'NOT IN' => [ 45, 46, 47 ] } }, { order_by => 'category' } );
+    my $clothes2 = $donation->clothes( { status_id => 45 },                             { order_by => 'category' } );
+    my $clothes3 = $donation->clothes( { status_id => 46 },                             { order_by => 'category' } );
+    my $clothes4 = $donation->clothes( { status_id => 47 },                             { order_by => 'category' } );
+    $self->render(
+        form     => $form, categories => $categories, clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3,
+        clothes4 => $clothes4
+    );
 }
 
 =head2 create

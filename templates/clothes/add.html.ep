@@ -181,20 +181,76 @@
       <i class="fa fa-black-tie fa-fw"></i>
       등록된 의류
     </p>
+
+    % if ($clothes1->count) {
     <ul class="list-inline">
-      % my $clothes = $donation->clothes(undef, { order_by => 'category' });
-      % while ( my $row = $clothes->next ) {
+      <li>
+        <span class="label label-success">
+          사용가능
+        </span>
+      </li>
+      % while ( my $row = $clothes1->next ) {
       <li>
         %= clothes2link($row, 1)
       </li>
       % }
-      % unless ($clothes->count) {
-      <li>의류가 등록되지 않았습니다</li>
+    </ul>
+
+    <hr>
+    % }
+
+    % if ($clothes2->count) {
+    <ul class="list-inline">
+      <li>
+        <span class="label label-warning">
+          옷캔
+        </span>
+      </li>
+      % while ( my $row = $clothes2->next ) {
+      <li>
+        %= clothes2link($row, 1)
+      </li>
       % }
     </ul>
 
-    % if (my $message = $donation->message) {
     <hr>
+    % }
+
+    % if ($clothes3->count) {
+    <ul class="list-inline">
+      <li>
+        <span class="label label-warning">
+          비백
+        </span>
+      </li>
+      % while ( my $row = $clothes3->next ) {
+      <li>
+        %= clothes2link($row, 1)
+      </li>
+      % }
+    </ul>
+
+    <hr>
+    % }
+
+    % if ($clothes4->count) {
+    <ul class="list-inline">
+      <li>
+        <span class="label label-danger">
+          사용못함
+        </span>
+      </li>
+      % while ( my $row = $clothes4->next ) {
+      <li>
+        %= clothes2link($row, 1)
+      </li>
+      % }
+    </ul>
+
+    <hr>
+    % }
+
+    % if (my $message = $donation->message) {
     <p>
       <i class="fa fa-envelope fa-fw"></i>
       기증 메세지
