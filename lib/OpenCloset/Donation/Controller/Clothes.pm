@@ -100,7 +100,11 @@ sub create {
     my $comment = $v->param('comment');
 
     $code = $self->generate_discard_code($category) if $discard;
+    $code = sprintf( '%05s', $code );
     return $self->error( 500, "Failed to generate discard clothes code($category)" ) unless $code;
+
+    my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
+    return $self->error( 400, "Duplicate clothes code: $code" ) if $clothes;
 
     my $price = $OpenCloset::Donation::Category::PRICE{$category};
 
@@ -122,7 +126,7 @@ sub create {
                 donation_id => $donation->id,
                 status_id   => $status_id,
                 group_id    => $group_id,
-                code        => sprintf( '%05s', $code ),
+                code        => $code,
                 neck        => $neck,
                 bust        => $bust,
                 waist       => $waist,
