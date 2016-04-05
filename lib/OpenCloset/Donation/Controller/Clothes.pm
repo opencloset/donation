@@ -47,19 +47,18 @@ sub create {
     my $v = $self->validation;
     $v->required('discard');
 
-    my $discard   = $v->param('discard');
-    my $status_id = 1;                   # 대여가능
+    my $discard = $v->param('discard');
 
     if ($discard) {
         $v->optional('code');
         $v->optional('gender');
-        $status_id = 8;                  # 폐기
     }
     else {
         $v->required('code')->like(qr/^[A-Z0-9]{4,5}$/);
         $v->required('gender')->in(qw/male female unisex/);
     }
 
+    $v->required('status-id');
     $v->required('category')->in(@categories);
     $v->optional('color');
 
@@ -82,10 +81,11 @@ sub create {
         return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
     }
 
-    my $category = $v->param('category');
-    my $code     = $v->param('code');
-    my $gender   = $v->param('gender');
-    my $color    = $v->param('color');
+    my $status_id = $v->param('status-id');
+    my $category  = $v->param('category');
+    my $code      = $v->param('code');
+    my $gender    = $v->param('gender');
+    my $color     = $v->param('color');
 
     my $neck     = $v->param('neck');
     my $bust     = $v->param('bust');
