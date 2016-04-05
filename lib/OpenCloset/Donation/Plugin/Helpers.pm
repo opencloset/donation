@@ -259,6 +259,8 @@ sub clothes_quantity {
 
     my $code = generate_code('jacket');    # JA17
 
+WARNING: 순서대로 바코드를 사용하고 있지 않기 때문에 이거 쓰면 안됨.
+
 =cut
 
 sub generate_code {

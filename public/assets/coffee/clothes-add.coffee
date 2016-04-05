@@ -23,12 +23,6 @@ $ ->
       when 'shoes'     then [ 'foot'                                     ]
       else []
     $("##{type}").show() for type in types
-    $.ajax "/clothes/code?category=#{category}",
-      type: 'GET'
-      success: (data, textStatus, jqXHR) ->
-        $('#code').prop('placeholder', data.code)
-      error: (jqXHR, textStatus, errorThrown) ->
-        console.log textStatus
 
   $('.label-category').click ->
     color = $(@).data('color')
