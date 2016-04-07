@@ -169,9 +169,15 @@
 
       <div class="pull-right">
         <button type="reset" class="btn btn-default">취소</button>
-        <button type="submit" class="btn btn-warning btn-discard" data-status-id="45">재활용(옷캔)</button>
-        <button type="submit" class="btn btn-warning btn-discard" data-status-id="46">재활용(비백)</button>
-        <button type="submit" class="btn btn-danger btn-discard" data-status-id="47">사용못함</button>
+        <button type="submit" class="btn btn-warning btn-discard" data-status-id="45">
+          <i class="fa fa-recycle fa-lg"></i>
+          옷캔
+        </button>
+        <button type="submit" class="btn btn-warning btn-discard" data-status-id="46">
+          <i class="fa fa-recycle fa-lg"></i>
+          비백
+        </button>
+        <button type="submit" class="btn btn-warning btn-discard" data-status-id="47">사용못함</button>
         <button type="submit" class="btn btn-success">추가</button>
       </div>
 
