@@ -199,6 +199,9 @@
         <p>
           <i class="fa fa-archive fa-fw"></i>
           <span class="text-success">사용가능</span>
+          <small class="text-muted">
+            %= clothes2text($clothes1)
+          </small>
         </p>
       </li>
       % while ( my $row = $clothes1->next ) {
@@ -217,6 +220,9 @@
         <p>
           <i class="fa fa-recycle fa-fw"></i>
           <span class="text-warning">옷캔</span>
+          <small class="text-muted">
+            %= clothes2text($clothes2)
+          </small>
         </p>
       </li>
       % while ( my $row = $clothes2->next ) {
@@ -235,6 +241,9 @@
         <p>
           <i class="fa fa-recycle fa-fw"></i>
           <span class="text-warning">비백</span>
+          <small class="text-muted">
+            %= clothes2text($clothes3)
+          </small>
         </p>
       </li>
       % while ( my $row = $clothes3->next ) {
@@ -253,6 +262,9 @@
         <p>
           <i class="fa fa-trash fa-fw"></i>
           <span class="text-danger">사용못함</span>
+          <small class="text-muted">
+            %= clothes2text($clothes4)
+          </small>
         </p>
       </li>
       % while ( my $row = $clothes4->next ) {
