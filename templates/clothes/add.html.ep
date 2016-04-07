@@ -34,7 +34,7 @@
     </p>
     <hr>
     <p>
-      <i class="fa fa-barcode fa-fw"></i>
+      <i class="fa fa-bars fa-fw"></i>
       의류의 종류
     </p>
     <ul class="list-inline">
@@ -188,10 +188,10 @@
   </div>
 
   <div class="col-md-4">
-    <p>
+    <h5>
       <i class="fa fa-black-tie fa-fw"></i>
       등록된 의류
-    </p>
+    </h5>
 
     % if ($clothes1->count) {
     <ul class="list-inline">
@@ -278,10 +278,10 @@
     % }
 
     % if (my $message = $donation->message) {
-    <p>
+    <h5>
       <i class="fa fa-envelope fa-fw"></i>
       기증 메세지
-    </p>
+    </h5>
     <p class="text-muted">
       <%= $message %>
     </p>
