@@ -1,7 +1,7 @@
 $ ->
   $('#category-toggle input').hide()
   $('#form-clothes button').hide()
-
+  $('[data-toggle="tooltip"]').tooltip { placement: 'right' }
 
   $('.js-category').click ->
     $('.js-category').removeClass('active')

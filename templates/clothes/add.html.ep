@@ -23,9 +23,9 @@
   <div class="col-md-8">
     <p>
       % if ($form) {
+        %= status2label($form->status)
         % my @categories = split /\|/, $form->category;
-        <a href="<%= url_for('form', id => $form->id) %>">
-          <i class="fa fa-file-text-o fa-fw"></i>
+        <a href="<%= url_for('form', id => $form->id) %>" data-toggle="tooltip" title="신청서로 이동" class="btn btn-link">
           %= join(', ', @categories)
         </a>
       % } else {
