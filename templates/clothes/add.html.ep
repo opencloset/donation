@@ -184,10 +184,11 @@
 
     % if ($clothes1->count) {
     <ul class="list-inline">
-      <li>
-        <span class="label label-success">
-          사용가능
-        </span>
+      <li class="list-item-block">
+        <p>
+          <i class="fa fa-archive fa-fw"></i>
+          <span class="text-success">사용가능</span>
+        </p>
       </li>
       % while ( my $row = $clothes1->next ) {
       <li>
@@ -201,10 +202,11 @@
 
     % if ($clothes2->count) {
     <ul class="list-inline">
-      <li>
-        <span class="label label-warning">
-          옷캔
-        </span>
+      <li class="list-item-block">
+        <p>
+          <i class="fa fa-recycle fa-fw"></i>
+          <span class="text-warning">옷캔</span>
+        </p>
       </li>
       % while ( my $row = $clothes2->next ) {
       <li>
@@ -218,10 +220,11 @@
 
     % if ($clothes3->count) {
     <ul class="list-inline">
-      <li>
-        <span class="label label-warning">
-          비백
-        </span>
+      <li class="list-item-block">
+        <p>
+          <i class="fa fa-recycle fa-fw"></i>
+          <span class="text-warning">비백</span>
+        </p>
       </li>
       % while ( my $row = $clothes3->next ) {
       <li>
@@ -235,10 +238,11 @@
 
     % if ($clothes4->count) {
     <ul class="list-inline">
-      <li>
-        <span class="label label-danger">
-          사용못함
-        </span>
+      <li class="list-item-block">
+        <p>
+          <i class="fa fa-trash fa-fw"></i>
+          <span class="text-danger">사용못함</span>
+        </p>
       </li>
       % while ( my $row = $clothes4->next ) {
       <li>
