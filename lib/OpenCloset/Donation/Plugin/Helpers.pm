@@ -6,6 +6,7 @@ use Mojo::ByteStream;
 use Mojo::DOM::HTML;
 use Math::Fleximal;
 
+use OpenCloset::Donation::Category;
 use OpenCloset::Donation::Status;
 
 =encoding utf8
@@ -31,6 +32,7 @@ sub register {
     $app->helper( update_status         => \&update_status );
     $app->helper( emphasis              => \&emphasis );
     $app->helper( clothes2link          => \&clothes2link );
+    $app->helper( clothes2text          => \&clothes2text );
     $app->helper( clothes_quantity      => \&clothes_quantity );
     $app->helper( generate_code         => \&generate_code );
     $app->helper( generate_discard_code => \&generate_discard_code );
@@ -223,6 +225,33 @@ sub clothes2link {
 
     my $tree = $html->tree;
     return Mojo::ByteStream->new( Mojo::DOM::HTML::_render($tree) );
+}
+
+=head2 clothes2text
+
+    my $str = $self->clothes2text($clothes);    # 자켓 2, 팬츠 2, 타이 1
+
+=cut
+
+sub clothes2text {
+    my ( $self, $clothes ) = @_;
+    return '' unless $clothes;
+
+    my $rs = $clothes->search( undef, { group_by => 'category', select => [ 'category', { count => 'category', -as => 'quantity' } ] } );
+
+    my %h;
+    while ( my $row = $rs->next ) {
+        my $category = $row->category;
+        my $quantity = $row->get_column('quantity');
+        $h{$category} = $quantity;
+    }
+
+    my @texts;
+    for my $c ( sort keys %h ) {
+        push @texts, sprintf( '%s %d', $OpenCloset::Donation::Category::LABEL_MAP{$c}, $h{$c} );
+    }
+
+    return join( ', ', @texts );
 }
 
 =head2 clothes_quantity

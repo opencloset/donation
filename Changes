@@ -5,6 +5,7 @@ v0.0.12    Fri, 25 Mar 2016 18:24:16 +0900
   - 사용자 검색
   - Add helper clothes_quantity
   - Add helper generate_discard_code
+  - Add helper clothes2text
 
 v0.0.11    Sat, 12 Mar 2016 14:41:58 +0900
   - 기증안내 이미지 추가 (#9)
