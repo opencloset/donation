@@ -35,3 +35,18 @@ $ ->
     $('#status-id').val($(@).data('status-id'))
     $('#discard').val('1')
     $(@).closest('form').submit()
+
+  $('#btn-sms-send').click ->
+    $form = $('#form-sms')
+    action = $form.attr('action')
+    method = $form.attr('method')
+    $.ajax action,
+      type: method
+      data: $form.serialize()
+      dataType: 'json'
+      success: (data, textStatus, jqXHR) ->
+        $.growl.notice({ title: 'Sent a SMS', message: "#{data.text}" })
+      error: (jqXHR, textStatus, errorThrown) ->
+        $.growl.error({ title: textStatus, message: "#{jqXHR.responseJSON.error}" })
+      complete: (jqXHR, textStatus) ->
+        $form.get(0).reset()
