@@ -2,7 +2,12 @@
 % layout 'private', jses => ['/assets/dist/js/clothes-add.min.js'];
 % use OpenCloset::Donation::Category;
 
-<h3><%= $user->name %>님</h3>
+<h3>
+  <%= $user->name %>님
+  <small>
+    <a href="<%= url_for('user.donations') %>">기증현황</a>
+  </small>
+</h3>
 
 <p>의류등록방법</p>
 <ol>
