@@ -80,11 +80,14 @@
         <div class="pull-right">
           <a class="btn btn-success btn-xs" href="<%= url_for('clothes.add', donation_id => $donation->id) %>">새옷등록</a>
         </div>
+        % my $clothes = $donation->clothes(undef, { order_by => 'category' });
         %= $donation->create_date->ymd
+        <small class="text-muted">
+          %= clothes2text($clothes)
+        </small>
       </div>
       <div class="panel-body">
         <ul class="list-inline">
-          % my $clothes = $donation->clothes(undef, { order_by => 'category' });
           % while ( my $row = $clothes->next ) {
           <li>
             %= clothes2link($row, 1)
