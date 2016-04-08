@@ -50,7 +50,7 @@
 </h3>
 
 % my $status = $form->status || '';
-<ul class="list-inline">
+<ul class="list-inline status-menu">
   % for my $s (@OpenCloset::Donation::Status::ALL) {
   <li>
     % if ($status eq $s) {
@@ -92,22 +92,15 @@
       새옷등록
     </a>
     <hr>
-    % if (my $quantities = clothes_quantity($donation)) {
     <h4>등록된 의류정보</h4>
-    <ul class="list-group">
-      % for my $category (sort keys %$quantities) {
-      <li class="list-group-item">
-        <span class="badge">
-          %= $quantities->{$category}
-        </span>
-        <span class="label label-primary">
-          %= $category
-        </span>
-      </li>
-      % }
-    </ul>
+    % my $clothes1 = $donation->clothes( { status_id => { 'NOT IN' => [ 45, 46, 47 ] } }, { order_by => 'category' } );
+    % my $clothes2 = $donation->clothes( { status_id => 45 },                             { order_by => 'category' } );
+    % my $clothes3 = $donation->clothes( { status_id => 46 },                             { order_by => 'category' } );
+    % my $clothes4 = $donation->clothes( { status_id => 47 },                             { order_by => 'category' } );
+    % if ($donation->clothes->count) {
+      %= include 'partials/clothes-by-status', clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3, clothes4 => $clothes4;
     % } else {
-    <p>아직 의류가 등록되지 않았습니다</p>
+      <p>등록된 의류가 없습니다</p>
     % }
   % } else {
   <a class="btn btn-info btn-sm" href="<%= url_for('user.donations.add', id => $user->id)->query(form_id => $form->id) %>">
