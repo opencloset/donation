@@ -86,7 +86,7 @@
 % }
 <button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
 <button id="btn-sms" class="btn btn-default btn-sm" type="button">SMS</button>
-% if ($status eq $OpenCloset::Donation::Status::RETURNED && $user) {
+% if ($user) {
   % if (my $donation = $form->donation) {
     <a class="btn btn-info btn-sm" href="<%= url_for('clothes.add', id => $user->id, donation_id => $donation->id) %>">
       새옷등록
