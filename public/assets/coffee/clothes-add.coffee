@@ -45,7 +45,22 @@ $ ->
       data: $form.serialize()
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
-        $.growl.notice({ title: 'Sent a SMS', message: "#{data.text}" })
+        $donationForm = $('#donation-form')
+        unless $donationForm
+          $.growl.notice({ title: 'Sent a SMS', message: "#{data.text}" })
+          return
+
+        id = $donationForm.data('form-id')
+        $.ajax "/forms/#{id}",
+          type: 'PUT'
+          dataType: 'json'
+          data: { status: 'registered' }
+          success: (data, textStatus, jqXHR) ->
+            location.reload()
+          error: (jqXHR, textStatus, errorThrown) ->
+            console.log textStatus
+          complete: (jqXHR, textStatus) ->
+
       error: (jqXHR, textStatus, errorThrown) ->
         $.growl.error({ title: textStatus, message: "#{jqXHR.responseJSON.error}" })
       complete: (jqXHR, textStatus) ->

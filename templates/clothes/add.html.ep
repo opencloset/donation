@@ -29,7 +29,7 @@
       % if ($form) {
         %= status2label($form->status)
         % my @categories = split /\|/, $form->category;
-        <a href="<%= url_for('form', id => $form->id) %>" data-toggle="tooltip" title="신청서로 이동" class="btn btn-link">
+        <a id="donation-form" href="<%= url_for('form', id => $form->id) %>" data-toggle="tooltip" title="신청서로 이동" class="btn btn-link" data-form-id="<%= $form->id %>">
           %= join(', ', @categories)
         </a>
       % } else {
