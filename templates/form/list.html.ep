@@ -1,5 +1,5 @@
 % title "기증신청서 목록";
-% layout 'private', jses => [
+% layout 'form-list', jses => [
 %   '/assets/dist/js/forms.min.js'
 % ];
 % my $q = param('q');

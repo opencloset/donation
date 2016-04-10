@@ -1,0 +1,32 @@
+% title '사용자 검색';
+% layout 'private';
+% my $q = param('q') || '';
+
+<h4>사용자 검색</h4>
+
+<form class="form-inline" method="GET" action="<%= url_for('users') %>">
+  <div class="form-group">
+    <input name="q" type="text" class="form-control" placeholder="email, phone, 이름" value="<%= $q %>">
+  </div>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<hr>
+
+% if ($q) {
+<div class="list-group">
+  % while (my $user = $users->next) {
+    % my $user_info = $user->user_info;
+    % my $gender    = $user_info->gender || 'question';
+    <a href="<%= url_for('user.donations', id => $user->id) %>" class="list-group-item">
+      <i class="fa fa-<%= $gender %>"></i>
+      |
+      %= emphasis($user->email, $q)
+      |
+      %= emphasis($user->name, $q)
+      |
+      %= emphasis($user_info->phone, $q)
+    </a>
+  % }
+</div>
+% }

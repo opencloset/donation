@@ -13,11 +13,10 @@
             AutoCommit        => 1,
         },
     },
-    secrets       => [ $ENV{OPENCLOSET_SECRET} ],                                   # must set secret of staff.theopencloset.net
+    secrets       => [ $ENV{OPENCLOSET_SECRET} ],                                                # must set secret of staff.theopencloset.net
     cookie_domain => $ENV{OPENCLOSET_DOMAIN} || 'localhost' || '.theopencloset.net',
-    opencloset =>
-        { login => 'http://localhost:5001/login', newclothes => 'http://localhost:5001/new-clothes', root => 'http://localhost:5001' },
-    email => {
+    opencloset    => { login => 'http://localhost:5001/login', root => 'http://localhost:5001' },
+    email         => {
         notify => {
             from => 'donation@theopencloset.net',
             to   => 'info@theopencloset.net'

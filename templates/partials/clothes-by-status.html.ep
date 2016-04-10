@@ -1,0 +1,83 @@
+% if ($clothes1->count) {
+<ul class="list-inline">
+  <li class="list-item-block">
+    <p>
+      <i class="fa fa-archive fa-fw"></i>
+      <span class="text-success">사용가능</span>
+      <small class="text-muted">
+        %= clothes2text($clothes1)
+      </small>
+    </p>
+  </li>
+  % while ( my $row = $clothes1->next ) {
+  <li>
+    %= clothes2link($row, 1)
+  </li>
+  % }
+</ul>
+
+<hr>
+% }
+
+% if ($clothes2->count) {
+<ul class="list-inline">
+  <li class="list-item-block">
+    <p>
+      <i class="fa fa-recycle fa-fw"></i>
+      <span class="text-warning">옷캔</span>
+      <small class="text-muted">
+        %= clothes2text($clothes2)
+      </small>
+    </p>
+  </li>
+  % while ( my $row = $clothes2->next ) {
+  <li>
+    %= clothes2link($row, 1)
+  </li>
+  % }
+</ul>
+
+<hr>
+% }
+
+% if ($clothes3->count) {
+<ul class="list-inline">
+  <li class="list-item-block">
+    <p>
+      <i class="fa fa-recycle fa-fw"></i>
+      <span class="text-warning">비백</span>
+      <small class="text-muted">
+        %= clothes2text($clothes3)
+      </small>
+    </p>
+  </li>
+  % while ( my $row = $clothes3->next ) {
+  <li>
+    %= clothes2link($row, 1)
+  </li>
+  % }
+</ul>
+
+<hr>
+% }
+
+% if ($clothes4->count) {
+<ul class="list-inline">
+  <li class="list-item-block">
+    <p>
+      <i class="fa fa-trash fa-fw"></i>
+      <span class="text-danger">사용못함</span>
+      <small class="text-muted">
+        %= clothes2text($clothes4)
+      </small>
+    </p>
+  </li>
+  % while ( my $row = $clothes4->next ) {
+  <li>
+    %= clothes2link($row, 1)
+  </li>
+  % }
+</ul>
+
+<hr>
+% }

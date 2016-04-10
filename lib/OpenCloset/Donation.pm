@@ -64,25 +64,43 @@ sub _public_routes {
     $r->post('/')->to('root#create')->name('create');
     $r->get('/done')->to('root#done')->name('done');
 
-    $r->get('/forms/:id/return')->to('form#sendback')->name('form.return');
-    $r->post('/forms/:id/return')->to('form#create_sendback');
-    $r->get('/forms/:id/return/done')->to('form#sendback_done')->name('form.return.done');
+    my $prefetch_form = $r->under('/forms/:id')->to('form#prefetch_form');
+    $prefetch_form->get('/return')->to('form#sendback')->name('form.return');
+    $prefetch_form->post('/return')->to('form#create_sendback');
+    $prefetch_form->get('/return/done')->to('form#sendback_done')->name('form.return.done');
 }
 
 sub _private_routes {
     my $self = shift;
     my $r    = $self->routes;
-    my $form = $r->under('/forms')->to('user#auth')->name('auth');
-    my $sms  = $r->under('/sms')->to('user#auth');
-    my $user = $r->under('/user')->to('user#auth');
 
-    $form = $form->under('/')->to('form#prefetch');
-    $form->get('/')->to('form#list')->name('forms');
-    $form->get('/:id')->to('form#form')->name('form');
-    $form->any( [ 'POST', 'PUT' ] => '/:id' )->to('form#update_form')->name('form.update');
+    my $forms   = $r->under('/forms')->to('user#auth')->name('auth');
+    my $sms     = $r->under('/sms')->to('user#auth');
+    my $users   = $r->under('/users')->to('user#auth');
+    my $clothes = $r->under('/clothes')->to('user#auth');
+
+    $forms = $forms->under('/')->to('form#prefetch_status');
+    $forms->get('/')->to('form#list')->name('forms');
+
+    my $form = $forms->under('/:id')->to('form#prefetch_form');
+    $form->get('/')->to('form#form')->name('form');
+    $form->any( [ 'POST', 'PUT' ] => '/' )->to('form#update_form')->name('form.update');
 
     $sms->post('/')->to('API#create_sms')->name('sms.create');
-    $user->post('/')->to('API#create_user')->name('user.create');
+
+    $users->get('/')->to('user#list')->name('users');
+    $users->post('/')->to('API#create_user')->name('user.create');
+
+    my $user = $users->under('/:id')->to('user#prefetch_user');
+    $user->get('/donations')->to('user#donations')->name('user.donations');
+    $user->get('/donations/new')->to('user#add_donation')->name('user.donations.add');
+    $user->post('/donations')->to('user#create_donation')->name('user.donations.create');
+
+    my $donation = $user->under('/donations/:donation_id')->to('user#prefetch_donation');
+    $donation->get('/clothes/new')->to('clothes#add')->name('clothes.add');
+    $donation->post('/clothes')->to('clothes#create')->name('clothes.create');
+
+    $clothes->get('/code')->to('API#code');
 }
 
 sub _extend_validator {

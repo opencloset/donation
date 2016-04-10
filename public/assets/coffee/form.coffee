@@ -26,7 +26,7 @@ $ ->
   $("#btn-user-add:not('disabled')").click (e) ->
     $this = $(@)
     $this.addClass('disabled')
-    $.ajax "/user",
+    $.ajax "/users",
       type: 'POST'
       data: { form_id: location.pathname.split('/').pop() }
       dataType: 'json'

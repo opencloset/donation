@@ -4,7 +4,9 @@ use Mojo::Base 'Mojolicious::Plugin';
 
 use Mojo::ByteStream;
 use Mojo::DOM::HTML;
+use Math::Fleximal;
 
+use OpenCloset::Donation::Category;
 use OpenCloset::Donation::Status;
 
 =encoding utf8
@@ -26,9 +28,14 @@ OpenCloset::Donation::Plugin::Helpers - opencloset donation mojo helper
 sub register {
     my ( $self, $app, $conf ) = @_;
 
-    $app->helper( status2label  => \&status2label );
-    $app->helper( update_status => \&update_status );
-    $app->helper( emphasis      => \&emphasis );
+    $app->helper( status2label          => \&status2label );
+    $app->helper( update_status         => \&update_status );
+    $app->helper( emphasis              => \&emphasis );
+    $app->helper( clothes2link          => \&clothes2link );
+    $app->helper( clothes2text          => \&clothes2text );
+    $app->helper( clothes_quantity      => \&clothes_quantity );
+    $app->helper( generate_code         => \&generate_code );
+    $app->helper( generate_discard_code => \&generate_discard_code );
 }
 
 =head1 HELPERS
@@ -179,6 +186,165 @@ sub emphasis {
 
     $text =~ s/$search/<em>$search<\/em>/g;
     return Mojo::ByteStream->new($text);
+}
+
+=head2 clothes2link($clothes, $external?)
+
+    %= clothes2link($clothes)
+    # <a href="https://staff.theopencloset.net/J001">
+    #  <%= $clothes->code %>
+    # </a>
+
+    %= clothes2link($clothes, 1)
+    # <a href="https://staff.theopencloset.net/J001" target="_blank">
+    #  <i class="fa fa-external-link"></i>
+    #  <%= $clothes->code %>
+    # </a>
+
+=cut
+
+sub clothes2link {
+    my ( $self, $clothes, $external ) = @_;
+    return '' unless $clothes;
+
+    my $code = $clothes->code;
+    $code =~ s/^0//;
+    my $prefix = $self->config->{opencloset}{root} . '/clothes';
+    my $html   = Mojo::DOM::HTML->new;
+
+    if ($external) {
+        $html->parse(
+            qq{<a href="$prefix/$code" target="_blank">
+  <span class="label label-primary"><i class="fa fa-external-link"></i> $code</label>
+</a>}
+        );
+    }
+    else {
+        $html->parse(qq{<a href="$prefix/$code"><span class="label label-primary">$code</label></a>});
+    }
+
+    my $tree = $html->tree;
+    return Mojo::ByteStream->new( Mojo::DOM::HTML::_render($tree) );
+}
+
+=head2 clothes2text
+
+    my $str = $self->clothes2text($clothes);    # 자켓 2, 팬츠 2, 타이 1
+
+=cut
+
+sub clothes2text {
+    my ( $self, $clothes ) = @_;
+    return '' unless $clothes;
+
+    my $rs = $clothes->search( undef, { group_by => 'category', select => [ 'category', { count => 'category', -as => 'quantity' } ] } );
+
+    my %h;
+    while ( my $row = $rs->next ) {
+        my $category = $row->category;
+        my $quantity = $row->get_column('quantity');
+        $h{$category} = $quantity;
+    }
+
+    my @texts;
+    for my $c ( sort keys %h ) {
+        push @texts, sprintf( '%s %d', $OpenCloset::Donation::Category::LABEL_MAP{$c}, $h{$c} );
+    }
+
+    return join( ', ', @texts );
+}
+
+=head2 clothes_quantity
+
+    my $hashref = $self->clothes_quantity($donation);
+
+    $hashref->{jacket};    # 4
+    $hashref->{pants};     # 2
+    $hashref->{tie};       # 1
+
+
+=cut
+
+sub clothes_quantity {
+    my ( $self, $donation ) = @_;
+    return unless $donation;
+
+    ## SELECT category, COUNT(category) FROM clothes WHERE donation_id = 2588 GROUP BY category;
+    my $rs = $donation->clothes( undef, { group_by => 'category', select => [ 'category', { count => 'category', -as => 'quantity' } ] } );
+
+    return unless $rs->count;
+
+    my $hashref = {};
+    while ( my $row = $rs->next ) {
+        my $category = $row->category;
+        my $quantity = $row->get_column('quantity');
+        $hashref->{$category} = $quantity;
+    }
+
+    return $hashref;
+}
+
+=head2 generate_code( $category )
+
+    my $code = generate_code('jacket');    # JA17
+
+WARNING: 순서대로 바코드를 사용하고 있지 않기 때문에 이거 쓰면 안됨.
+
+=cut
+
+sub generate_code {
+    my ( $self, $category ) = @_;
+    return unless $category;
+
+    my $clothes = $self->schema->resultset('Clothes')->search(
+        {
+            category  => $category,
+            status_id => { 'NOT IN' => [ 45, 46, 47 ] }
+        },
+        {
+            order_by => { -desc => 'id' },
+            rows     => 1,
+        }
+    )->next;
+    return unless $clothes;
+
+    my $code = $clothes->code;
+
+    $code =~ s/^0//;
+    my $category_prefix = substr $code, 0, 1;
+    my $rest = substr $code, 1;
+
+    my @digits = ( 0 .. 9, 'A' .. 'Z' );
+    my $number = Math::Fleximal->new( $rest, \@digits );
+    my $last = Math::Fleximal->new(0)->change_flex( \@digits )->add($number)->add( $number->one )->to_str;
+
+    return sprintf( '%s%03s', $category_prefix, $last );
+}
+
+=head2 generate_discard_code( $category )
+
+    my $discard_code = generate_discard_code('jacket');    # JA17
+
+=cut
+
+sub generate_discard_code {
+    my ( $self, $category ) = @_;
+    return unless $category;
+
+    my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
+    return unless $clothes_code;
+
+    my $code = $clothes_code->code;
+
+    $code =~ s/^0//;
+    my $category_prefix = substr $code, 0, 1;
+    my $rest = substr $code, 1;
+
+    my @digits = ( 0 .. 9, 'A' .. 'Z' );
+    my $number = Math::Fleximal->new( $rest, \@digits );
+    my $last = Math::Fleximal->new(0)->change_flex( \@digits )->add($number)->add( $number->one )->to_str;
+
+    return sprintf( '%s%03s', $category_prefix, $last );
 }
 
 1;

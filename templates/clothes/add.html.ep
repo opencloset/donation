@@ -1,0 +1,224 @@
+% title '새옷등록';
+% layout 'private', jses => [
+%   '/assets/components/growl/javascripts/jquery.growl.js',
+%   '/assets/dist/js/clothes-add.min.js'
+% ], csses => ['/assets/components/growl/stylesheets/jquery.growl.css'];
+% use OpenCloset::Donation::Category;
+% my $user_info = $user->user_info;
+
+<h3>
+  <%= $user->name %>님
+  <small>
+    <a href="<%= url_for('user.donations') %>">기증현황</a>
+  </small>
+</h3>
+
+<p>의류등록방법</p>
+<ol>
+  <li>종류를 선택합니다.</li>
+  <li>의류코드를 입력합니다.</li>
+  <li>색상을 선택합니다.</li>
+  <li>사이즈를 입력합니다</li>
+  <li>추가 또는 재활용 버튼을 누릅니다.</li>
+  <li>1 ~ 5 반복</li>
+</ol>
+
+<div class="row">
+  <div class="col-md-8">
+    <p>
+      % if ($form) {
+        %= status2label($form->status)
+        % my @categories = split /\|/, $form->category;
+        <a id="donation-form" href="<%= url_for('form', id => $form->id) %>" data-toggle="tooltip" title="신청서로 이동" class="btn btn-link" data-form-id="<%= $form->id %>">
+          %= join(', ', @categories)
+        </a>
+      % } else {
+      기증신청서 없이 등록된 의류입니다.
+      % }
+    </p>
+    <hr>
+    <p>
+      <i class="fa fa-bars fa-fw"></i>
+      의류의 종류
+    </p>
+    <ul class="list-inline">
+      % while (my $row = $categories->next) {
+      <li>
+        % my $category = $row->category;
+        <button class="btn btn-default btn-sm js-category" data-category="<%= $category %>">
+          %= $OpenCloset::Donation::Category::LABEL_MAP{$category}
+        </button>
+      </li>
+      % }
+    </ul>
+
+    <hr>
+
+    <form id="form-clothes" action="<%= url_for('clothes.create') %>" method="POST">
+      <input id="discard" name="discard" type="hidden" value="0">
+      <input id="status-id" name="status-id" type="hidden" value="1">
+      <input id="category" name="category" type="hidden" value="">
+      <fieldset>
+        <div class="form-group">
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="gender" value="male">
+              <i class="fa fa-male fa-fw"></i>
+              남성용
+            </label>
+          </div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="gender" value="female">
+              <i class="fa fa-female fa-fw"></i>
+              여성용
+            </label>
+          </div>
+          <div class="radio-inline">
+            <label>
+              <input type="radio" name="gender" value="unisex">
+              <i class="fa fa-question fa-fw"></i>
+              남녀공용
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <ul class="list-inline">
+            <li>
+              <span class="label label-default label-category label-category-black" data-color="black">블랙</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-blue" data-color="blue">블루</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-brown" data-color="brown">브라운</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-charcoalgray" data-color="charcoalgray">차콜그레이</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-gray" data-color="gray">그레이</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-green" data-color="green">그린</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-navy" data-color="navy">네이비</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-orange" data-color="orange">오렌지</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-pink" data-color="pink">핑크</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-purple" data-color="purple">퍼플</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-red" data-color="red">레드</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-white" data-color="white">화이트</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-yellow" data-color="yellow">옐로우</span>
+            </li>
+            <li>
+              <span class="label label-default label-category label-category-etc" data-color="etc">기타</span>
+            </li>
+          </ul>
+          <input id="color" name="color" type="hidden">
+        </div>
+
+        <div class="form-group">
+          <input id="code" class="form-control" name="code" type="text" placeholder="의류코드">
+        </div>
+      </fieldset>
+      
+      <fieldset id="category-toggle">
+        <div class="form-group">
+        </div>
+        <div class="form-group">
+          <input id="neck" class="form-control" name="neck" type="text" placeholder="목둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="bust" class="form-control" name="bust" type="text" placeholder="가슴둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="waist" class="form-control" name="waist" type="text" placeholder="허리둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="hip" class="form-control" name="hip" type="text" placeholder="엉덩이둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="topbelly" class="form-control" name="topbelly" type="text" placeholder="윗배둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="belly" class="form-control" name="belly" type="text" placeholder="배둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="arm" class="form-control" name="arm" type="text" placeholder="팔길이 cm">
+        </div>
+        <div class="form-group">
+          <input id="thigh" class="form-control" name="thigh" type="text" placeholder="허벅지둘레 cm">
+        </div>
+        <div class="form-group">
+          <input id="length" class="form-control" name="length" type="text" placeholder="길이 cm">
+        </div>
+        <div class="form-group">
+          <input id="foot" class="form-control" name="foot" type="text" placeholder="발크기 mm">
+        </div>
+      </fieldset>
+
+      <div class="pull-right">
+        <button type="reset" class="btn btn-default">취소</button>
+        <button type="submit" class="btn btn-warning btn-discard" data-status-id="45">
+          <i class="fa fa-recycle fa-lg"></i>
+          옷캔
+        </button>
+        <button type="submit" class="btn btn-warning btn-discard" data-status-id="46">
+          <i class="fa fa-recycle fa-lg"></i>
+          비백
+        </button>
+        <button type="submit" class="btn btn-warning btn-discard" data-status-id="47">사용못함</button>
+        <button type="submit" class="btn btn-success">추가</button>
+      </div>
+
+      <p class="help-block">
+        <strong>재활용/사용못함</strong>은 의류코드를 입력할 필요가 없습니다.
+      </p>
+    </form>
+  </div>
+
+  <div class="col-md-4">
+    <h5>
+      <i class="fa fa-black-tie fa-fw"></i>
+      등록된 의류
+    </h5>
+
+    %= include 'partials/clothes-by-status', clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3, clothes4 => $clothes4;
+
+    % if (my $message = $donation->message) {
+    <h5>
+      <i class="fa fa-gratipay fa-fw"></i>
+      기증 메세지
+    </h5>
+    <p class="text-muted">
+      <%= $message %>
+    </p>
+
+    <hr>
+    % }
+
+    <h5>
+      <i class="fa fa-envelope fa-fw"></i>
+      SMS
+      <button type="button" id="btn-sms-send" class="btn btn-default btn-sm">Send</button>
+    </h5>
+    <form id="form-sms" action="<%= url_for('sms.create') %>" method="POST">
+      <input name="to" type="hidden" value="<%= $user_info->phone %>">
+      <textarea cols="23" id="sms-msg" name="text" rows="5"></textarea>
+    </form>
+  </div>
+</div>
