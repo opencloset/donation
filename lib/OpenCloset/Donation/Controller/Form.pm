@@ -10,18 +10,19 @@ has schema => sub { shift->app->schema };
 
 =head1 METHODS
 
-=head2 prefetch
+=head2 prefetch_status
 
     under /forms
 
 =cut
 
-sub prefetch {
+sub prefetch_status {
     my $self = shift;
 
     my $new       = $self->schema->resultset('DonationForm')->search( { status => undef } )->count;
     my $requested = $self->schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::RETURN_REQUESTED } )->count;
-    $self->stash( new => $new, return_requested => $requested );
+    my $waiting   = $self->schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::WAITING } )->count;
+    $self->stash( new => $new, return_requested => $requested, waiting => $waiting );
     return 1;
 }
 
@@ -59,6 +60,26 @@ sub list {
     $self->render( forms => $rs, pageset => $pageset );
 }
 
+=head2 prefetch_form
+
+    under /forms/:id
+
+=cut
+
+sub prefetch_form {
+    my $self = shift;
+    my $id   = $self->param('id');
+
+    my $form = $self->schema->resultset('DonationForm')->find($id);
+    unless ($form) {
+        $self->error( 404, "Form not found: $id" );
+        return;
+    }
+
+    $self->stash( form => $form );
+    return 1;
+}
+
 =head2 form
 
     # form
@@ -68,10 +89,7 @@ sub list {
 
 sub form {
     my $self = shift;
-    my $id   = $self->param('id');
-
-    my $form = $self->schema->resultset('DonationForm')->find($id);
-    return $self->error( 404, "Form not found: $id" ) unless $form;
+    my $form = $self->stash('form');
 
     my $user = $self->schema->resultset('User')->find( { email => $form->email } );
     unless ($user) {
@@ -91,10 +109,7 @@ sub form {
 
 sub update_form {
     my $self = shift;
-    my $id   = $self->param('id');
-
-    my $form = $self->schema->resultset('DonationForm')->find($id);
-    return $self->error( 404, "Form not found: $id" ) unless $form;
+    my $form = $self->stash('form');
 
     my $v = $self->validation;
     $v->optional('status')->in(@OpenCloset::Donation::Status::ALL);
@@ -117,7 +132,7 @@ sub update_form {
     }
 
     $form->update($input);
-    $self->res->headers->location( $self->url_for( 'form', id => $id ) );
+    $self->res->headers->location( $self->url_for( 'form', id => $form->id ) );
     $self->respond_to( html => sub { shift->redirect_to('form') }, json => { json => { $form->get_columns } } );
 }
 
@@ -130,13 +145,10 @@ sub update_form {
 
 sub sendback {
     my $self       = shift;
-    my $id         = $self->param('id');
+    my $form       = $self->stash('form');
     my $authorized = $self->param('authorized');
 
     return $self->error( 401, "Authorize required" ) unless $authorized;
-
-    my $form = $self->schema->resultset('DonationForm')->find($id);
-    return $self->error( 404, "Form not found: $id" ) unless $form;
 
     my $now = DateTime->now( time_zone => 'Asia/Seoul' );
     $self->render( form => $form, holidays => [ $self->holidays( $now->year ) ] );
@@ -150,10 +162,7 @@ sub sendback {
 
 sub create_sendback {
     my $self = shift;
-    my $id   = $self->param('id');
-
-    my $form = $self->schema->resultset('DonationForm')->find($id);
-    return $self->error( 404, "Form not found: $id" ) unless $form;
+    my $form = $self->stash('form');
 
     my $v = $self->validation;
     $v->required('return-date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
@@ -172,7 +181,7 @@ sub create_sendback {
     $form->discard_changes;
 
     $self->update_status( $form, $OpenCloset::Donation::Status::RETURN_REQUESTED );
-    $self->res->headers->location( $self->url_for( 'form', id => $id ) );
+    $self->res->headers->location( $self->url_for( 'form', id => $form->id ) );
     $self->respond_to(
         html => sub {
             my $self = shift;
@@ -215,8 +224,9 @@ sub _search_cond {
     my @or;
     if ( $q =~ /^[0-9\-]+$/ ) {
         $q =~ s/-//g;
-        push @or, { 'phone'   => { like => "%$q%" } };
-        push @or, { 'waybill' => { like => "%$q%" } };
+        push @or, { phone   => { like => "%$q%" } };
+        push @or, { waybill => { like => "%$q%" } };
+        push @or, { email   => { like => "%$q%" } };
     }
     elsif ( $q =~ /^[a-zA-Z0-9_\-]+/ ) {
         if ( $q =~ /\@/ ) {

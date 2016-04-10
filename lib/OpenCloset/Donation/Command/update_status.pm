@@ -100,7 +100,7 @@ sub delivering2delivered {
 
 =head2 returnrequested2returning
 
-반송신청(return-requested) 상태의 item 을 체크해서 반품배송장을 저장하고 반송중(returning)으로 변경합니다
+반송신청(return-requested) 과 반송중(returning) 상태의 item 을 체크해서 반품배송장을 저장하고 반송중(returning)으로 변경합니다
 
 30분마다
 
@@ -111,17 +111,21 @@ sub returnrequested2returning {
 
     my $schema = $self->app->schema;
     my $driver = 'KR::CJKorea';
-    my $rs     = $schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::RETURN_REQUESTED } );
+    my $rs     = $schema->resultset('DonationForm')
+        ->search( { status => { -in => [ $OpenCloset::Donation::Status::RETURN_REQUESTED, $OpenCloset::Donation::Status::RETURNING ] } } );
     while ( my $row = $rs->next ) {
         my $waybill = $row->waybill;
         next unless $waybill;
+
+        my $return_waybill = $row->return_waybill;
+        next if $return_waybill;
 
         my $tracker = Parcel::Track->new( $driver, $row->waybill );
         my $result = $tracker->track;
         next unless $result;
 
         my $html = shift @{ $result->{htmls} ||= [] };
-        my ($return_waybill) = $html =~ /반품:(\d+)/;
+        ($return_waybill) = $html =~ /반품:(\d+)/;
         return unless $return_waybill;
 
         $row->update( { return_waybill => $return_waybill } );

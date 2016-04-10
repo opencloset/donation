@@ -1,0 +1,111 @@
+% title $user->name . '님 기증 현황';
+% layout 'private', jses => [
+%   '/assets/components/jquery-timeago/jquery.timeago.js',
+%   '/assets/components/jquery-timeago/locales/jquery.timeago.ko.js',
+%   '/assets/dist/js/user-donations.min.js',
+% ];
+% use OpenCloset::Donation::Category;
+% my @categories = sort keys %{ $categories };
+
+
+<p class="pull-right">
+  <a href="<%= url_for('user.donations.add') %>" class="btn btn-success">새로운 기증 등록</a>
+</p>
+
+<h2>
+  <%= $user->name %>님
+  <small>기증현황</small>
+</h2>
+
+<hr>
+
+<h4>신청서</h4>
+<div class="list-group">
+  % while (my $form = $forms->next) {
+  <a href="<%= url_for('form', id => $form->id) %>" class="list-group-item">
+    <span class="pull-right">
+      % my $status = $form->status || '';
+      % my $create_date = $form->create_date;
+      <span title="신청일">
+        <abbr class="timeago" title="<%= $create_date->ymd %>T<%= $create_date->hms %>Z">
+          %= $create_date
+        </abbr>
+      </span>
+    </span>
+    <span class="col-md-1">
+      %= status2label($form->status)
+    </span>
+    % my @categories = split /\|/, $form->category;
+    %= join(', ', @categories)
+    % if (my $comment = $form->comment) {
+    <small class="well-sm text-muted">
+      %= $comment
+    </small>
+    % }
+  </a>
+  % }
+  % unless ($forms->count) {
+  <li class="list-group-item">
+    No items
+  </li>
+  % }
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-6">
+    <h4>개요</h4>
+    <ul class="list-group">
+      % unless (@categories) {
+      <li class="list-group-item">
+        No items
+      </li>
+      % } else {
+        % for my $category (@categories) {
+        <li class="list-group-item">
+          <span class="badge"><%= $categories->{$category} %></span>
+          <span class="label label-primary"><%= $OpenCloset::Donation::Category::LABEL_MAP{$category} %></span>
+        </li>
+        % }
+      % }
+    </ul>
+  </div>
+
+  <div class="col-md-6">
+    <h4>자세히</h4>
+    % while (my $donation = $donations->next) {
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="pull-right">
+          <a class="btn btn-success btn-xs" href="<%= url_for('clothes.add', donation_id => $donation->id) %>">새옷등록</a>
+        </div>
+        % my $clothes = $donation->clothes(undef, { order_by => 'category' });
+        %= $donation->create_date->ymd
+        <small class="text-muted">
+          %= clothes2text($clothes)
+        </small>
+      </div>
+      <div class="panel-body">
+        <ul class="list-inline">
+          % while ( my $row = $clothes->next ) {
+          <li>
+            %= clothes2link($row, 1)
+          </li>
+          % }
+        </ul>
+
+        % if (my $message = $donation->message) {
+        <hr>
+        <p><%= $message %></p>
+        % }
+      </div>
+    </div>
+    % }
+    % unless ($donations->count) {
+    <li class="list-group-item">
+      No items
+    </li>
+    % }
+  </div>
+</div>

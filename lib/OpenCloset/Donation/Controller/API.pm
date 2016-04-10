@@ -38,7 +38,7 @@ sub create_sms {
 =head2 create_user
 
     # user.create
-    POST /user
+    POST /users
 
 =cut
 
@@ -73,6 +73,24 @@ sub create_user {
 
     $self->res->code( $res->{status} );
     $self->render( text => $res->{content} || $res->{reason} );
+}
+
+=head2 code
+
+    GET /clothes/code?category=:category
+
+=cut
+
+sub code {
+    my $self     = shift;
+    my $category = $self->param('category');
+
+    return $self->error( '400', 'category param required' ) unless $category;
+
+    my $code = $self->generate_code($category);
+    return $self->error( '404', 'Not found category' ) unless $code;
+
+    $self->render( json => { category => $category, code => $code } );
 }
 
 1;
