@@ -21,7 +21,8 @@ sub prefetch_status {
 
     my $new       = $self->schema->resultset('DonationForm')->search( { status => undef } )->count;
     my $requested = $self->schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::RETURN_REQUESTED } )->count;
-    $self->stash( new => $new, return_requested => $requested );
+    my $waiting   = $self->schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::WAITING } )->count;
+    $self->stash( new => $new, return_requested => $requested, waiting => $waiting );
     return 1;
 }
 
