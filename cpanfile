@@ -4,6 +4,7 @@ requires 'Email::Sender::Simple';
 requires 'Email::Sender::Transport::SMTP';
 requires 'Email::Simple';
 requires 'Email::Valid';
+requires 'Math::Fleximal';
 requires 'Mojolicious';
 requires 'Mojolicious::Plugin::Config';
 requires 'Parcel::Track';
