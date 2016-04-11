@@ -81,6 +81,7 @@ sub create {
     $v->optional('thigh')->size( 2, 3 );
     $v->optional('length')->size( 2, 3 );
     $v->optional('foot')->size(3);
+    $v->optional('cuff')->size( 2, 3 );
 
     $v->optional('comment');
 
@@ -103,6 +104,7 @@ sub create {
     my $belly    = $v->param('belly');
     my $arm      = $v->param('arm');
     my $thigh    = $v->param('thigh');
+    my $cuff     = $v->param('cuff');
     my $length   = $v->param('length') || $v->param('foot');
 
     my $comment = $v->param('comment');
@@ -144,6 +146,7 @@ sub create {
                 arm         => $arm,
                 thigh       => $thigh,
                 length      => $length,
+                cuff        => $cuff,
                 color       => $color,
                 gender      => $gender,
                 category    => $category,
