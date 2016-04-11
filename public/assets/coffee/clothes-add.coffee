@@ -12,7 +12,7 @@ $ ->
     $('#category').val(category)
     types = switch category
       when 'jacket'    then [ 'bust', 'arm', 'topbelly', 'belly'         ]
-      when 'pants'     then [ 'waist', 'hip', 'thigh', 'length'          ]
+      when 'pants'     then [ 'waist', 'hip', 'thigh', 'length', 'cuff'  ]
       when 'shirt'     then [ 'neck', 'bust', 'arm'                      ]
       when 'waistcoat' then [ 'topbelly'                                 ]
       when 'coat'      then [ 'bust', 'arm'                              ]
