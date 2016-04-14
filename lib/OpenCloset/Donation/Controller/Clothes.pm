@@ -157,10 +157,13 @@ sub create {
 
         die "Failed to create a new clothes" unless $clothes;
 
-        my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
-        die "Not found category: $category" unless $clothes_code;
+        if ( $status_id =~ /^4[567]$/ ) {
+            my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
+            die "Not found category: $category" unless $clothes_code;
 
-        $clothes_code->update( { code => sprintf( '%05s', $code ) } );
+            $clothes_code->update( { code => sprintf( '%05s', $code ) } );
+        }
+
         $guard->commit;
     }
     catch {
