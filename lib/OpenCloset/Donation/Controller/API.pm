@@ -61,7 +61,7 @@ sub create_user {
     my $cookie = $self->cookie('opencloset');
     return $self->error( 401, "Authorize required" ) unless $cookie;
 
-    my %params = map { $_ => $form->$_ } qw/name phone email/;
+    my %params = map { $_ => $form->$_ } qw/name phone email gender/;
     $params{address2} = $form->address1 || '';
     $params{address3} = $form->address2 || '';
     $params{address4} = $form->address3 || '';
