@@ -5,7 +5,7 @@ use Email::Valid ();
 
 use OpenCloset::Schema;
 
-use version; our $VERSION = qv("v0.1.2");
+use version; our $VERSION = qv("v0.1.3");
 
 has schema => sub {
     my $self = shift;
