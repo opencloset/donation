@@ -62,7 +62,7 @@ sub create {
         $v->optional('gender');
     }
     else {
-        $v->required('code')->like(qr/^[A-Z0-9]{4,5}$/);
+        $v->required('code')->like(qr/^[a-zA-Z0-9]{4,5}$/);
         $v->required('gender')->in(qw/male female unisex/);
     }
 
@@ -80,7 +80,7 @@ sub create {
     $v->optional('arm')->size( 2, 3 );
     $v->optional('thigh')->size( 2, 3 );
     $v->optional('length')->size( 2, 3 );
-    $v->optional('foot')->size(3);
+    $v->optional('foot')->size( 3, 3 );
     $v->optional('cuff')->size( 2, 3 );
 
     $v->optional('comment');
@@ -110,7 +110,7 @@ sub create {
     my $comment = $v->param('comment');
 
     $code = $self->generate_discard_code($category) if $discard;
-    $code = sprintf( '%05s', $code );
+    $code = sprintf( '%05s', uc $code );
     return $self->error( 500, "Failed to generate discard clothes code($category)" ) unless $code;
 
     my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );

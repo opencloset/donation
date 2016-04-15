@@ -65,3 +65,6 @@ $ ->
         $.growl.error({ title: textStatus, message: "#{jqXHR.responseJSON.error}" })
       complete: (jqXHR, textStatus) ->
         $form.get(0).reset()
+
+  $('#code').on 'keydown', (e) ->
+    e.preventDefault() if e.which is 13
