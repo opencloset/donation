@@ -80,7 +80,7 @@ sub create {
     $v->optional('arm')->size( 2, 3 );
     $v->optional('thigh')->size( 2, 3 );
     $v->optional('length')->size( 2, 3 );
-    $v->optional('foot')->size(3);
+    $v->optional('foot')->size( 3, 3 );
     $v->optional('cuff')->size( 2, 3 );
 
     $v->optional('comment');
