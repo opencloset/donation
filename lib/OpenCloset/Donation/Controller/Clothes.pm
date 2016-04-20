@@ -81,7 +81,7 @@ sub create {
     $v->optional('thigh')->size( 2, 3 );
     $v->optional('length')->size( 2, 3 );
     $v->optional('foot')->size( 3, 3 );
-    $v->optional('cuff')->size( 2, 3 );
+    $v->optional('cuff')->like(qr/^\d{1,3}(\.)?(\d{1,2})?$/);
 
     $v->optional('comment');
 
@@ -146,7 +146,7 @@ sub create {
                 arm         => $arm,
                 thigh       => $thigh,
                 length      => $length,
-                cuff        => $cuff,
+                cuff        => $self->inch2cm($cuff),
                 color       => $color,
                 gender      => $gender,
                 category    => $category,
