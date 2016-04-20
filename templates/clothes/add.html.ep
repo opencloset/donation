@@ -170,7 +170,7 @@
           <input id="foot" class="form-control" name="foot" type="text" placeholder="발크기 mm">
         </div>
         <div class="form-group">
-          <input id="cuff" class="form-control" name="cuff" type="text" placeholder="밑단둘레 cm">
+          <input id="cuff" class="form-control" name="cuff" type="text" placeholder="밑단둘레 inch">
         </div>
       </fieldset>
 
