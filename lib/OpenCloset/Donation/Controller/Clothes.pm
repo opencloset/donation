@@ -111,9 +111,14 @@ sub create {
 
     my $comment = $v->param('comment');
 
+    ###
+    ### Adjust params
+    ###
     $code = $self->generate_discard_code($category) if $discard;
     $code = sprintf( '%05s', uc $code );
     return $self->error( 500, "Failed to generate discard clothes code($category)" ) unless $code;
+
+    $cuff = $self->inch2cm($cuff) if $cuff;
 
     my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
     return $self->error( 400, "Duplicate clothes code: $code" ) if $clothes;
@@ -148,7 +153,7 @@ sub create {
                 arm         => $arm,
                 thigh       => $thigh,
                 length      => $length,
-                cuff        => $self->inch2cm($cuff),
+                cuff        => $cuff,
                 color       => $color,
                 gender      => $gender,
                 category    => $category,
