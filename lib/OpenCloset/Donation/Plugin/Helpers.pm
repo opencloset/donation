@@ -231,7 +231,8 @@ sub clothes2link {
 
 =head2 clothes2text
 
-    my $str = $self->clothes2text($clothes);    # 자켓 2, 팬츠 2, 타이 1
+    %= clothes2text($clothes);
+    # 자켓 2, 팬츠 2, 타이 1
 
 =cut
 
@@ -353,7 +354,8 @@ sub generate_discard_code {
 
 1 inch == 2.54 cm
 
-    my $cm = $self->inch2cm(1.00);    # 2.54
+    %= inch2cm(1);
+    # 2.54
 
 =cut
 
@@ -365,7 +367,8 @@ sub inch2cm {
 
 =head2 cm2inch
 
-    my $inch = $self->cm2inch(2.54);    # 1
+    %= cm2inch(2.54);
+    # 1.00
 
 =cut
 
