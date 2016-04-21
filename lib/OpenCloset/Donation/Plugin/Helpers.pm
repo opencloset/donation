@@ -36,6 +36,8 @@ sub register {
     $app->helper( clothes_quantity      => \&clothes_quantity );
     $app->helper( generate_code         => \&generate_code );
     $app->helper( generate_discard_code => \&generate_discard_code );
+    $app->helper( inch2cm               => \&inch2cm );
+    $app->helper( cm2inch               => \&cm2inch );
 }
 
 =head1 HELPERS
@@ -229,7 +231,8 @@ sub clothes2link {
 
 =head2 clothes2text
 
-    my $str = $self->clothes2text($clothes);    # 자켓 2, 팬츠 2, 타이 1
+    %= clothes2text($clothes);
+    # 자켓 2, 팬츠 2, 타이 1
 
 =cut
 
@@ -345,6 +348,34 @@ sub generate_discard_code {
     my $last = Math::Fleximal->new(0)->change_flex( \@digits )->add($number)->add( $number->one )->to_str;
 
     return sprintf( '%s%03s', $category_prefix, $last );
+}
+
+=head2 inch2cm
+
+1 inch == 2.54 cm
+
+    %= inch2cm(1);
+    # 2.54
+
+=cut
+
+sub inch2cm {
+    my ( $self, $inch ) = @_;
+    return 0.00 unless $inch;
+    return sprintf( '%.2f', $inch * 2.54 );
+}
+
+=head2 cm2inch
+
+    %= cm2inch(2.54);
+    # 1.00
+
+=cut
+
+sub cm2inch {
+    my ( $self, $cm ) = @_;
+    return 0.00 unless $cm;
+    return sprintf( '%.2f', $cm * 100 / 254 );
 }
 
 1;

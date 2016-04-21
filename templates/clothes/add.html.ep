@@ -42,9 +42,8 @@
       의류의 종류
     </p>
     <ul class="list-inline">
-      % while (my $row = $categories->next) {
+      % for my $category (@OpenCloset::Donation::Category::ALL) {
       <li>
-        % my $category = $row->category;
         <button class="btn btn-default btn-sm js-category" data-category="<%= $category %>">
           %= $OpenCloset::Donation::Category::LABEL_MAP{$category}
         </button>
@@ -170,7 +169,7 @@
           <input id="foot" class="form-control" name="foot" type="text" placeholder="발크기 mm">
         </div>
         <div class="form-group">
-          <input id="cuff" class="form-control" name="cuff" type="text" placeholder="밑단둘레 cm">
+          <input id="cuff" class="form-control" name="cuff" type="text" placeholder="밑단둘레 inch">
         </div>
       </fieldset>
 
@@ -221,7 +220,7 @@
     </h5>
     <form id="form-sms" action="<%= url_for('sms.create') %>" method="POST">
       <input name="to" type="hidden" value="<%= $user_info->phone %>">
-      <textarea cols="23" id="sms-msg" name="text" rows="5"></textarea>
+      <textarea cols="23" id="sms-msg" name="text" rows="10"><%= $sms_body %></textarea>
     </form>
   </div>
 </div>
