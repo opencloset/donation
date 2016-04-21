@@ -42,9 +42,8 @@
       의류의 종류
     </p>
     <ul class="list-inline">
-      % while (my $row = $categories->next) {
+      % for my $category (@OpenCloset::Donation::Category::ALL) {
       <li>
-        % my $category = $row->category;
         <button class="btn btn-default btn-sm js-category" data-category="<%= $category %>">
           %= $OpenCloset::Donation::Category::LABEL_MAP{$category}
         </button>
