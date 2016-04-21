@@ -21,13 +21,11 @@ sub add {
     my $user     = $self->stash('user');
     my $donation = $self->stash('donation');
 
-    my $form = $donation->donation_forms->next;
-    my $categories = $self->schema->resultset('Clothes')->search( undef, { group_by => 'category', select => ['category'] } );
-
+    my $form     = $donation->donation_forms->next;
     my $clothes1 = $donation->clothes( { status_id => { 'NOT IN' => [ 45, 46, 47 ] } }, { order_by => 'category' } );
-    my $clothes2 = $donation->clothes( { status_id => 45 },                             { order_by => 'category' } );
-    my $clothes3 = $donation->clothes( { status_id => 46 },                             { order_by => 'category' } );
-    my $clothes4 = $donation->clothes( { status_id => 47 },                             { order_by => 'category' } );
+    my $clothes2 = $donation->clothes( { status_id => 45 }, { order_by => 'category' } );
+    my $clothes3 = $donation->clothes( { status_id => 46 }, { order_by => 'category' } );
+    my $clothes4 = $donation->clothes( { status_id => 47 }, { order_by => 'category' } );
 
     my $all_clothes = $donation->clothes;
     my $msg         = $self->render_to_string(
@@ -37,8 +35,8 @@ sub add {
     chomp $msg;
 
     $self->render(
-        form     => $form,     categories => $categories, clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3,
-        clothes4 => $clothes4, sms_body   => $msg
+        form     => $form,     clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3,
+        clothes4 => $clothes4, sms_body => $msg
     );
 }
 
@@ -54,11 +52,7 @@ sub create {
     my $user     = $self->stash('user');
     my $donation = $self->stash('donation');
 
-    my $categories = $self->schema->resultset('Clothes')->search( undef, { group_by => 'category', select => ['category'] } );
-    my @categories;
-    while ( my $row = $categories->next ) {
-        push @categories, $row->category;
-    }
+    my @categories = @OpenCloset::Donation::Category::ALL;
 
     my $v = $self->validation;
     $v->required('discard');
@@ -117,9 +111,14 @@ sub create {
 
     my $comment = $v->param('comment');
 
+    ###
+    ### Adjust params
+    ###
     $code = $self->generate_discard_code($category) if $discard;
     $code = sprintf( '%05s', uc $code );
     return $self->error( 500, "Failed to generate discard clothes code($category)" ) unless $code;
+
+    $cuff = $self->inch2cm($cuff) if $cuff;
 
     my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
     return $self->error( 400, "Duplicate clothes code: $code" ) if $clothes;
@@ -154,7 +153,7 @@ sub create {
                 arm         => $arm,
                 thigh       => $thigh,
                 length      => $length,
-                cuff        => $self->inch2cm($cuff),
+                cuff        => $cuff,
                 color       => $color,
                 gender      => $gender,
                 category    => $category,
