@@ -21,6 +21,7 @@ $ ->
       when 'blouse'    then [ 'bust', 'arm'                                ]
       when 'belt'      then [ 'length'                                     ]
       when 'shoes'     then [ 'foot'                                       ]
+      when 'misc'      then [                                              ]
       else []
     $("##{type}").show() for type in types
 
