@@ -67,6 +67,19 @@ sub create_user {
     $params{address4} = $form->address3 || '';
     $params{birth} = substr( $form->birth_date || '', 0, 4 );
 
+    if ( exists $params{gender} ) {
+        my $gender = $params{gender};
+        if ( $gender == 1 ) {
+            $params{gender} = 'male';
+        }
+        elsif ( $gender == 2 ) {
+            $params{gender} = 'female';
+        }
+        else {
+            $params{gender} = 'unisex';
+        }
+    }
+
     my $http = HTTP::Tiny->new;
     my $root = $self->config->{opencloset}{root};
     my $res  = $http->post_form( "$root/api/user.json", \%params, { headers => { cookie => "opencloset=$cookie" } } );
