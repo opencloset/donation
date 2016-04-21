@@ -28,9 +28,17 @@ sub add {
     my $clothes2 = $donation->clothes( { status_id => 45 },                             { order_by => 'category' } );
     my $clothes3 = $donation->clothes( { status_id => 46 },                             { order_by => 'category' } );
     my $clothes4 = $donation->clothes( { status_id => 47 },                             { order_by => 'category' } );
+
+    my $all_clothes = $donation->clothes;
+    my $msg         = $self->render_to_string(
+        'sms/clothes_info', format => 'txt', all => $all_clothes, available => $clothes1,
+        status_in_45 => $clothes2, status_in_46 => $clothes3
+    );
+    chomp $msg;
+
     $self->render(
-        form     => $form, categories => $categories, clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3,
-        clothes4 => $clothes4
+        form     => $form,     categories => $categories, clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3,
+        clothes4 => $clothes4, sms_body   => $msg
     );
 }
 
