@@ -217,12 +217,12 @@ sub clothes2link {
     if ($external) {
         $html->parse(
             qq{<a href="$prefix/$code" target="_blank">
-  <span class="label label-primary"><i class="fa fa-external-link"></i> $code</label>
+  <span class="label label-primary"><i class="fa fa-external-link"></i> $code</span>
 </a>}
         );
     }
     else {
-        $html->parse(qq{<a href="$prefix/$code"><span class="label label-primary">$code</label></a>});
+        $html->parse(qq{<a href="$prefix/$code"><span class="label label-primary">$code</span></a>});
     }
 
     my $tree = $html->tree;
