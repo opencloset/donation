@@ -4,6 +4,7 @@
 <table class="table table-bordered">
   <thead>
     <tr>
+      <th>수선여부</th>
       <th>팬츠/스커트</th>
       <th>자켓</th>
       <th>Actions</th>
@@ -11,6 +12,9 @@
   </thead>
   <tbody>
     <tr>
+      <td>
+        <input type="checkbox" value="">
+      </td>
       <td>
         <a href="https://staff.theopencloset.net/P001" target="_blank">
           <span class="label label-primary"><i class="fa fa-external-link"></i> P001</span>
