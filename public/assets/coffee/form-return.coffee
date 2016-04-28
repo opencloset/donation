@@ -1,5 +1,5 @@
 $ ->
-  holidays = eval $("input[name=activity-date]").data('holidays')
+  holidays = eval $("input[name=return-date]").data('holidays')
   $("input[name=return-date]").datepicker(
     language: 'kr'
     todayHighlight: true
