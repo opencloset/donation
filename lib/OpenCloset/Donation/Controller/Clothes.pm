@@ -184,4 +184,15 @@ sub create {
     $self->redirect_to('clothes.add');
 }
 
+=head2 list
+
+    # clothes
+    GET /clothes
+
+=cut
+
+sub list {
+    my $self = shift;
+}
+
 1;

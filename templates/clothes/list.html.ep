@@ -1,0 +1,30 @@
+% title '수선의류목록';
+% layout 'private';
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>팬츠/스커트</th>
+      <th>자켓</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://staff.theopencloset.net/P001" target="_blank">
+          <span class="label label-primary"><i class="fa fa-external-link"></i> P001</span>
+        </a>
+      </td>
+      <td>
+        <a href="https://staff.theopencloset.net/J001" target="_blank">
+          <span class="label label-default"><i class="fa fa-external-link"></i> J001</span>
+        </a>
+      </td>
+      <td>
+        <button class="btn btn-default btn-sm">미리보기</button>
+        <button class="btn btn-success btn-sm">치수변경</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
