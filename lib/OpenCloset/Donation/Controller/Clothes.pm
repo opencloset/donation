@@ -185,14 +185,14 @@ sub create {
     $self->redirect_to('clothes.add');
 }
 
-=head2 list
+=head2 repair_list
 
     # repair_clothes
     GET /clothes/repair
 
 =cut
 
-sub list {
+sub repair_list {
     my $self = shift;
     my $page = $self->param('p') || 1;
 

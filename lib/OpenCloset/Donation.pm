@@ -100,7 +100,7 @@ sub _private_routes {
     $donation->get('/clothes/new')->to('clothes#add')->name('clothes.add');
     $donation->post('/clothes')->to('clothes#create')->name('clothes.create');
 
-    $clothes->get('/repair')->to('Clothes#list')->name('repair_clothes');
+    $clothes->get('/repair')->to('Clothes#repair_list')->name('repair_clothes');
     $clothes->put('/repair/:code')->to('API#repair_clothes')->name('clothes.repair');
     $clothes->get('/code')->to('API#code');
 }
