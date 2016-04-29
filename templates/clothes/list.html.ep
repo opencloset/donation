@@ -1,5 +1,10 @@
 % title '수선의류목록';
-% layout 'private';
+% layout 'private', jses => [
+%   '/assets/components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js',
+%   '/assets/dist/js/repair-clothes.min.js'
+% ], csses => [
+%   '/assets/components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
+% ];
 
 <table class="table table-bordered">
   <thead>
