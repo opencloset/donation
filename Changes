@@ -1,4 +1,5 @@
   - Add route: GET /clothes/repair
+  - Add route: PUT /clothes/repair/:code
 
 v0.1.7    Wed, 04 May 2016 12:10:30 +0900
   - 개인정보동의서 수정 (#7)

@@ -106,4 +106,57 @@ sub code {
     $self->render( json => { category => $category, code => $code } );
 }
 
+=head2 repair_clothes
+
+    # clothes.repair
+    PUT /clothes/repair/:code
+
+=cut
+
+sub repair_clothes {
+    my $self = shift;
+    my $code = $self->param('code');
+
+    my $v = $self->validation;
+    $v->optional('done');
+    $v->optional('alteration-at');
+    $v->optional('cost')->like(qr/^\d*$/);
+    $v->optional('assign-date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+    $v->optional('pickup-date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
+    return $self->error( 404, "Clothes not found: $code" ) unless $clothes;
+
+    my $r = $self->schema->resultset('RepairClothes')->find_or_create( { clothes_code => $clothes->code } );
+
+    unless ($r) {
+        my $err = "Couldn't find or create repair clothes";
+        $self->log->error($err);
+        return $self->error( 500, $err );
+    }
+
+    my $done          = $v->param('done');
+    my $alteration_at = $v->param('alteration-at');
+    my $cost          = $v->param('cost');
+    my $assign_date   = $v->param('assign-date');
+    my $pickup_date   = $v->param('pickup-date');
+
+    $r->update(
+        {
+            done          => $done,
+            alteration_at => $alteration_at,
+            cost          => $cost,
+            assign_date   => $assign_date,
+            pickup_date   => $pickup_date,
+        }
+    );
+
+    $self->render( json => { $r->get_columns } );
+}
+
 1;
