@@ -1,6 +1,7 @@
 package OpenCloset::Donation::Controller::Clothes;
 use Mojo::Base 'Mojolicious::Controller';
 
+use Data::Pageset;
 use Try::Tiny;
 
 use OpenCloset::Donation::Category;
@@ -193,6 +194,25 @@ sub create {
 
 sub list {
     my $self = shift;
+    my $page = $self->param('p') || 1;
+
+    my $rs = $self->schema->resultset('Clothes')->search(
+        {
+            category  => { -in => [ $OpenCloset::Donation::Category::PANTS, $OpenCloset::Donation::Category::SKIRT ] },
+            status_id => $self->get_status('수선')
+        },
+        { rows => 15, page => $page, order_by => { -desc => 'id' } }
+    );
+    my $pageset = Data::Pageset->new(
+        {
+            total_entries    => $rs->pager->total_entries,
+            entries_per_page => $rs->pager->entries_per_page,
+            pages_per_set    => 5,
+            current_page     => $page,
+        }
+    );
+
+    $self->render( clothes => $rs, pageset => $pageset );
 }
 
 1;

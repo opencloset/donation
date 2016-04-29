@@ -5,30 +5,66 @@
   <thead>
     <tr>
       <th>수선여부</th>
+      <th>수선장소</th>
+      <th>비용</th>
+      <th>맡긴날</th>
+      <th>수거일</th>
+      <th>기증자</th>
       <th>팬츠/스커트</th>
       <th>자켓</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
+    % while (my $row = $clothes->next) {
+    % my $r = $row->repair_clothes;
     <tr>
       <td>
-        <input type="checkbox" value="">
+        % if ($r) {
+          % if ($r->done) {
+            <input type="checkbox" value="1" checked>
+          % } else {
+            <input type="checkbox" value="1">
+          % }
+        % } else {
+        <input type="checkbox" value="1">
+        % }
       </td>
       <td>
-        <a href="https://staff.theopencloset.net/P001" target="_blank">
-          <span class="label label-primary"><i class="fa fa-external-link"></i> P001</span>
+        %= $r ? $r->alteration_at : ''
+      </td>
+      <td>
+        <samp>
+          %= $r ? $r->cost : ''
+        </samp>
+      </td>
+      <td>
+        %= $r ? $r->assign_date || '' : ''
+      </td>
+      <td>
+        %= $r ? $r->pickup_date || '' : ''
+      </td>
+      <td>
+        % my $donation = $row->donation;
+        % my $user = $donation->user;
+        <a href="<%= url_for('clothes.add', id => $user->id, donation_id => $donation->id) %>">
+          %= $user->name
         </a>
       </td>
       <td>
-        <a href="https://staff.theopencloset.net/J001" target="_blank">
-          <span class="label label-default"><i class="fa fa-external-link"></i> J001</span>
-        </a>
+        %= clothes2link($row, 1)
+      </td>
+      <td>
+        % if (my $suit = $row->suit_code_bottom) {
+          %= clothes2link($suit->code_top, 1)
+        % }
       </td>
       <td>
         <button class="btn btn-default btn-sm">미리보기</button>
         <button class="btn btn-success btn-sm">치수변경</button>
       </td>
     </tr>
+    % }
   </tbody>
 </table>
+%= include 'partials/pagination', pageset => $pageset;
