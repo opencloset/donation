@@ -8,7 +8,7 @@
       <i class="fa fa-search" aria-hidden="true"></i>
       사용자 검색
     </a>
-    <a class="btn btn-default navbar-btn" href="<%= url_for('clothes') %>">
+    <a class="btn btn-default navbar-btn" href="<%= url_for('repair_clothes') %>">
       <i class="fa fa-wrench" aria-hidden="true"></i>
       수선의류 목록
     </a>

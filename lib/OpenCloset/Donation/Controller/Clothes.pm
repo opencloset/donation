@@ -186,8 +186,8 @@ sub create {
 
 =head2 list
 
-    # clothes
-    GET /clothes
+    # repair_clothes
+    GET /clothes/repair
 
 =cut
 
