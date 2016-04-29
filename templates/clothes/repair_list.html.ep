@@ -23,31 +23,35 @@
   <tbody>
     % while (my $row = $clothes->next) {
     % my $r = $row->repair_clothes;
+    % my $done = $r ? $r->done : '';
+    % my $alteration_at = $r ? $r->alteration_at : '';
+    % my $cost = $r ? $r->cost : '';
+    % my $assign_date = $r ? $r->assign_date : '';
+    % my $pickup_date = $r ? $r->pickup_date : '';
     <tr>
       <td>
-        % if ($r) {
-          % if ($r->done) {
-            <input type="checkbox" value="1" checked>
-          % } else {
-            <input type="checkbox" value="1">
-          % }
-        % } else {
-        <input type="checkbox" value="1">
-        % }
+        <a href="#" class="repair-clothes-column-done" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="done" data-title="수선여부" data-pk="1" data-value="<%= $done %>">
+        </a>
       </td>
       <td>
-        %= $r ? $r->alteration_at : ''
+        <a href="#" class="repair-clothes-column" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="alteration_at" data-title="수선장소" data-pk="1">
+          %= $alteration_at
+        </a>
       </td>
       <td>
-        <samp>
-          %= $r ? $r->cost : ''
-        </samp>
+        <a href="#" class="repair-clothes-column" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="cost" data-title="비용" data-pk="1">
+          %= $cost
+        </a>
       </td>
       <td>
-        %= $r ? $r->assign_date || '' : ''
+        <a href="#" class="repair-clothes-column" data-type="date" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="assign_date" data-title="맡긴날" data-pk="1">
+          %= $assign_date ? $assign_date->ymd : ''
+        </a>
       </td>
       <td>
-        %= $r ? $r->pickup_date || '' : ''
+        <a href="#" class="repair-clothes-column" data-type="date" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="pickup_date" data-title="수거일" data-pk="1">
+          %= $pickup_date ? $pickup_date->ymd : ''
+        </a>
       </td>
       <td>
         % my $donation = $row->donation;

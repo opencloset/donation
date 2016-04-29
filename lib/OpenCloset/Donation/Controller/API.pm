@@ -119,10 +119,10 @@ sub repair_clothes {
 
     my $v = $self->validation;
     $v->optional('done');
-    $v->optional('alteration-at');
+    $v->optional('alteration_at');
     $v->optional('cost')->like(qr/^\d*$/);
-    $v->optional('assign-date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
-    $v->optional('pickup-date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+    $v->optional('assign_date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+    $v->optional('pickup_date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
 
     if ( $v->has_error ) {
         my $failed = $v->failed;
@@ -140,22 +140,10 @@ sub repair_clothes {
         return $self->error( 500, $err );
     }
 
-    my $done          = $v->param('done');
-    my $alteration_at = $v->param('alteration-at');
-    my $cost          = $v->param('cost');
-    my $assign_date   = $v->param('assign-date');
-    my $pickup_date   = $v->param('pickup-date');
+    my $input = $v->input;
+    map { delete $input->{$_} } qw/name pk value/; # delete x-editable params
 
-    $r->update(
-        {
-            done          => $done,
-            alteration_at => $alteration_at,
-            cost          => $cost,
-            assign_date   => $assign_date,
-            pickup_date   => $pickup_date,
-        }
-    );
-
+    $r->update($input);
     $self->render( json => { $r->get_columns } );
 }
 
