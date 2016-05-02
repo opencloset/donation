@@ -1,9 +1,12 @@
 % title '수선의류목록';
 % layout 'private', jses => [
 %   '/assets/components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js',
+%   '/assets/components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
+%   '/assets/components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.kr.min.js',
 %   '/assets/dist/js/repair-clothes.min.js'
 % ], csses => [
-%   '/assets/components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
+%   '/assets/components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css',
+%   '/assets/components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css'
 % ];
 
 <table class="table table-bordered">
@@ -31,28 +34,24 @@
     % my $pickup_date = $r ? $r->pickup_date : '';
     <tr>
       <td>
-        <a href="#" class="repair-clothes-column-done" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="done" data-title="수선여부" data-pk="<%= $pk %>" data-value="<%= $done %>">
+        <a href="#" class="repair-clothes-column repair-clothes-column-done-editable" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="done" data-title="수선여부" data-pk="<%= $pk %>" data-value="<%= $done %>">
         </a>
       </td>
       <td>
-        <a href="#" class="repair-clothes-column" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="alteration_at" data-title="수선장소" data-pk="<%= $pk %>">
+        <a href="#" class="repair-clothes-column repair-clothes-column-editable" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="alteration_at" data-title="수선장소" data-pk="<%= $pk %>">
           %= $alteration_at
         </a>
       </td>
       <td>
-        <a href="#" class="repair-clothes-column" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="cost" data-title="비용" data-pk="<%= $pk %>">
+        <a href="#" class="repair-clothes-column repair-clothes-column-editable" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="cost" data-title="비용" data-pk="<%= $pk %>">
           %= $cost
         </a>
       </td>
       <td>
-        <a href="#" class="repair-clothes-column" data-type="date" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="assign_date" data-title="맡긴날" data-pk="<%= $pk %>">
-          %= $assign_date ? $assign_date->ymd : ''
-        </a>
+        <input name="assign_date" class="repair-clothes-column datepicker<%= $assign_date ? '' : ' empty' %>" type="text" value="<%= $assign_date ? $assign_date->ymd : '비어있음' %>" data-provide="datepicker" data-url="<%= url_for('clothes.repair', code => $row->code) %>">
       </td>
       <td>
-        <a href="#" class="repair-clothes-column" data-type="date" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="pickup_date" data-title="수거일" data-pk="<%= $pk %>">
-          %= $pickup_date ? $pickup_date->ymd : ''
-        </a>
+        <input name="pickup_date" class="repair-clothes-column datepicker<%= $pickup_date ? '' : ' empty' %>" type="text" value="<%= $pickup_date ? $pickup_date->ymd : '비어있음' %>" data-provide="datepicker" data-url="<%= url_for('clothes.repair', code => $row->code) %>">
       </td>
       <td>
         % my $donation = $row->donation;

@@ -146,3 +146,25 @@ em {
 input#code {
     text-transform: uppercase;
 }
+@repair-clothes-column-color: #0088cc;
+input.repair-clothes-column {
+    color: @repair-clothes-column-color;
+    display: inline-block;
+    cursor: pointer;
+    background-color:transparent;
+    border: 0px solid;
+    border-radius: 0;
+    border-bottom: 1px dashed @repair-clothes-column-color;
+    width: 85px;
+    &:focus {
+        outline: none;
+    }
+}
+.repair-clothes-column {
+    border-radius: 0;
+    border-bottom: 1px dashed @repair-clothes-column-color;
+    &.empty {
+        color: #dd1144;
+        font-style: italic;
+    }
+}
