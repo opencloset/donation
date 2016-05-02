@@ -3,7 +3,7 @@
 %   '/assets/components/growl/javascripts/jquery.growl.js',
 %   '/assets/dist/js/clothes-add.min.js'
 % ], csses => ['/assets/components/growl/stylesheets/jquery.growl.css'];
-% use OpenCloset::Donation::Category;
+% use OpenCloset::Constants::Category;
 % my $user_info = $user->user_info;
 
 <h3>
@@ -42,10 +42,10 @@
       의류의 종류
     </p>
     <ul class="list-inline">
-      % for my $category (@OpenCloset::Donation::Category::ALL) {
+      % for my $category (@OpenCloset::Constants::Category::ALL) {
       <li>
         <button class="btn btn-default btn-sm js-category" data-category="<%= $category %>">
-          %= $OpenCloset::Donation::Category::LABEL_MAP{$category}
+          %= $OpenCloset::Constants::Category::LABEL_MAP{$category}
         </button>
       </li>
       % }

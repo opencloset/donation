@@ -12,4 +12,5 @@ requires 'Parcel::Track::KR::CJKorea';
 requires 'Try::Tiny';
 
 # cpan.theopencloset.net
+requires 'OpenCloset::Common';
 requires 'OpenCloset::Plugin::Helpers';

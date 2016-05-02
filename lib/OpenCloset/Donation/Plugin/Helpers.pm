@@ -6,7 +6,8 @@ use Mojo::ByteStream;
 use Mojo::DOM::HTML;
 use Math::Fleximal;
 
-use OpenCloset::Donation::Category;
+use OpenCloset::Constants::Measurement;
+use OpenCloset::Constants::Category;
 use OpenCloset::Donation::Status;
 
 =encoding utf8
