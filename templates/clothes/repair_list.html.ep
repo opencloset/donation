@@ -23,6 +23,7 @@
   <tbody>
     % while (my $row = $clothes->next) {
     % my $r = $row->repair_clothes;
+    % my $pk = $r ? $r->clothes_code : 1;
     % my $done = $r ? $r->done : '';
     % my $alteration_at = $r ? $r->alteration_at : '';
     % my $cost = $r ? $r->cost : '';
@@ -30,26 +31,26 @@
     % my $pickup_date = $r ? $r->pickup_date : '';
     <tr>
       <td>
-        <a href="#" class="repair-clothes-column-done" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="done" data-title="수선여부" data-pk="1" data-value="<%= $done %>">
+        <a href="#" class="repair-clothes-column-done" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="done" data-title="수선여부" data-pk="<%= $pk %>" data-value="<%= $done %>">
         </a>
       </td>
       <td>
-        <a href="#" class="repair-clothes-column" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="alteration_at" data-title="수선장소" data-pk="1">
+        <a href="#" class="repair-clothes-column" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="alteration_at" data-title="수선장소" data-pk="<%= $pk %>">
           %= $alteration_at
         </a>
       </td>
       <td>
-        <a href="#" class="repair-clothes-column" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="cost" data-title="비용" data-pk="1">
+        <a href="#" class="repair-clothes-column" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="cost" data-title="비용" data-pk="<%= $pk %>">
           %= $cost
         </a>
       </td>
       <td>
-        <a href="#" class="repair-clothes-column" data-type="date" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="assign_date" data-title="맡긴날" data-pk="1">
+        <a href="#" class="repair-clothes-column" data-type="date" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="assign_date" data-title="맡긴날" data-pk="<%= $pk %>">
           %= $assign_date ? $assign_date->ymd : ''
         </a>
       </td>
       <td>
-        <a href="#" class="repair-clothes-column" data-type="date" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="pickup_date" data-title="수거일" data-pk="1">
+        <a href="#" class="repair-clothes-column" data-type="date" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="pickup_date" data-title="수거일" data-pk="<%= $pk %>">
           %= $pickup_date ? $pickup_date->ymd : ''
         </a>
       </td>
