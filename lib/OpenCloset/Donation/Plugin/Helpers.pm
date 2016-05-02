@@ -2,9 +2,10 @@ package OpenCloset::Donation::Plugin::Helpers;
 
 use Mojo::Base 'Mojolicious::Plugin';
 
+use Math::Fleximal;
 use Mojo::ByteStream;
 use Mojo::DOM::HTML;
-use Math::Fleximal;
+use Text::Diff;
 
 use OpenCloset::Constants::Measurement;
 use OpenCloset::Constants::Category;
@@ -39,6 +40,7 @@ sub register {
     $app->helper( generate_discard_code => \&generate_discard_code );
     $app->helper( inch2cm               => \&inch2cm );
     $app->helper( cm2inch               => \&cm2inch );
+    $app->helper( clothesDiff           => \&clothesDiff );
 }
 
 =head1 HELPERS
@@ -252,7 +254,7 @@ sub clothes2text {
 
     my @texts;
     for my $c ( sort keys %h ) {
-        push @texts, sprintf( '%s %d', $OpenCloset::Donation::Category::LABEL_MAP{$c}, $h{$c} );
+        push @texts, sprintf( '%s %d', $OpenCloset::Constants::Category::LABEL_MAP{$c}, $h{$c} );
     }
 
     return join( ', ', @texts );
@@ -377,6 +379,63 @@ sub cm2inch {
     my ( $self, $cm ) = @_;
     return 0.00 unless $cm;
     return sprintf( '%.2f', $cm * 100 / 254 );
+}
+
+=head2 clothesDiff( $source, $target or $expected_size )
+
+    %= clothesDiff($clothes, { waist => 78 })
+
+=cut
+
+sub clothesDiff {
+    my ( $self, $source, $target ) = @_;
+
+    my $source_str = _clothes_measurement2text($source);
+    return $source_str unless $target;
+
+    my %columns = $source->get_columns;
+    for my $key ( keys %$target ) {
+        $columns{$key} = $target->{$key};
+    }
+
+    my $target_str = _clothes_measurement2text( \%columns );
+    return diff( \$source_str, \$target_str );
+}
+
+=head2 _clothes_measurement2text( $clothes | $hashref )
+
+    _clothes_measurement2text($clothes);
+    # neck: 0
+    # bust: 97
+    # waist: 78
+    # ...
+
+    _clothes_measurement2text({ bust: 100 })
+    # bust: 100
+
+=cut
+
+sub _clothes_measurement2text {
+    my $clothes = shift;
+
+    return '' unless $clothes;
+
+    my %columns;
+    if ( ref $clothes eq 'HASH' ) {
+        %columns = %$clothes;
+    }
+    else {
+        %columns = $clothes->get_columns;
+    }
+
+    my @sizes;
+    for my $part (qw/neck bust waist hip topbelly belly arm thigh length cuff/) {
+        my $size = $columns{$part} || '';
+        next unless $size;
+        push @sizes, sprintf "%s: %s", $OpenCloset::Constants::Measurement::LABEL_MAP{$part}, $size;
+    }
+
+    return join( "\n", @sizes );
 }
 
 1;

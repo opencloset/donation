@@ -9,6 +9,7 @@ requires 'Mojolicious';
 requires 'Mojolicious::Plugin::Config';
 requires 'Parcel::Track';
 requires 'Parcel::Track::KR::CJKorea';
+requires 'Text::Diff';
 requires 'Try::Tiny';
 
 # cpan.theopencloset.net
