@@ -19,6 +19,17 @@ $ ->
       params[params.name] = params.value
       params
 
+  $('.repair-clothes-column-alteration-at-editable').editable
+    source: [
+      {value: '밀라노', text: '밀라노'},
+      {value: '단골', text: '단골'}
+      {value: '미도', text: '미도'}
+      {value: '기타', text: '기타'}
+    ]
+    params: (params) ->
+      params[params.name] = params.value
+      params
+
   $('.datepicker').datepicker
     todayHighlight: true
     autoclose:      true

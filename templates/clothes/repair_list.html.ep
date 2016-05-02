@@ -38,7 +38,7 @@
         </a>
       </td>
       <td>
-        <a href="#" class="repair-clothes-column repair-clothes-column-editable" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="alteration_at" data-title="수선장소" data-pk="<%= $pk %>">
+        <a href="#" class="repair-clothes-column repair-clothes-column-alteration-at-editable" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="alteration_at" data-title="수선장소" data-pk="<%= $pk %>">
           %= $alteration_at
         </a>
       </td>
