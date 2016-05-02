@@ -4,7 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use Data::Pageset;
 use Try::Tiny;
 
-use OpenCloset::Donation::Category;
+use OpenCloset::Constants::Category;
 
 has schema => sub { shift->app->schema };
 
@@ -198,7 +198,7 @@ sub repair_list {
 
     my $rs = $self->schema->resultset('Clothes')->search(
         {
-            category  => { -in => [ $OpenCloset::Donation::Category::PANTS, $OpenCloset::Donation::Category::SKIRT ] },
+            category  => { -in => [ $OpenCloset::Constants::Category::PANTS, $OpenCloset::Constants::Category::SKIRT ] },
             status_id => $self->get_status('수선')
         },
         { rows => 15, page => $page, order_by => { -desc => 'id' } }
