@@ -5,6 +5,7 @@ $.fn.editable.defaults.ajaxOptions =
   dataType: 'json'
 
 $ ->
+  hljs.initHighlightingOnLoad()
   $('.repair-clothes-column-editable').editable
     params: (params) ->
       params[params.name] = params.value
