@@ -103,6 +103,7 @@ sub _private_routes {
     $clothes->get('/repair')->to('Clothes#repair_list')->name('repair_clothes');
     $clothes->put('/repair/:code')->to('API#repair_clothes')->name('clothes.repair');
     $clothes->get('/code')->to('API#code');
+    $clothes->get('/:code/resize')->to('API#resize_clothes')->name('clothes.resize');
 }
 
 sub _extend_validator {

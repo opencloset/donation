@@ -147,4 +147,15 @@ sub repair_clothes {
     $self->render( json => { $r->get_columns } );
 }
 
+=head2 resize
+
+    # clothes.resize
+    GET /clothes/:code/resize
+
+=cut
+
+sub resize_clothes {
+    my $self = shift;
+}
+
 1;
