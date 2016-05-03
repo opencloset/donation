@@ -66,14 +66,23 @@ $ ->
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
-  $('.collapse').on 'show.bs.collapse', ->
+  $('.collapse.bottom').on 'show.bs.collapse', ->
     id   = $(@).prop('id')
     code = $(@).data('code')
     $.ajax "/clothes/#{code}/resize",
       type: 'GET'
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
-        $("##{id} .diff.hljs").html(data.diff)
+        $("##{id} .diff.hljs").html(data.diff.bottom)
         hljs.highlightBlock($("##{id} .diff.hljs").get(0))
+        top_id = id.replace /bottom/, 'top'
+        $("##{top_id} .diff.hljs").html(data.diff.top)
+        hljs.highlightBlock($("##{top_id} .diff.hljs").get(0))
+        $("##{top_id}").collapse('show')
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
+
+  $('.collapse.bottom').on 'hide.bs.collapse', ->
+    id     = $(@).prop('id')
+    top_id = id.replace /bottom/, 'top'
+    $("##{top_id}").collapse('hide')

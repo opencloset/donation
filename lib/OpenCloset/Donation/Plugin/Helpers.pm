@@ -399,10 +399,12 @@ sub clothesDiff {
     }
 
     my $target_str = _clothes_measurement2text( \%columns );
+    $self->log->debug("source: $source_str");
+    $self->log->debug("target: $target_str");
     return diff( \$source_str, \$target_str );
 }
 
-=head2 _clothes_measurement2text( $clothes | $hashref )
+=head2 _clothes_measurement2text( $clothes or $hashref )
 
     _clothes_measurement2text($clothes);
     # neck: 0

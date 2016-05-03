@@ -2,7 +2,9 @@ package OpenCloset::Donation::Controller::API;
 use Mojo::Base 'Mojolicious::Controller';
 
 use HTTP::Tiny;
+
 use OpenCloset::Clothes;
+use OpenCloset::Constants::Category;
 
 has schema => sub { shift->app->schema };
 
@@ -148,10 +150,18 @@ sub repair_clothes {
     $self->render( json => { $r->get_columns } );
 }
 
-=head2 resize
+=head2 resize_clothes
 
     # clothes.resize
     GET /clothes/:code/resize
+
+=over Supports Categories
+
+=item PANTS
+
+=item SKIRT
+
+=back
 
 =cut
 
@@ -162,11 +172,23 @@ sub resize_clothes {
     my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
     return $self->error( 404, "Clothes not found: $code" ) unless $rs;
 
-    my $clothes = OpenCloset::Clothes->new( clothes => $rs );
+    my $category = $rs->category;
+    return $self->error( 400, "Unsupported category: $category" ) unless "$PANTS $SKIRT" =~ m/\b$category\b/;
+
+    my $suit   = $rs->suit_code_bottom;
+    my $top    = $suit ? $suit->code_top : undef;
+    my $bottom = $rs;
+
+    my $clothes = OpenCloset::Clothes->new( clothes => $bottom );
     my $suggestion = $clothes->suggest_repair_size;
 
-    my $diff = $self->clothesDiff( $rs, $suggestion );
-    $self->render( json => { diff => $diff } );
+    my $diff_bottom = $self->clothesDiff( $bottom, $suggestion->{bottom} );
+    my $diff_top = '';
+    if ($top) {
+        $diff_top = $self->clothesDiff( $top, $suggestion->{top} );
+    }
+
+    $self->render( json => { diff => { top => $diff_top, bottom => $diff_bottom } } );
 }
 
 1;

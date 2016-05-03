@@ -64,20 +64,25 @@
       </td>
       <td>
         %= clothes2link($row, 1)
-      </td>
-      <td>
-        % if (my $suit = $row->suit_code_bottom) {
-          %= clothes2link($suit->code_top, 1)
-        % }
-      </td>
-      <td>
-        <button class="btn btn-default btn-sm" data-toggle="collapse" href="#preview-<%= $row->code %>">미리보기</button>
-        <button class="btn btn-success btn-sm">치수변경</button>
-        <div id="preview-<%= $row->code %>" data-code="<%= $row->code %>" class="collapse">
+        <div id="preview-bottom-<%= $row->code %>" data-code="<%= $row->code %>" class="collapse bottom">
           <div>
             <pre><code class="diff hljs"></code></pre>
           </div>
         </div>
+      </td>
+      <td>
+        % if (my $suit = $row->suit_code_bottom) {
+          %= clothes2link($suit->code_top, 1)
+          <div id="preview-top-<%= $row->code %>" class="collapse">
+            <div>
+              <pre><code class="diff hljs"></code></pre>
+            </div>
+          </div>
+        % }
+      </td>
+      <td>
+        <button class="btn btn-default btn-sm" data-toggle="collapse" href="#preview-bottom-<%= $row->code %>">미리보기</button>
+        <button class="btn btn-success btn-sm">치수변경</button>
       </td>
     </tr>
     % }
