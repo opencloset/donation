@@ -68,21 +68,41 @@
           <div>
             <pre><code class="diff hljs"></code></pre>
           </div>
+          <ul class="desc text-muted"></ul>
         </div>
       </td>
       <td>
         % if (my $suit = $row->suit_code_bottom) {
           %= clothes2link($suit->code_top, 1)
-          <div id="preview-top-<%= $row->code %>" class="collapse">
+          <div id="preview-top-<%= $row->code %>" class="hidden">
             <div>
               <pre><code class="diff hljs"></code></pre>
             </div>
+            <ul class="desc text-muted"></ul>
           </div>
         % }
       </td>
       <td>
         <button class="btn btn-default btn-sm" data-toggle="collapse" href="#preview-bottom-<%= $row->code %>">미리보기</button>
         <button class="btn btn-success btn-sm">치수변경</button>
+        <div class="options hidden">
+          <hr>
+          <form id="form-<%= $row->code %>" data-code="<%= $row->code %>" action="<%= url_for('clothes.resize', code => $row->code) %>">
+            <div class="form-inline">
+              <input name="stretch" class="form-control input-sm" type="text" placeholder="허리늘임 cm" style="width: 100px;">
+              <button class="btn btn-default btn-sm btn-refresh">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+                <span class="sr-only">Refresh</span>
+              </button>
+            </div>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="has_tuck" value="1"> 1턱
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="has_dual_tuck" value="1"> 2턱
+            </label>
+          </form>
+        </div>
       </td>
     </tr>
     % }

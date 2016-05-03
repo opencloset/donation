@@ -69,7 +69,11 @@ $ ->
   $('.collapse.bottom').on 'show.bs.collapse', ->
     id   = $(@).prop('id')
     code = $(@).data('code')
-    $.ajax "/clothes/#{code}/resize",
+    top_id = id.replace /bottom/, 'top'
+    $("##{top_id}").toggleClass('hidden')
+
+    params = $("#form-#{code}").serialize()
+    $.ajax "/clothes/#{code}/resize?#{params}",
       type: 'GET'
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
@@ -82,7 +86,22 @@ $ ->
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
+    $td = $(@).closest('td').next().next()
+    $td.find('.options').toggleClass('hidden')
+
   $('.collapse.bottom').on 'hide.bs.collapse', ->
     id     = $(@).prop('id')
     top_id = id.replace /bottom/, 'top'
-    $("##{top_id}").collapse('hide')
+    $("##{top_id}").toggleClass('hidden')
+
+    $("##{id} .desc").empty()
+    $("##{top_id} .desc").empty()
+
+    $td = $(@).closest('td').next().next()
+    $td.find('.options').toggleClass('hidden')
+
+  $('table').on 'click', '.btn-refresh', (e) ->
+    e.preventDefault()
+    code = $(@).closest('form').data('code')
+    $collapse = $("#preview-bottom-#{code}")
+    $collapse.trigger('hide').trigger('show')

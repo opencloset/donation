@@ -169,6 +169,15 @@ sub resize_clothes {
     my $self = shift;
     my $code = $self->param('code');
 
+    my $stretch       = $self->param('stretch') || 0;
+    my $has_tuck      = $self->param('has_tuck');
+    my $has_dual_tuck = $self->param('has_dual_tuck');
+    my $opts          = {
+        stretch       => $stretch,
+        has_tuck      => $has_tuck,
+        has_dual_tuck => $has_dual_tuck
+    };
+
     my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
     return $self->error( 404, "Clothes not found: $code" ) unless $rs;
 
@@ -180,7 +189,7 @@ sub resize_clothes {
     my $bottom = $rs;
 
     my $clothes = OpenCloset::Clothes->new( clothes => $bottom );
-    my $suggestion = $clothes->suggest_repair_size;
+    my $suggestion = $clothes->suggest_repair_size($opts);
 
     my $diff_bottom = $self->clothesDiff( $bottom, $suggestion->{bottom} );
     my $diff_top = '';
