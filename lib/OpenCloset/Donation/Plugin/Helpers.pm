@@ -435,6 +435,7 @@ sub _clothes_measurement2text {
         push @sizes, sprintf "%s: %s", $OpenCloset::Constants::Measurement::LABEL_MAP{$part}, $size;
     }
 
+    push @sizes, "\n";
     return join( "\n", @sizes );
 }
 

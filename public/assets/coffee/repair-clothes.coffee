@@ -5,7 +5,6 @@ $.fn.editable.defaults.ajaxOptions =
   dataType: 'json'
 
 $ ->
-  hljs.initHighlightingOnLoad()
   $('.repair-clothes-column-editable').editable
     params: (params) ->
       params[params.name] = params.value
@@ -64,5 +63,17 @@ $ ->
             $this.removeClass('editable-bg-transition')
           , 1700
         , 10
+      error: (jqXHR, textStatus, errorThrown) ->
+      complete: (jqXHR, textStatus) ->
+
+  $('.collapse').on 'show.bs.collapse', ->
+    id   = $(@).prop('id')
+    code = $(@).data('code')
+    $.ajax "/clothes/#{code}/resize",
+      type: 'GET'
+      dataType: 'json'
+      success: (data, textStatus, jqXHR) ->
+        $("##{id} .diff.hljs").html(data.diff)
+        hljs.highlightBlock($("##{id} .diff.hljs").get(0))
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->

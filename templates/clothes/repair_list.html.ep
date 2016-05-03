@@ -73,7 +73,7 @@
       <td>
         <button class="btn btn-default btn-sm" data-toggle="collapse" href="#preview-<%= $row->code %>">미리보기</button>
         <button class="btn btn-success btn-sm">치수변경</button>
-        <div id="preview-<%= $row->code %>" class="collapse">
+        <div id="preview-<%= $row->code %>" data-code="<%= $row->code %>" class="collapse">
           <div>
             <pre><code class="diff hljs"></code></pre>
           </div>

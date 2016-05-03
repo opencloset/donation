@@ -2,6 +2,7 @@ package OpenCloset::Donation::Controller::API;
 use Mojo::Base 'Mojolicious::Controller';
 
 use HTTP::Tiny;
+use OpenCloset::Clothes;
 
 has schema => sub { shift->app->schema };
 
@@ -156,6 +157,16 @@ sub repair_clothes {
 
 sub resize_clothes {
     my $self = shift;
+    my $code = $self->param('code');
+
+    my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
+    return $self->error( 404, "Clothes not found: $code" ) unless $rs;
+
+    my $clothes = OpenCloset::Clothes->new( clothes => $rs );
+    my $suggestion = $clothes->suggest_repair_size;
+
+    my $diff = $self->clothesDiff( $rs, $suggestion );
+    $self->render( json => { diff => $diff } );
 }
 
 1;
