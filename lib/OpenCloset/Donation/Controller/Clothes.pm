@@ -53,7 +53,7 @@ sub create {
     my $user     = $self->stash('user');
     my $donation = $self->stash('donation');
 
-    my @categories = @OpenCloset::Donation::Category::ALL;
+    my @categories = @OpenCloset::Constants::Category::ALL;
 
     my $v = $self->validation;
     $v->required('discard');
@@ -124,7 +124,7 @@ sub create {
     my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
     return $self->error( 400, "Duplicate clothes code: $code" ) if $clothes;
 
-    my $price = $OpenCloset::Donation::Category::PRICE{$category};
+    my $price = $OpenCloset::Constants::Category::PRICE{$category};
 
     ## transaction
     my $guard = $self->schema->txn_scope_guard;
