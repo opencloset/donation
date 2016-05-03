@@ -197,7 +197,7 @@ sub resize_clothes {
         $diff_top = $self->clothesDiff( $top, $suggestion->{top} );
     }
 
-    $self->render( json => { diff => { top => $diff_top, bottom => $diff_bottom } } );
+    $self->render( json => { diff => { top => $diff_top, bottom => $diff_bottom }, messages => $suggestion->{messages} } );
 }
 
 1;

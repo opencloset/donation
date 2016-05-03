@@ -79,10 +79,13 @@ $ ->
       success: (data, textStatus, jqXHR) ->
         $("##{id} .diff.hljs").html(data.diff.bottom)
         hljs.highlightBlock($("##{id} .diff.hljs").get(0))
-        top_id = id.replace /bottom/, 'top'
+        _.each data.messages.bottom, (el) ->
+          $("##{id} .desc").append("<li>#{el}</li>")
+
         $("##{top_id} .diff.hljs").html(data.diff.top)
         hljs.highlightBlock($("##{top_id} .diff.hljs").get(0))
-        $("##{top_id}").collapse('show')
+        _.each data.messages.top, (el) ->
+          $("##{top_id} .desc").append("<li>#{el}</li>")
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
