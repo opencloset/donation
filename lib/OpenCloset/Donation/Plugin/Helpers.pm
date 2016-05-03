@@ -399,9 +399,10 @@ sub clothesDiff {
     }
 
     my $target_str = _clothes_measurement2text( \%columns );
-    $self->log->debug("source: $source_str");
-    $self->log->debug("target: $target_str");
-    return diff( \$source_str, \$target_str );
+    my $diff = diff( \$source_str, \$target_str );
+
+    $diff = '변경이 없습니다' unless $diff;
+    return $diff;
 }
 
 =head2 _clothes_measurement2text( $clothes or $hashref )
