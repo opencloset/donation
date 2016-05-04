@@ -195,14 +195,22 @@ sub create {
 sub repair_list {
     my $self = shift;
     my $page = $self->param('p') || 1;
+    my $q    = $self->param('q');
 
-    my $rs = $self->schema->resultset('Clothes')->search(
-        {
+    my $cond;
+    my $attr = { rows => 15, page => $page, order_by => { -desc => 'id' } };
+
+    if ($q) {
+        $q = sprintf( '%05s', $q );
+        $cond = { code => $q };
+    }
+    else {
+        $cond = {
             category  => { -in => [ $OpenCloset::Constants::Category::PANTS, $OpenCloset::Constants::Category::SKIRT ] },
             status_id => $self->get_status('수선')
-        },
-        { rows => 15, page => $page, order_by => { -desc => 'id' } }
-    );
+        };
+    }
+    my $rs = $self->schema->resultset('Clothes')->search( $cond, $attr );
     my $pageset = Data::Pageset->new(
         {
             total_entries    => $rs->pager->total_entries,

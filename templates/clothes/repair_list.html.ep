@@ -11,6 +11,16 @@
 %   '/assets/components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css'
 % ];
 
+% my $q = param('q') || '';
+
+<form class="form-inline" method="GET" action="<%= url_for('repair_clothes') %>">
+  <div class="form-group">
+    <input name="q" type="text" class="form-control" placeholder="의류코드" value="<%= $q %>">
+  </div>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<hr>
+
 <table class="table table-bordered">
   <thead>
     <tr>
