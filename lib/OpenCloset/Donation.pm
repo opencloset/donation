@@ -104,6 +104,7 @@ sub _private_routes {
     $clothes->put('/repair/:code')->to('API#repair_clothes')->name('clothes.repair');
     $clothes->get('/code')->to('API#code');
     $clothes->get('/:code/suggestion')->to('API#suggestion_resize')->name('clothes.resize.suggestion');
+    $clothes->put('/:code/suggestion')->to('API#update_resize')->name('clothes.resize.update');
 }
 
 sub _extend_validator {

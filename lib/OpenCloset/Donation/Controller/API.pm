@@ -2,9 +2,14 @@ package OpenCloset::Donation::Controller::API;
 use Mojo::Base 'Mojolicious::Controller';
 
 use HTTP::Tiny;
+use Try::Tiny;
 
 use OpenCloset::Clothes;
 use OpenCloset::Constants::Category;
+
+## repair_clothes.done
+our $DONE_RESIZED   = 1;
+our $DONE_COMPLETED = 2;
 
 has schema => sub { shift->app->schema };
 
@@ -173,7 +178,9 @@ boolean(1 or 0)
 
 =back
 
-=over Supports Categories
+=head3 Supports Categories
+
+=over
 
 =item PANTS
 
@@ -216,6 +223,93 @@ sub suggestion_resize {
     }
 
     $self->render( json => { diff => { top => $diff_top, bottom => $diff_bottom }, messages => $suggestion->{messages} } );
+}
+
+=head2 update_resize
+
+    # clothes.resize.update
+    PUT /clothes/:code/suggestion
+
+=head3 params
+
+=over
+
+=item stretch
+
+unsigned int(cm)
+
+=item has_tuck
+
+boolean(1 or 0)
+
+=item has_dual_tuck
+
+boolean(1 or 0)
+
+=back
+
+=head3 Supports Categories
+
+=over
+
+=item PANTS
+
+=item SKIRT
+
+=back
+
+=cut
+
+sub update_resize {
+    my $self = shift;
+    my $code = $self->param('code');
+
+    my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
+    return $self->error( 404, "Clothes not found: $code" ) unless $rs;
+
+    my $category = $rs->category;
+    return $self->error( 400, "Unsupported category: $category" ) unless "$PANTS $SKIRT" =~ m/\b$category\b/;
+
+    my $stretch       = $self->param('stretch') || 0;
+    my $has_tuck      = $self->param('has_tuck');
+    my $has_dual_tuck = $self->param('has_dual_tuck');
+    my $opts          = {
+        stretch       => $stretch,
+        has_tuck      => $has_tuck,
+        has_dual_tuck => $has_dual_tuck
+    };
+
+    my $suit   = $rs->suit_code_bottom;
+    my $top    = $suit ? $suit->code_top : undef;
+    my $bottom = $rs;
+
+    my $clothes = OpenCloset::Clothes->new( clothes => $bottom );
+    my $suggestion = $clothes->suggest_repair_size($opts);
+
+    my $r = $self->schema->resultset('RepairClothes')->find_or_create( { clothes_code => $rs->code } );
+    unless ($r) {
+        my $err = "Couldn't find or create repair clothes";
+        $self->log->error($err);
+        return $self->error( 500, $err );
+    }
+
+    ## transaction
+    my $guard = $self->schema->txn_scope_guard;
+    try {
+        $bottom->update( $suggestion->{bottom} );
+        $top->update( $suggestion->{top} ) if $top;
+        $r->update( { done => $DONE_RESIZED } );
+        $guard->commit;
+    }
+    catch {
+        my $err = $_;
+        $self->log->error("Transaction error: clothes.resize.update");
+        $self->log->error($err);
+
+        return $self->error( 500, $err );
+    };
+
+    $self->render( json => { top => $top ? { $top->get_columns } : {}, bottom => { $bottom->get_columns }, repair => { $r->get_columns } } );
 }
 
 1;

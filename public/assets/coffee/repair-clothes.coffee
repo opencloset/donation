@@ -19,6 +19,10 @@ $ ->
     params: (params) ->
       params[params.name] = params.value
       params
+    success: (res, newValue) ->
+      $btn = $(@).closest('tr').find('td:last .btn-resize')
+      boolean = if parseInt(newValue) then true else false
+      $btn.prop('disabled', boolean)
 
   $('.repair-clothes-column-alteration-at-editable').editable
     source: [
@@ -107,5 +111,23 @@ $ ->
   $('table').on 'click', '.btn-refresh', (e) ->
     e.preventDefault()
     code = $(@).closest('form').data('code')
-    $collapse = $("#preview-bottom-#{code}")
-    $collapse.trigger('hide').trigger('show')
+    $div = $("#preview-bottom-#{code}")
+    $div.trigger('hide').trigger('show')
+
+  $('.btn-resize').click ->
+    $this = $(@)
+    code = $this.data('code')
+    $div = $("#preview-bottom-#{code}")
+
+    params = $("#form-#{code}").serialize()
+    $.ajax "/clothes/#{code}/suggestion",
+      type: 'PUT'
+      dataType: 'json'
+      data: params
+      success: (data, textStatus, jqXHR) ->
+        $this.closest('tr').find('td:first a').editable('setValue', data.repair.done)
+        $div.trigger('hide').trigger('show')
+        $this.prop('disabled', true)
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log textStatus
+      complete: (jqXHR, textStatus) ->
