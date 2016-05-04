@@ -13,7 +13,8 @@ $ ->
   $('.repair-clothes-column-done-editable').editable
     source: [
       {value: 0, text: ''},
-      {value: 1, text: '수선완료'}
+      {value: 1, text: '치수변경'},
+      {value: 2, text: '수선완료'}
     ]
     params: (params) ->
       params[params.name] = params.value
@@ -73,7 +74,7 @@ $ ->
     $("##{top_id}").toggleClass('hidden')
 
     params = $("#form-#{code}").serialize()
-    $.ajax "/clothes/#{code}/resize?#{params}",
+    $.ajax "/clothes/#{code}/suggestion?#{params}",
       type: 'GET'
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->

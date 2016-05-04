@@ -150,10 +150,28 @@ sub repair_clothes {
     $self->render( json => { $r->get_columns } );
 }
 
-=head2 resize_clothes
+=head2 suggestion_resize
 
-    # clothes.resize
-    GET /clothes/:code/resize
+    # clothes.resize.suggestion
+    GET /clothes/:code/suggestion
+
+=head3 params
+
+=over
+
+=item stretch
+
+unsigned int(cm)
+
+=item has_tuck
+
+boolean(1 or 0)
+
+=item has_dual_tuck
+
+boolean(1 or 0)
+
+=back
 
 =over Supports Categories
 
@@ -165,7 +183,7 @@ sub repair_clothes {
 
 =cut
 
-sub resize_clothes {
+sub suggestion_resize {
     my $self = shift;
     my $code = $self->param('code');
 

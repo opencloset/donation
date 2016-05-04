@@ -14,7 +14,7 @@
 <table class="table table-bordered">
   <thead>
     <tr>
-      <th>수선여부</th>
+      <th>진행상태</th>
       <th>수선장소</th>
       <th>비용</th>
       <th>맡긴날</th>
@@ -84,10 +84,10 @@
       </td>
       <td>
         <button class="btn btn-default btn-sm" data-toggle="collapse" href="#preview-bottom-<%= $row->code %>">미리보기</button>
-        <button class="btn btn-success btn-sm">치수변경</button>
+        <button class="btn btn-success btn-resize btn-sm"<%= $done ? 'disabled="disabled"' : '' %>>치수변경</button>
         <div class="options hidden">
           <hr>
-          <form id="form-<%= $row->code %>" data-code="<%= $row->code %>" action="<%= url_for('clothes.resize', code => $row->code) %>">
+          <form id="form-<%= $row->code %>" data-code="<%= $row->code %>" action="<%= url_for('clothes.resize.suggestion', code => $row->code) %>">
             <div class="form-inline">
               <input name="stretch" class="form-control input-sm" type="text" placeholder="허리늘임 cm" style="width: 100px;">
               <button class="btn btn-default btn-sm btn-refresh">
