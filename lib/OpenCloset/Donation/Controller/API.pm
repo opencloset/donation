@@ -152,7 +152,7 @@ sub repair_clothes {
     my $input = $v->input;
     map { delete $input->{$_} } qw/name pk value/; # delete x-editable params
 
-    if ( $input->{done} == $DONE_COMPLETED && !exists $input->{pickup_date} ) {
+    if ( exists $input->{done} && $input->{done} == $DONE_COMPLETED && !exists $input->{pickup_date} ) {
         $input->{pickup_date} = DateTime->now;
     }
 
