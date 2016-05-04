@@ -401,7 +401,7 @@ sub clothesDiff {
     my $target_str = _clothes_measurement2text( \%columns );
     my $diff = diff( \$source_str, \$target_str );
 
-    $diff = '변경이 없습니다' unless $diff;
+    $diff = $source_str unless $diff;
     return $diff;
 }
 
