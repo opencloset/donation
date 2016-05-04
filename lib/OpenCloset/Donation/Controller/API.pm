@@ -1,6 +1,7 @@
 package OpenCloset::Donation::Controller::API;
 use Mojo::Base 'Mojolicious::Controller';
 
+use DateTime;
 use HTTP::Tiny;
 use Try::Tiny;
 
@@ -150,6 +151,10 @@ sub repair_clothes {
 
     my $input = $v->input;
     map { delete $input->{$_} } qw/name pk value/; # delete x-editable params
+
+    if ( $input->{done} == $DONE_COMPLETED && !exists $input->{pickup_date} ) {
+        $input->{pickup_date} = DateTime->now;
+    }
 
     $r->update($input);
     $self->render( json => { $r->get_columns } );

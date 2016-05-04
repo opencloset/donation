@@ -20,9 +20,16 @@ $ ->
       params[params.name] = params.value
       params
     success: (res, newValue) ->
-      $btn = $(@).closest('tr').find('td:last .btn-resize')
-      boolean = if parseInt(newValue) then true else false
+      v    = parseInt(newValue)
+      $tr  = $(@).closest('tr')
+      $btn = $tr.find('td:last .btn-resize')
+      boolean = if v then true else false
       $btn.prop('disabled', boolean)
+
+      return unless v is 2
+
+      $input = $tr.find('input[name="pickup_date"]')
+      $input.val(res.pickup_date).removeClass('empty')
 
   $('.repair-clothes-column-alteration-at-editable').editable
     source: [
