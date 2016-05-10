@@ -129,6 +129,7 @@ sub repair_clothes {
     my $v = $self->validation;
     $v->optional('done');
     $v->optional('alteration_at');
+    $v->optional('comment');
     $v->optional('cost')->like(qr/^\d*$/);
     $v->optional('assign_date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
     $v->optional('pickup_date')->like(qr/^\d{4}-\d{2}-\d{2}$/);

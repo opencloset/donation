@@ -27,6 +27,7 @@
       <th>진행상태</th>
       <th>수선장소</th>
       <th>비용</th>
+      <th>사유</th>
       <th>맡긴날</th>
       <th>수거일</th>
       <th>기증자</th>
@@ -42,6 +43,7 @@
     % my $done = $r ? $r->done : '';
     % my $alteration_at = $r ? $r->alteration_at : '';
     % my $cost = $r ? $r->cost : '';
+    % my $comment = $r ? $r->comment : '';
     % my $assign_date = $r ? $r->assign_date : '';
     % my $pickup_date = $r ? $r->pickup_date : '';
     <tr>
@@ -57,6 +59,11 @@
       <td>
         <a href="#" class="repair-clothes-column repair-clothes-column-editable" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="cost" data-title="비용" data-pk="<%= $pk %>">
           %= $cost
+        </a>
+      </td>
+      <td>
+        <a href="#" class="repair-clothes-column repair-clothes-column-editable" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="comment" data-title="사유" data-pk="<%= $pk %>">
+          %= $comment
         </a>
       </td>
       <td>
