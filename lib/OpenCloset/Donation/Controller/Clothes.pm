@@ -204,7 +204,7 @@ sub repair_list {
     }
     else {
         $cond = {
-            category  => { -in => [ $OpenCloset::Constants::Category::PANTS, $OpenCloset::Constants::Category::SKIRT ] },
+            category  => { -in => [ $PANTS, $SKIRT ] },
             status_id => $self->get_status('수선')
         };
     }
