@@ -119,8 +119,6 @@ sub create {
     $code = sprintf( '%05s', uc $code );
     return $self->error( 500, "Failed to generate discard clothes code($category)" ) unless $code;
 
-    $cuff = $self->inch2cm($cuff) if $cuff;
-
     my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
     return $self->error( 400, "Duplicate clothes code: $code" ) if $clothes;
 
