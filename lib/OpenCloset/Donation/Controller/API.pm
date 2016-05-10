@@ -158,7 +158,7 @@ sub repair_clothes {
     }
 
     $r->update($input);
-    $self->render( json => { $r->get_columns } );
+    $self->render( json => { $r->get_inflated_columns } );
 }
 
 =head2 suggestion_resize
@@ -328,9 +328,9 @@ sub update_resize {
 
     $self->render(
         json => {
-            top => $top ? { $top->get_columns } : {},
-            bottom => { $bottom->get_columns },
-            repair => { $r->get_columns }
+            top => $top ? { $top->get_inflated_columns } : {},
+            bottom => { $bottom->get_inflated_columns },
+            repair => { $r->get_inflated_columns }
         }
     );
 }
