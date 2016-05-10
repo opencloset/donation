@@ -73,7 +73,7 @@
         </a>
       </td>
       <td>
-        %= clothes2link($row, 1)
+        %= clothes2link($row, { with_status => 1, external => 1 })
         <div id="preview-bottom-<%= $row->code %>" data-code="<%= $row->code %>" class="collapse bottom">
           <div>
             <pre><code class="diff hljs"></code></pre>

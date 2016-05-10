@@ -117,6 +117,8 @@ C<undef>
 
 =back
 
+=back
+
 =cut
 
 sub update_status {
@@ -193,42 +195,97 @@ sub emphasis {
     return Mojo::ByteStream->new($text);
 }
 
-=head2 clothes2link($clothes, $external?)
+=head2 clothes2link( $clothes, $opts )
 
     %= clothes2link($clothes)
     # <a href="https://staff.theopencloset.net/J001">
-    #  <%= $clothes->code %>
+    #   <span class="label label-primary"><i class="fa fa-external-link"></i>
+    #     J001
+    #   </span>
     # </a>
 
-    %= clothes2link($clothes, 1)
+    %= clothes2link($clothes, 1)    # external link
     # <a href="https://staff.theopencloset.net/J001" target="_blank">
-    #  <i class="fa fa-external-link"></i>
-    #  <%= $clothes->code %>
+    #   <span class="label label-primary"><i class="fa fa-external-link"></i>
+    #     J001
+    #   </span>
     # </a>
+
+    %= clothes2link($clothes, { with_status => 1, external => 1 })    # external link with status
+    # <a href="https://staff.theopencloset.net/J001" target="_blank">
+    #   <span class="label label-primary"><i class="fa fa-external-link"></i>
+    #     J001
+    #   </span>
+    # </a>
+
+=head3 $opt
+
+외부링크로 제공하거나, 상태를 함께 표시할지 여부를 선택합니다.
+Default 는 모두 off 입니다.
+
+=over
+
+=item C<1>
+
+상태없이 외부링크로 나타냅니다.
+
+=item C<$hashref>
+
+=over
+
+=item C<$with_status>
+
+상태도 함께 나타낼지에 대한 Bool 입니다.
+
+=item C<$external>
+
+외부링크로 제공할지에 대한 Bool 입니다.
+
+=back
+
+=back
 
 =cut
 
 sub clothes2link {
-    my ( $self, $clothes, $external ) = @_;
+    my ( $self, $clothes, $opts ) = @_;
     return '' unless $clothes;
 
     my $code = $clothes->code;
     $code =~ s/^0//;
     my $prefix = $self->config->{opencloset}{root} . '/clothes';
-    my $html   = Mojo::DOM::HTML->new;
+    my $dom    = Mojo::DOM::HTML->new;
 
-    if ($external) {
-        $html->parse(
-            qq{<a href="$prefix/$code" target="_blank">
-  <span class="label label-primary"><i class="fa fa-external-link"></i> $code</span>
-</a>}
-        );
+    my $html = "$code";
+    if ($opts) {
+        if ( ref $opts eq 'HASH' ) {
+            if ( $opts->{with_status} ) {
+                my $status = $clothes->status->name;
+                $html .= qq{ <small>$status</small>};
+            }
+
+            if ( $opts->{external} ) {
+                $html = qq{<i class="fa fa-external-link"></i> } . $html;
+                $html = qq{<span class="label label-primary">$html</span>};
+                $html = qq{<a href="$prefix/$code" target="_blank">$html</a>};
+            }
+            else {
+                $html = qq{<span class="label label-primary">$html</span>};
+                $html = qq{<a href="$prefix/$code">$html</a>};
+            }
+        }
+        else {
+            $html = qq{<i class="fa fa-external-link"></i> } . $html;
+            $html = qq{<span class="label label-primary">$html</span>};
+            $html = qq{<a href="$prefix/$code" target="_blank">$html</a>};
+        }
     }
     else {
-        $html->parse(qq{<a href="$prefix/$code"><span class="label label-primary">$code</span></a>});
+        $html = qq{<a href="$prefix/$code"><span class="label label-primary">$html</span></a>};
     }
 
-    my $tree = $html->tree;
+    $dom->parse($html);
+    my $tree = $dom->tree;
     return Mojo::ByteStream->new( Mojo::DOM::HTML::_render($tree) );
 }
 
