@@ -326,7 +326,13 @@ sub update_resize {
         return $self->error( 500, $err );
     };
 
-    $self->render( json => { top => $top ? { $top->get_columns } : {}, bottom => { $bottom->get_columns }, repair => { $r->get_columns } } );
+    $self->render(
+        json => {
+            top => $top ? { $top->get_columns } : {},
+            bottom => { $bottom->get_columns },
+            repair => { $r->get_columns }
+        }
+    );
 }
 
 1;

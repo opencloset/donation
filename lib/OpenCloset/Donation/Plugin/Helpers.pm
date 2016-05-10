@@ -485,7 +485,7 @@ sub _clothes_measurement2text {
         %columns = %$clothes;
     }
     else {
-        %columns = $clothes->get_inflated_columns;
+        %columns = $clothes->get_columns;
     }
 
     my @sizes;
