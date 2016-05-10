@@ -219,16 +219,27 @@ sub suggestion_resize {
     my $top    = $suit ? $suit->code_top : undef;
     my $bottom = $rs;
 
-    my $clothes = OpenCloset::Clothes->new( clothes => $bottom );
-    my $suggestion = $clothes->suggest_repair_size($opts);
+    my $clothes     = OpenCloset::Clothes->new( clothes => $bottom );
+    my $diff_bottom = '';
+    my $diff_top    = '';
+    my $messages;
 
-    my $diff_bottom = $self->clothesDiff( $bottom, $suggestion->{bottom} );
-    my $diff_top = '';
-    if ($top) {
-        $diff_top = $self->clothesDiff( $top, $suggestion->{top} );
+    my $r = $self->schema->resultset('RepairClothes')->find( { clothes_code => $rs->code } );
+    if ( $r && $r->done ) {
+        $diff_bottom = $self->clothesDiff($bottom);
+        $diff_top    = $self->clothesDiff($top);
+    }
+    else {
+        my $suggestion = $clothes->suggest_repair_size($opts);
+        $messages    = $suggestion->{messages};
+        $diff_bottom = $self->clothesDiff( $bottom, $suggestion->{bottom} );
+        $diff_top    = '';
+        if ($top) {
+            $diff_top = $self->clothesDiff( $top, $suggestion->{top} );
+        }
     }
 
-    $self->render( json => { diff => { top => $diff_top, bottom => $diff_bottom }, messages => $suggestion->{messages} } );
+    $self->render( json => { diff => { top => $diff_top, bottom => $diff_bottom }, messages => $messages || {} } );
 }
 
 =head2 update_resize
