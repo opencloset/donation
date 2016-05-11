@@ -7,6 +7,7 @@ use Try::Tiny;
 
 use OpenCloset::Clothes;
 use OpenCloset::Constants::Category;
+use OpenCloset::Constants::Status qw/$RENTABLE $RESERVATION $CLEANING $REPAIR $RETURNED/;
 
 ## repair_clothes.done
 our $DONE_RESIZED   = 1;
@@ -155,6 +156,13 @@ sub repair_clothes {
 
     if ( exists $input->{done} && $input->{done} == $DONE_COMPLETED && !exists $input->{pickup_date} ) {
         $input->{pickup_date} = DateTime->now;
+    }
+
+    if ( $input->{alteration_at} ) {
+        my $status_id = $clothes->status_id;
+        if ( "$RENTABLE $RESERVATION $CLEANING $RETURNED" =~ m/\b$status_id\b/ ) {
+            $clothes->update( { status_id => $REPAIR } );
+        }
     }
 
     $r->update($input);

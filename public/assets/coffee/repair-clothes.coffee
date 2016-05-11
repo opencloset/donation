@@ -32,6 +32,7 @@ $ ->
       $input.val(res.pickup_date).removeClass('empty')
 
   $('.repair-clothes-column-alteration-at-editable').editable
+    success: -> location.reload()
     source: [
       {value: '밀라노', text: '밀라노'},
       {value: '단골', text: '단골'}
