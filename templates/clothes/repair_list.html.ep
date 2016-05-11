@@ -75,6 +75,8 @@
     % my $comment = $r ? $r->comment : '';
     % my $assign_date = $r ? $r->assign_date : '';
     % my $pickup_date = $r ? $r->pickup_date : '';
+    % my $top = $row->top;
+    % my $bottom = $row->bottom;
     <tr>
       <td>
         <a href="#" class="repair-clothes-column repair-clothes-column-done-editable" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="done" data-title="수선여부" data-pk="<%= $pk %>" data-value="<%= $done %>">
@@ -108,19 +110,23 @@
           %= $user->name
         </a>
       </td>
-      <td>
-        %= clothes2link($row, { with_status => 1, external => 1 })
-        <div id="preview-bottom-<%= $row->code %>" data-code="<%= $row->code %>" class="collapse bottom">
-          <div>
-            <pre><code class="diff hljs"></code></pre>
+      <td class="bottom" data-code="<%= $bottom ? $bottom->code : '' %>">
+        % if ($bottom) {
+          %= clothes2link($bottom, { with_status => 1, external => 1 })
+          <div class="preview hidden">
+            <hr>
+            <div>
+              <pre><code class="diff hljs"></code></pre>
+            </div>
+            <ul class="desc text-muted"></ul>
           </div>
-          <ul class="desc text-muted"></ul>
-        </div>
+        % }
       </td>
-      <td>
-        % if (my $suit = $row->suit_code_bottom) {
-          %= clothes2link($suit->code_top, 1)
-          <div id="preview-top-<%= $row->code %>" class="hidden">
+      <td class="top" data-code="<%= $top ? $top->code : '' %>">
+        % if ($top) {
+          %= clothes2link($top, 1)
+          <div class="preview hidden">
+            <hr>
             <div>
               <pre><code class="diff hljs"></code></pre>
             </div>
@@ -129,14 +135,14 @@
         % }
       </td>
       <td>
-        <button class="btn btn-default btn-sm" data-toggle="collapse" href="#preview-bottom-<%= $row->code %>">미리보기</button>
+        <button class="btn btn-default btn-sm btn-preview" data-code="<%= $row->code %>">미리보기</button>
         <button class="btn btn-success btn-resize btn-sm" data-code="<%= $row->code %>"<%= $done ? ' disabled="disabled"' : '' %>>치수변경</button>
         <div class="options hidden">
           <hr>
-          <form id="form-<%= $row->code %>" data-code="<%= $row->code %>" action="<%= url_for('clothes.resize.suggestion', code => $row->code) %>">
+          <form id="form-<%= $row->code %>" action="<%= url_for('clothes.resize.suggestion', code => $row->code) %>">
             <div class="form-inline">
               <input name="stretch" class="form-control input-sm" type="text" placeholder="허리늘임 cm" style="width: 100px;">
-              <button class="btn btn-default btn-sm btn-refresh">
+              <button type="button" class="btn btn-default btn-sm btn-refresh">
                 <i class="fa fa-refresh" aria-hidden="true"></i>
                 <span class="sr-only">Refresh</span>
               </button>

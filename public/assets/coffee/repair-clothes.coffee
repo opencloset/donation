@@ -79,63 +79,72 @@ $ ->
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
-  $('.collapse.bottom').on 'show.bs.collapse', ->
-    id   = $(@).prop('id')
-    code = $(@).data('code')
-    top_id = id.replace /bottom/, 'top'
-    $("##{top_id}").toggleClass('hidden')
+  $('.btn-preview').click (e) ->
+    $this    = $(@)
+    $tr      = $(@).closest('tr')
+    code     = $this.data('code')
+    $options = $this.closest('td').find('.options')
 
-    params = $("#form-#{code}").serialize()
-    $.ajax "/clothes/#{code}/suggestion?#{params}",
+    $top            = $tr.children('.top')
+    $bottom         = $tr.children('.bottom')
+    $preview_top    = $top.children('.preview')
+    $preview_bottom = $bottom.children('.preview')
+
+    unless $options.hasClass('hidden')
+      $preview_top.toggleClass('hidden')
+      $preview_bottom.toggleClass('hidden')
+      $options.toggleClass('hidden')
+      return
+
+    $form  = $options.children('form')
+    params = $form.serialize()
+
+    $.ajax "#{$form.prop('action')}?#{params}",
       type: 'GET'
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
-        $("##{id} .diff.hljs").html(data.diff.bottom)
-        hljs.highlightBlock($("##{id} .diff.hljs").get(0))
-        _.each data.messages.bottom, (el) ->
-          $("##{id} .desc").append("<li>#{el}</li>")
+        if data.diff.top
+          $hljs = $preview_top.find('.hljs')
+          $hljs.html(data.diff.top)
+          hljs.highlightBlock($hljs.get(0))
 
-        $("##{top_id} .diff.hljs").html(data.diff.top)
-        hljs.highlightBlock($("##{top_id} .diff.hljs").get(0))
-        _.each data.messages.top, (el) ->
-          $("##{top_id} .desc").append("<li>#{el}</li>")
+          $desc = $preview_top.children('.desc').empty()
+          _.each data.messages.top, (el) ->
+            $desc.append("<li>#{el}</li>")
+
+        if data.diff.bottom
+          $hljs = $preview_bottom.find('.hljs')
+          $hljs.html(data.diff.bottom)
+          hljs.highlightBlock($hljs.get(0))
+
+          $desc = $preview_bottom.children('.desc').empty()
+          _.each data.messages.bottom, (el) ->
+            $desc.append("<li>#{el}</li>")
+
       error: (jqXHR, textStatus, errorThrown) ->
+        console.log textStatus and alert 'error'
       complete: (jqXHR, textStatus) ->
-
-    $td = $(@).closest('td').next().next()
-    $td.find('.options').toggleClass('hidden')
-
-  $('.collapse.bottom').on 'hide.bs.collapse', ->
-    id     = $(@).prop('id')
-    top_id = id.replace /bottom/, 'top'
-    $("##{top_id}").toggleClass('hidden')
-
-    $("##{id} .desc").empty()
-    $("##{top_id} .desc").empty()
-
-    $td = $(@).closest('td').next().next()
-    $td.find('.options').toggleClass('hidden')
+        $preview_top.toggleClass('hidden')
+        $preview_bottom.toggleClass('hidden')
+        $options.toggleClass('hidden')
 
   $('table').on 'click', '.btn-refresh', (e) ->
-    e.preventDefault()
-    code = $(@).closest('form').data('code')
-    $div = $("#preview-bottom-#{code}")
-    $div.trigger('hide').trigger('show')
+    $(@).closest('td').children('.btn-preview').trigger('click').trigger('click')
 
   $('.btn-resize').click ->
     $this = $(@)
-    code = $this.data('code')
-    $div = $("#preview-bottom-#{code}")
+    $form = $this.closest('td').find('form')
+    code  = $this.data('code')
 
-    params = $("#form-#{code}").serialize()
+    params = $form.serialize()
     $.ajax "/clothes/#{code}/suggestion",
       type: 'PUT'
       dataType: 'json'
       data: params
       success: (data, textStatus, jqXHR) ->
         $this.closest('tr').find('td:first a').editable('setValue', data.repair.done)
-        $div.trigger('hide').trigger('show')
+        $this.prev().trigger('click').trigger('click')
         $this.prop('disabled', true)
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log textStatus
+        console.log textStatus and alert 'error'
       complete: (jqXHR, textStatus) ->
