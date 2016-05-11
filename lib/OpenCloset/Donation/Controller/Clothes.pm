@@ -6,6 +6,7 @@ use List::Util qw/uniq/;
 use Try::Tiny;
 
 use OpenCloset::Constants::Category;
+use OpenCloset::Constants::Status qw/$REPAIR/;
 
 has schema => sub { shift->app->schema };
 
@@ -198,7 +199,12 @@ sub repair_list {
     my $session = $self->session;
 
     my $cond;
-    my $attr = { rows => 15, page => $page, order_by => { -desc => 'id' } };
+    my $attr = {
+        rows     => 15,
+        page     => $page,
+        order_by => [qw/repair_clothes.done repair_clothes.alteration_at/],
+        join     => 'repair_clothes'
+    };
 
     ## TODO: cookie 를 공유하기 때문에 service 별 namespace 를 붙이는 것이 좋겠다
     if ($q) {
@@ -212,10 +218,16 @@ sub repair_list {
         delete $session->{donation}{repair_list};
 
         $cond = {
-            category  => { -in => [ $PANTS, $SKIRT ] },
-            status_id => $self->get_status('수선')
+            -and => [
+                category => { -in => [ $PANTS, $SKIRT ] },
+                -or      => [
+                    status_id           => $REPAIR,
+                    'repair_clothes.id' => { '!=' => undef },
+                ]
+            ]
         };
     }
+
     my $rs = $self->schema->resultset('Clothes')->search( $cond, $attr );
     my $pageset = Data::Pageset->new(
         {

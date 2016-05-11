@@ -1,5 +1,10 @@
 <nav>
   <ul class="pagination">
+    <li>
+      <a href="<%= url_with->query([p => $pageset->first_page]) %>" aria-label="First">
+        <span aria-hidden="true">&laquo;&laquo;</span>
+      </a>
+    </li>
     <!-- Previous -->
     % if ($pageset->previous_page) {
     <li>
@@ -36,5 +41,10 @@
       </a>
     </li>
     % }
+    <li>
+      <a href="<%= url_with->query([p => $pageset->last_page]) %>" aria-label="Last">
+        <span aria-hidden="true">&raquo;&raquo;</span>
+      </a>
+    </li>
   </ul>
 </nav>
