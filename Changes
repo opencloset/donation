@@ -2,6 +2,8 @@
   - Add route: PUT /clothes/repair/:code
   - Add helper clothesDiff
   - Remove helpers: inch2cm, cm2inch
+  - 수선의류의 관리목록 추가 (#33)
+  - 수선의류의 수선치수 제안 기능 추가 (#33)
 
 v0.1.7    Wed, 04 May 2016 12:10:30 +0900
   - 개인정보동의서 수정 (#7)
