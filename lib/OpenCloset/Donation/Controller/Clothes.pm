@@ -246,7 +246,10 @@ sub repair_list {
 
     my $summary = $self->schema->resultset('RepairClothes')->search(
         {
-            done => undef,
+            -or => [
+                { done => undef },
+                { done => 1 },
+            ]
         },
         {
             select => [

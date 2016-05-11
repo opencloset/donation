@@ -23,6 +23,7 @@
 <p class="help-block">
   % while (my $row = $summary->next) {
   % my $alteration_at = $row->get_column('alteration_at');
+  % next unless $alteration_at;
   % my $sum = $row->get_column('sum');
   <span>
     <strong>
