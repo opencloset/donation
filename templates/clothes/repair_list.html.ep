@@ -21,6 +21,22 @@
 <hr>
 
 <p class="help-block">
+  % while (my $row = $summary->next) {
+  % my $alteration_at = $row->get_column('alteration_at');
+  % my $sum = $row->get_column('sum');
+  <span>
+    <strong>
+      <a href="<%= url_for->query(alteration_at => $alteration_at) %>">
+        <%= $alteration_at %>
+      </a>
+    </strong>
+    에서 <%= $sum %>벌
+  </span>
+  % }
+  수선중 입니다.
+</p>
+
+<p class="help-block">
   수선장소를 입력하면,
   <span class="label label-default">대여가능</span>
   <span class="label label-default">예약</span>

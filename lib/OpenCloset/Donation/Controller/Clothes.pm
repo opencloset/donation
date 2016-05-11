@@ -193,10 +193,11 @@ sub create {
 =cut
 
 sub repair_list {
-    my $self    = shift;
-    my $page    = $self->param('p') || 1;
-    my $q       = $self->param('q');
-    my $session = $self->session;
+    my $self          = shift;
+    my $page          = $self->param('p') || 1;
+    my $q             = $self->param('q');
+    my $alteration_at = $self->param('alteration_at');
+    my $session       = $self->session;
 
     my $cond;
     my $attr = {
@@ -213,6 +214,9 @@ sub repair_list {
         $session->{donation}{repair_list} = [@repair_list];
 
         $cond = { code => { -in => [@repair_list] } };
+    }
+    elsif ($alteration_at) {
+        $cond = { 'repair_clothes.alteration_at' => $alteration_at };
     }
     else {
         delete $session->{donation}{repair_list};
@@ -238,7 +242,20 @@ sub repair_list {
         }
     );
 
-    $self->render( clothes => $rs, pageset => $pageset );
+    my $summary = $self->schema->resultset('RepairClothes')->search(
+        {
+            done => undef,
+        },
+        {
+            select => [
+                'alteration_at',
+                { count => '*', -as => 'sum' }
+            ],
+            group_by => 'alteration_at'
+        }
+    );
+
+    $self->render( clothes => $rs, pageset => $pageset, summary => $summary );
 }
 
 1;
