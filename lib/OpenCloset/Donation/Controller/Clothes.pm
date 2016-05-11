@@ -2,6 +2,7 @@ package OpenCloset::Donation::Controller::Clothes;
 use Mojo::Base 'Mojolicious::Controller';
 
 use Data::Pageset;
+use List::Util qw/uniq/;
 use Try::Tiny;
 
 use OpenCloset::Constants::Category;
@@ -191,18 +192,25 @@ sub create {
 =cut
 
 sub repair_list {
-    my $self = shift;
-    my $page = $self->param('p') || 1;
-    my $q    = $self->param('q');
+    my $self    = shift;
+    my $page    = $self->param('p') || 1;
+    my $q       = $self->param('q');
+    my $session = $self->session;
 
     my $cond;
     my $attr = { rows => 15, page => $page, order_by => { -desc => 'id' } };
 
+    ## TODO: cookie 를 공유하기 때문에 service 별 namespace 를 붙이는 것이 좋겠다
     if ($q) {
         $q = sprintf( '%05s', $q );
-        $cond = { code => $q };
+        my @repair_list = uniq( @{ $session->{donation}{repair_list} ||= [] }, $q );
+        $session->{donation}{repair_list} = [@repair_list];
+
+        $cond = { code => { -in => [@repair_list] } };
     }
     else {
+        delete $session->{donation}{repair_list};
+
         $cond = {
             category  => { -in => [ $PANTS, $SKIRT ] },
             status_id => $self->get_status('수선')
