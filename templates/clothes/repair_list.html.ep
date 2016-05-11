@@ -17,7 +17,19 @@
   </div>
   <button type="submit" class="btn btn-primary">Search</button>
 </form>
+
 <hr>
+
+<p class="help-block">
+  수선장소를 입력하면,
+  <span class="label label-default">대여가능</span>
+  <span class="label label-default">예약</span>
+  <span class="label label-default">세탁</span>
+  <span class="label label-default">반납</span>
+  의류는
+  <span class="label label-default">수선</span>
+  으로 변경됩니다.
+</p>
 
 <table class="table table-bordered">
   <thead>
