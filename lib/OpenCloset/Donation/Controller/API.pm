@@ -221,13 +221,11 @@ sub suggestion_resize {
     return $self->error( 404, "Clothes not found: $code" ) unless $rs;
 
     my $category = $rs->category;
-    return $self->error( 400, "Unsupported category: $category" ) unless "$PANTS $SKIRT" =~ m/\b$category\b/;
+    return $self->error( 400, "Not supported category: $category" ) unless "$JACKET $PANTS $SKIRT" =~ m/\b$category\b/;
 
-    my $suit   = $rs->suit_code_bottom;
-    my $top    = $suit ? $suit->code_top : undef;
-    my $bottom = $rs;
-
-    my $clothes     = OpenCloset::Clothes->new( clothes => $bottom );
+    my $clothes     = OpenCloset::Clothes->new( clothes => $rs );
+    my $top         = $rs->top;
+    my $bottom      = $rs->bottom;
     my $diff_bottom = '';
     my $diff_top    = '';
     my $messages;
@@ -289,12 +287,6 @@ sub update_resize {
     my $self = shift;
     my $code = $self->param('code');
 
-    my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
-    return $self->error( 404, "Clothes not found: $code" ) unless $rs;
-
-    my $category = $rs->category;
-    return $self->error( 400, "Unsupported category: $category" ) unless "$PANTS $SKIRT" =~ m/\b$category\b/;
-
     my $stretch       = $self->param('stretch') || 0;
     my $has_tuck      = $self->param('has_tuck');
     my $has_dual_tuck = $self->param('has_dual_tuck');
@@ -304,11 +296,15 @@ sub update_resize {
         has_dual_tuck => $has_dual_tuck
     };
 
-    my $suit   = $rs->suit_code_bottom;
-    my $top    = $suit ? $suit->code_top : undef;
-    my $bottom = $rs;
+    my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
+    return $self->error( 404, "Clothes not found: $code" ) unless $rs;
 
-    my $clothes = OpenCloset::Clothes->new( clothes => $bottom );
+    my $category = $rs->category;
+    return $self->error( 400, "Not supported category: $category" ) unless "$JACKET $PANTS $SKIRT" =~ m/\b$category\b/;
+
+    my $clothes    = OpenCloset::Clothes->new( clothes => $rs );
+    my $top        = $rs->top;
+    my $bottom     = $rs->bottom;
     my $suggestion = $clothes->suggest_repair_size($opts);
 
     my $r = $self->schema->resultset('RepairClothes')->find_or_create( { clothes_code => $rs->code } );
@@ -321,8 +317,8 @@ sub update_resize {
     ## transaction
     my $guard = $self->schema->txn_scope_guard;
     try {
-        $bottom->update( $suggestion->{bottom} );
-        $top->update( $suggestion->{top} ) if $top;
+        $bottom->update( $suggestion->{bottom} ) if $bottom;
+        $top->update( $suggestion->{top} )       if $top;
         $r->update( { done => $DONE_RESIZED } );
         $guard->commit;
     }
@@ -336,8 +332,8 @@ sub update_resize {
 
     $self->render(
         json => {
-            top => $top ? { $top->get_inflated_columns } : {},
-            bottom => { $bottom->get_inflated_columns },
+            top    => $top    ? { $top->get_inflated_columns }    : {},
+            bottom => $bottom ? { $bottom->get_inflated_columns } : {},
             repair => { $r->get_inflated_columns }
         }
     );

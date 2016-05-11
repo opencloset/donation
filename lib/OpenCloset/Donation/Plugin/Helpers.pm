@@ -419,6 +419,7 @@ sub clothesDiff {
 
     my $source_str = _clothes_measurement2text($source);
     return $source_str unless $target;
+    return $source_str unless $source;
 
     my %columns = $source->get_columns;
     for my $key ( keys %$target ) {

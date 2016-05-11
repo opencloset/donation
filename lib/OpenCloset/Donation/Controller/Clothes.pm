@@ -210,7 +210,7 @@ sub repair_list {
     ## TODO: cookie 를 공유하기 때문에 service 별 namespace 를 붙이는 것이 좋겠다
     if ($q) {
         $q = sprintf( '%05s', $q );
-        return $self->error( 400, 'Not supported category' ) unless $q =~ /^0[PK]/;
+        return $self->error( 400, 'Not supported category' ) unless $q =~ /^0[JPK]/;
 
         my @repair_list = uniq( @{ $session->{donation}{repair_list} ||= [] }, $q );
         $session->{donation}{repair_list} = [@repair_list];
