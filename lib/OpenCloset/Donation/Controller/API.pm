@@ -5,7 +5,7 @@ use DateTime;
 use HTTP::Tiny;
 use Try::Tiny;
 
-use OpenCloset::Clothes;
+use OpenCloset::Common::Clothes;
 use OpenCloset::Constants::Category;
 use OpenCloset::Constants::Status qw/$RENTABLE $RESERVATION $CLEANING $REPAIR $RETURNED/;
 
@@ -223,7 +223,7 @@ sub suggestion_resize {
     my $category = $rs->category;
     return $self->error( 400, "Not supported category: $category" ) unless "$JACKET $PANTS $SKIRT" =~ m/\b$category\b/;
 
-    my $clothes     = OpenCloset::Clothes->new( clothes => $rs );
+    my $clothes     = OpenCloset::Common::Clothes->new( clothes => $rs );
     my $top         = $rs->top;
     my $bottom      = $rs->bottom;
     my $diff_bottom = '';
@@ -302,7 +302,7 @@ sub update_resize {
     my $category = $rs->category;
     return $self->error( 400, "Not supported category: $category" ) unless "$JACKET $PANTS $SKIRT" =~ m/\b$category\b/;
 
-    my $clothes    = OpenCloset::Clothes->new( clothes => $rs );
+    my $clothes    = OpenCloset::Common::Clothes->new( clothes => $rs );
     my $top        = $rs->top;
     my $bottom     = $rs->bottom;
     my $suggestion = $clothes->suggest_repair_size($opts);
