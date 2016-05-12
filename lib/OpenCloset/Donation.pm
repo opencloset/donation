@@ -5,7 +5,7 @@ use Email::Valid ();
 
 use OpenCloset::Schema;
 
-use version; our $VERSION = qv("v0.1.7");
+use version; our $VERSION = qv("v0.2.0");
 
 has schema => sub {
     my $self = shift;
@@ -100,7 +100,11 @@ sub _private_routes {
     $donation->get('/clothes/new')->to('clothes#add')->name('clothes.add');
     $donation->post('/clothes')->to('clothes#create')->name('clothes.create');
 
+    $clothes->get('/repair')->to('Clothes#repair_list')->name('repair_clothes');
+    $clothes->put('/repair/:code')->to('API#repair_clothes')->name('clothes.repair');
     $clothes->get('/code')->to('API#code');
+    $clothes->get('/:code/suggestion')->to('API#suggestion_resize')->name('clothes.resize.suggestion');
+    $clothes->put('/:code/suggestion')->to('API#update_resize')->name('clothes.resize.update');
 }
 
 sub _extend_validator {

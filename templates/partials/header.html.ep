@@ -1,3 +1,6 @@
 <h1>
-  <a href="<%= url_for('home') %>">열린옷장</a>
+  <i class="fa fa-black-tie" aria-hidden="true"></i>
+  <a href="<%= url_for('home') %>">
+    열린옷장
+  </a>
 </h1>
