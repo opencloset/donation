@@ -131,7 +131,7 @@
   <p class="help-block">
     <small>
       운송장 번호를 입력하면 상태가
-      %= status2label($OpenCloset::Donation::Status::DELIVERING)
+      %= status2label($DELIVERING)
       으로 변경됩니다
     </small>
   </p>

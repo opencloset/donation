@@ -46,23 +46,23 @@ sub run {
 
     say "[$from] -> [$to]\n";
 
-    if ( $from eq $OpenCloset::Donation::Status::DELIVERING ) {
-        if ( $to eq $OpenCloset::Donation::Status::DELIVERED ) {
+    if ( $from eq $DELIVERING ) {
+        if ( $to eq $DELIVERED ) {
             $self->delivering2delivered();
         }
     }
-    elsif ( $from eq $OpenCloset::Donation::Status::DELIVERED ) {
-        if ( $to eq $OpenCloset::Donation::Status::DO_NOT_RETURN ) {
+    elsif ( $from eq $DELIVERED ) {
+        if ( $to eq $DO_NOT_RETURN ) {
             $self->delivered2donotreturn();
         }
     }
-    elsif ( $from eq $OpenCloset::Donation::Status::RETURN_REQUESTED ) {
-        if ( $to eq $OpenCloset::Donation::Status::RETURNING ) {
+    elsif ( $from eq $RETURN_REQUESTED ) {
+        if ( $to eq $RETURNING ) {
             $self->returnrequested2returning();
         }
     }
-    elsif ( $from eq $OpenCloset::Donation::Status::RETURNING ) {
-        if ( $to eq $OpenCloset::Donation::Status::RETURNED ) {
+    elsif ( $from eq $RETURNING ) {
+        if ( $to eq $RETURNED ) {
             $self->returning2returned();
         }
     }
@@ -81,7 +81,7 @@ sub delivering2delivered {
 
     my $schema = $self->app->schema;
     my $driver = 'KR::CJKorea';
-    my $rs     = $schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::DELIVERING } );
+    my $rs     = $schema->resultset('DonationForm')->search( { status => $DELIVERING } );
     while ( my $row = $rs->next ) {
         my $waybill = $row->waybill;
         next unless $waybill;
@@ -93,8 +93,8 @@ sub delivering2delivered {
         my $latest = pop @{ $result->{descs} };
         next unless $latest =~ /배달완료/;
 
-        $self->app->update_status( $row, $OpenCloset::Donation::Status::DELIVERED );
-        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::DELIVERING, $OpenCloset::Donation::Status::DELIVERED;
+        $self->app->update_status( $row, $DELIVERED );
+        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $DELIVERING, $DELIVERED;
     }
 }
 
@@ -111,8 +111,7 @@ sub returnrequested2returning {
 
     my $schema = $self->app->schema;
     my $driver = 'KR::CJKorea';
-    my $rs     = $schema->resultset('DonationForm')
-        ->search( { status => { -in => [ $OpenCloset::Donation::Status::RETURN_REQUESTED, $OpenCloset::Donation::Status::RETURNING ] } } );
+    my $rs     = $schema->resultset('DonationForm')->search( { status => { -in => [ $RETURN_REQUESTED, $RETURNING ] } } );
     while ( my $row = $rs->next ) {
         my $waybill = $row->waybill;
         next unless $waybill;
@@ -129,9 +128,9 @@ sub returnrequested2returning {
         return unless $return_waybill;
 
         $row->update( { return_waybill => $return_waybill } );
-        $self->app->update_status( $row, $OpenCloset::Donation::Status::RETURNING );
-        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::RETURN_REQUESTED,
-            $OpenCloset::Donation::Status::RETURNING;
+        $self->app->update_status( $row, $RETURNING );
+        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $RETURN_REQUESTED,
+            $RETURNING;
     }
 }
 
@@ -148,7 +147,7 @@ sub returning2returned {
 
     my $schema = $self->app->schema;
     my $driver = 'KR::CJKorea';
-    my $rs     = $schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::RETURNING } );
+    my $rs     = $schema->resultset('DonationForm')->search( { status => $RETURNING } );
     while ( my $row = $rs->next ) {
         my $return_waybill = $row->return_waybill;
         next unless $return_waybill;
@@ -160,8 +159,8 @@ sub returning2returned {
         my $latest = pop @{ $result->{descs} };
         next unless $latest =~ /배달완료/;
 
-        $self->app->update_status( $row, $OpenCloset::Donation::Status::RETURNED );
-        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::RETURNING, $OpenCloset::Donation::Status::RETURNED;
+        $self->app->update_status( $row, $RETURNED );
+        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $RETURNING, $RETURNED;
     }
 }
 
@@ -182,14 +181,14 @@ sub delivered2donotreturn {
     my $parser = $self->app->schema->storage->datetime_parser;
     my $rs     = $self->app->schema->resultset('DonationForm')->search(
         {
-            status      => $OpenCloset::Donation::Status::DELIVERING,
+            status      => $DELIVERING,
             update_date => { '<' => $parser->format_datetime($dt) }
         }
     );
 
     while ( my $row = $rs->next ) {
-        $row->update( { status => $OpenCloset::Donation::Status::DO_NOT_RETURN } );
-        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $OpenCloset::Donation::Status::DELIVERING, $OpenCloset::Donation::Status::DO_NOT_RETURN;
+        $row->update( { status => $DO_NOT_RETURN } );
+        printf "[%d] %s: %s -> %s\n", $row->id, $row->name, $DELIVERING, $DO_NOT_RETURN;
     }
 }
 

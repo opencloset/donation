@@ -1,6 +1,9 @@
 package OpenCloset::Donation::Status;
 
 use utf8;
+require Exporter;
+@ISA    = qw(Exporter);
+@EXPORT = qw($NULL $WAITING $DELIVERING $DELIVERED $RETURN_REQUESTED $RETURNING $RETURNED $CANCEL $DO_NOT_RETURN $REGISTERED);
 
 our $NULL             = '';
 our $WAITING          = 'waiting';

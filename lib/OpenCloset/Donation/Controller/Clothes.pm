@@ -33,7 +33,7 @@ sub add {
     my $all_clothes = $donation->clothes;
     my $msg         = $self->render_to_string(
         'sms/clothes_info', format => 'txt', all => $all_clothes, available => $clothes1,
-        status_in_45 => $clothes2, status_in_46 => $clothes3
+        status_in_45 => $clothes2, status_in_46 => $clothes3, status_in_47 => $clothes4
     );
     chomp $msg;
 
