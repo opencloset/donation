@@ -1,3 +1,4 @@
+v0.2.0    Thu, 12 May 2016 12:40:31 +0900
   - Add route: GET /clothes/repair
   - Add route: PUT /clothes/repair/:code
   - Add helper clothesDiff
