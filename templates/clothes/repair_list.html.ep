@@ -1,0 +1,163 @@
+% title '수선의류목록';
+% layout 'private', jses => [
+%   '/assets/components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js',
+%   '/assets/components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
+%   '/assets/components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.kr.min.js',
+%   '/assets/components/highlightjs/highlight.pack.min.js',
+%   '/assets/dist/js/repair-clothes.min.js'
+% ], csses => [
+%   '/assets/components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css',
+%   '/assets/components/highlightjs/styles/default.css',
+%   '/assets/components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css'
+% ];
+
+<form class="form-inline" method="GET" action="<%= url_for('repair_clothes') %>">
+  <div class="form-group">
+    <input name="q" type="text" class="form-control" placeholder="의류코드(TAB 키로 이동)" tabindex="1">
+  </div>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<hr>
+
+% if ($summary->count) {
+<p class="help-block">
+  % while (my $row = $summary->next) {
+  % my $alteration_at = $row->get_column('alteration_at');
+  % next unless $alteration_at;
+  % my $sum = $row->get_column('sum');
+  <span>
+    <strong>
+      <a href="<%= url_for->query(alteration_at => $alteration_at) %>">
+        <%= $alteration_at %>
+      </a>
+    </strong>
+    에서 <%= $sum %>벌
+  </span>
+  % }
+  수선중 입니다.
+</p>
+% }
+
+<p class="help-block">
+  수선장소를 입력하면,
+  <span class="label label-default">대여가능</span>
+  <span class="label label-default">예약</span>
+  <span class="label label-default">세탁</span>
+  <span class="label label-default">반납</span>
+  의류는
+  <span class="label label-default">수선</span>
+  으로 변경됩니다.
+</p>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>진행상태</th>
+      <th>수선장소</th>
+      <th>비용</th>
+      <th>사유</th>
+      <th>맡긴날</th>
+      <th>수거일</th>
+      <th>기증자</th>
+      <th>팬츠/스커트</th>
+      <th>자켓</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    % while (my $row = $clothes->next) {
+    % my $r = $row->repair_clothes;
+    % my $pk = $r ? $r->clothes_code : 1;
+    % my $done = $r ? $r->done : '';
+    % my $alteration_at = $r ? $r->alteration_at : '';
+    % my $cost = $r ? $r->cost : '';
+    % my $comment = $r ? $r->comment : '';
+    % my $assign_date = $r ? $r->assign_date : '';
+    % my $pickup_date = $r ? $r->pickup_date : '';
+    % my $top = $row->top;
+    % my $bottom = $row->bottom;
+    <tr>
+      <td>
+        <a href="#" class="repair-clothes-column repair-clothes-column-done-editable" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="done" data-title="수선여부" data-pk="<%= $pk %>" data-value="<%= $done %>">
+        </a>
+      </td>
+      <td>
+        <a href="#" class="repair-clothes-column repair-clothes-column-alteration-at-editable" data-type="select" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="alteration_at" data-title="수선장소" data-pk="<%= $pk %>">
+          %= $alteration_at
+        </a>
+      </td>
+      <td>
+        <a href="#" class="repair-clothes-column repair-clothes-column-editable" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="cost" data-title="비용" data-pk="<%= $pk %>">
+          %= $cost
+        </a>
+      </td>
+      <td>
+        <a href="#" class="repair-clothes-column repair-clothes-column-editable" data-type="text" data-url="<%= url_for('clothes.repair', code => $row->code) %>" data-name="comment" data-title="사유" data-pk="<%= $pk %>">
+          %= $comment
+        </a>
+      </td>
+      <td>
+        <input name="assign_date" class="repair-clothes-column datepicker<%= $assign_date ? '' : ' empty' %>" type="text" value="<%= $assign_date ? $assign_date->ymd : '비어있음' %>" data-provide="datepicker" data-url="<%= url_for('clothes.repair', code => $row->code) %>">
+      </td>
+      <td>
+        <input name="pickup_date" class="repair-clothes-column datepicker<%= $pickup_date ? '' : ' empty' %>" type="text" value="<%= $pickup_date ? $pickup_date->ymd : '비어있음' %>" data-provide="datepicker" data-url="<%= url_for('clothes.repair', code => $row->code) %>">
+      </td>
+      <td>
+        % my $donation = $row->donation;
+        % my $user = $donation->user;
+        <a href="<%= url_for('clothes.add', id => $user->id, donation_id => $donation->id) %>">
+          %= $user->name
+        </a>
+      </td>
+      <td class="bottom" data-code="<%= $bottom ? $bottom->code : '' %>">
+        % if ($bottom) {
+          %= clothes2link($bottom, { with_status => 1, external => 1 })
+          <div class="preview hidden">
+            <hr>
+            <div>
+              <pre><code class="diff hljs"></code></pre>
+            </div>
+            <ul class="desc text-muted"></ul>
+          </div>
+        % }
+      </td>
+      <td class="top" data-code="<%= $top ? $top->code : '' %>">
+        % if ($top) {
+          %= clothes2link($top, 1)
+          <div class="preview hidden">
+            <hr>
+            <div>
+              <pre><code class="diff hljs"></code></pre>
+            </div>
+            <ul class="desc text-muted"></ul>
+          </div>
+        % }
+      </td>
+      <td>
+        <button class="btn btn-default btn-sm btn-preview" data-code="<%= $row->code %>">미리보기</button>
+        <button class="btn btn-success btn-resize btn-sm" data-code="<%= $row->code %>"<%= $done ? ' disabled="disabled"' : '' %>>치수변경</button>
+        <div class="options hidden">
+          <hr>
+          <form id="form-<%= $row->code %>" action="<%= url_for('clothes.resize.suggestion', code => $row->code) %>">
+            <div class="form-inline">
+              <input name="stretch" class="form-control input-sm" type="text" placeholder="허리늘임 cm" style="width: 100px;">
+              <button type="button" class="btn btn-default btn-sm btn-refresh">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+                <span class="sr-only">Refresh</span>
+              </button>
+            </div>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="has_tuck" value="1"> 1턱
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" name="has_dual_tuck" value="1"> 2턱
+            </label>
+          </form>
+        </div>
+      </td>
+    </tr>
+    % }
+  </tbody>
+</table>
+%= include 'partials/pagination', pageset => $pageset;

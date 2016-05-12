@@ -2,11 +2,13 @@ package OpenCloset::Donation::Plugin::Helpers;
 
 use Mojo::Base 'Mojolicious::Plugin';
 
+use Math::Fleximal;
 use Mojo::ByteStream;
 use Mojo::DOM::HTML;
-use Math::Fleximal;
+use Text::Diff;
 
-use OpenCloset::Donation::Category;
+use OpenCloset::Constants::Measurement;
+use OpenCloset::Constants::Category;
 use OpenCloset::Donation::Status;
 
 =encoding utf8
@@ -36,8 +38,7 @@ sub register {
     $app->helper( clothes_quantity      => \&clothes_quantity );
     $app->helper( generate_code         => \&generate_code );
     $app->helper( generate_discard_code => \&generate_discard_code );
-    $app->helper( inch2cm               => \&inch2cm );
-    $app->helper( cm2inch               => \&cm2inch );
+    $app->helper( clothesDiff           => \&clothesDiff );
 }
 
 =head1 HELPERS
@@ -111,6 +112,8 @@ C<undef>
 =item do-not-return
 
 =item registered
+
+=back
 
 =back
 
@@ -190,42 +193,97 @@ sub emphasis {
     return Mojo::ByteStream->new($text);
 }
 
-=head2 clothes2link($clothes, $external?)
+=head2 clothes2link( $clothes, $opts )
 
     %= clothes2link($clothes)
     # <a href="https://staff.theopencloset.net/J001">
-    #  <%= $clothes->code %>
+    #   <span class="label label-primary"><i class="fa fa-external-link"></i>
+    #     J001
+    #   </span>
     # </a>
 
-    %= clothes2link($clothes, 1)
+    %= clothes2link($clothes, 1)    # external link
     # <a href="https://staff.theopencloset.net/J001" target="_blank">
-    #  <i class="fa fa-external-link"></i>
-    #  <%= $clothes->code %>
+    #   <span class="label label-primary"><i class="fa fa-external-link"></i>
+    #     J001
+    #   </span>
     # </a>
+
+    %= clothes2link($clothes, { with_status => 1, external => 1 })    # external link with status
+    # <a href="https://staff.theopencloset.net/J001" target="_blank">
+    #   <span class="label label-primary"><i class="fa fa-external-link"></i>
+    #     J001
+    #   </span>
+    # </a>
+
+=head3 $opt
+
+외부링크로 제공하거나, 상태를 함께 표시할지 여부를 선택합니다.
+Default 는 모두 off 입니다.
+
+=over
+
+=item C<1>
+
+상태없이 외부링크로 나타냅니다.
+
+=item C<$hashref>
+
+=over
+
+=item C<$with_status>
+
+상태도 함께 나타낼지에 대한 Bool 입니다.
+
+=item C<$external>
+
+외부링크로 제공할지에 대한 Bool 입니다.
+
+=back
+
+=back
 
 =cut
 
 sub clothes2link {
-    my ( $self, $clothes, $external ) = @_;
+    my ( $self, $clothes, $opts ) = @_;
     return '' unless $clothes;
 
     my $code = $clothes->code;
     $code =~ s/^0//;
     my $prefix = $self->config->{opencloset}{root} . '/clothes';
-    my $html   = Mojo::DOM::HTML->new;
+    my $dom    = Mojo::DOM::HTML->new;
 
-    if ($external) {
-        $html->parse(
-            qq{<a href="$prefix/$code" target="_blank">
-  <span class="label label-primary"><i class="fa fa-external-link"></i> $code</label>
-</a>}
-        );
+    my $html = "$code";
+    if ($opts) {
+        if ( ref $opts eq 'HASH' ) {
+            if ( $opts->{with_status} ) {
+                my $status = $clothes->status->name;
+                $html .= qq{ <small>$status</small>};
+            }
+
+            if ( $opts->{external} ) {
+                $html = qq{<i class="fa fa-external-link"></i> } . $html;
+                $html = qq{<span class="label label-primary">$html</span>};
+                $html = qq{<a href="$prefix/$code" target="_blank">$html</a>};
+            }
+            else {
+                $html = qq{<span class="label label-primary">$html</span>};
+                $html = qq{<a href="$prefix/$code">$html</a>};
+            }
+        }
+        else {
+            $html = qq{<i class="fa fa-external-link"></i> } . $html;
+            $html = qq{<span class="label label-primary">$html</span>};
+            $html = qq{<a href="$prefix/$code" target="_blank">$html</a>};
+        }
     }
     else {
-        $html->parse(qq{<a href="$prefix/$code"><span class="label label-primary">$code</label></a>});
+        $html = qq{<a href="$prefix/$code"><span class="label label-primary">$html</span></a>};
     }
 
-    my $tree = $html->tree;
+    $dom->parse($html);
+    my $tree = $dom->tree;
     return Mojo::ByteStream->new( Mojo::DOM::HTML::_render($tree) );
 }
 
@@ -251,7 +309,7 @@ sub clothes2text {
 
     my @texts;
     for my $c ( sort keys %h ) {
-        push @texts, sprintf( '%s %d', $OpenCloset::Donation::Category::LABEL_MAP{$c}, $h{$c} );
+        push @texts, sprintf( '%s %d', $OpenCloset::Constants::Category::LABEL_MAP{$c}, $h{$c} );
     }
 
     return join( ', ', @texts );
@@ -350,32 +408,66 @@ sub generate_discard_code {
     return sprintf( '%s%03s', $category_prefix, $last );
 }
 
-=head2 inch2cm
+=head2 clothesDiff( $source, $target or $expected_size )
 
-1 inch == 2.54 cm
-
-    %= inch2cm(1);
-    # 2.54
+    %= clothesDiff($clothes, { waist => 78 })
 
 =cut
 
-sub inch2cm {
-    my ( $self, $inch ) = @_;
-    return 0.00 unless $inch;
-    return sprintf( '%.2f', $inch * 2.54 );
+sub clothesDiff {
+    my ( $self, $source, $target ) = @_;
+
+    my $source_str = _clothes_measurement2text($source);
+    return $source_str unless $target;
+    return $source_str unless $source;
+
+    my %columns = $source->get_columns;
+    for my $key ( keys %$target ) {
+        $columns{$key} = $target->{$key};
+    }
+
+    my $target_str = _clothes_measurement2text( \%columns );
+    my $diff = diff( \$source_str, \$target_str );
+
+    $diff = $source_str unless $diff;
+    return $diff;
 }
 
-=head2 cm2inch
+=head2 _clothes_measurement2text( $clothes or $hashref )
 
-    %= cm2inch(2.54);
-    # 1.00
+    _clothes_measurement2text($clothes);
+    # neck: 0
+    # bust: 97
+    # waist: 78
+    # ...
+
+    _clothes_measurement2text({ bust: 100 })
+    # bust: 100
 
 =cut
 
-sub cm2inch {
-    my ( $self, $cm ) = @_;
-    return 0.00 unless $cm;
-    return sprintf( '%.2f', $cm * 100 / 254 );
+sub _clothes_measurement2text {
+    my $clothes = shift;
+
+    return '' unless $clothes;
+
+    my %columns;
+    if ( ref $clothes eq 'HASH' ) {
+        %columns = %$clothes;
+    }
+    else {
+        %columns = $clothes->get_inflated_columns;
+    }
+
+    my @sizes;
+    for my $part (qw/neck bust waist hip topbelly belly arm thigh length cuff/) {
+        my $size = $columns{$part} || '';
+        next unless $size;
+        push @sizes, sprintf "%s: %s", $OpenCloset::Constants::Measurement::LABEL_MAP{$part}, $size;
+    }
+
+    push @sizes, "\n";
+    return join( "\n", @sizes );
 }
 
 1;

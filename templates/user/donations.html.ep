@@ -4,7 +4,7 @@
 %   '/assets/components/jquery-timeago/locales/jquery.timeago.ko.js',
 %   '/assets/dist/js/user-donations.min.js',
 % ];
-% use OpenCloset::Donation::Category;
+% use OpenCloset::Constants::Category;
 % my @categories = sort keys %{ $categories };
 
 
@@ -65,7 +65,7 @@
         % for my $category (@categories) {
         <li class="list-group-item">
           <span class="badge"><%= $categories->{$category} %></span>
-          <span class="label label-primary"><%= $OpenCloset::Donation::Category::LABEL_MAP{$category} %></span>
+          <span class="label label-primary"><%= $OpenCloset::Constants::Category::LABEL_MAP{$category} %></span>
         </li>
         % }
       % }

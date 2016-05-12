@@ -1,7 +1,17 @@
 package OpenCloset::Donation::Controller::API;
 use Mojo::Base 'Mojolicious::Controller';
 
+use DateTime;
 use HTTP::Tiny;
+use Try::Tiny;
+
+use OpenCloset::Common::Clothes;
+use OpenCloset::Constants::Category;
+use OpenCloset::Constants::Status qw/$RENTABLE $RESERVATION $CLEANING $REPAIR $RETURNED/;
+
+## repair_clothes.done
+our $DONE_RESIZED   = 1;
+our $DONE_COMPLETED = 2;
 
 has schema => sub { shift->app->schema };
 
@@ -104,6 +114,229 @@ sub code {
     return $self->error( '404', 'Not found category' ) unless $code;
 
     $self->render( json => { category => $category, code => $code } );
+}
+
+=head2 repair_clothes
+
+    # clothes.repair
+    PUT /clothes/repair/:code
+
+=cut
+
+sub repair_clothes {
+    my $self = shift;
+    my $code = $self->param('code');
+
+    my $v = $self->validation;
+    $v->optional('done');
+    $v->optional('alteration_at');
+    $v->optional('comment');
+    $v->optional('cost')->like(qr/^\d*$/);
+    $v->optional('assign_date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+    $v->optional('pickup_date')->like(qr/^\d{4}-\d{2}-\d{2}$/);
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
+    return $self->error( 404, "Clothes not found: $code" ) unless $clothes;
+
+    my $r = $self->schema->resultset('RepairClothes')->find_or_create( { clothes_code => $clothes->code } );
+
+    unless ($r) {
+        my $err = "Couldn't find or create repair clothes";
+        $self->log->error($err);
+        return $self->error( 500, $err );
+    }
+
+    my $input = $v->input;
+    map { delete $input->{$_} } qw/name pk value/; # delete x-editable params
+
+    if ( exists $input->{done} && $input->{done} == $DONE_COMPLETED && !exists $input->{pickup_date} ) {
+        $input->{pickup_date} = DateTime->now;
+    }
+
+    if ( $input->{alteration_at} ) {
+        my $status_id = $clothes->status_id;
+        if ( "$RENTABLE $RESERVATION $CLEANING $RETURNED" =~ m/\b$status_id\b/ ) {
+            $clothes->update( { status_id => $REPAIR } );
+        }
+    }
+
+    $r->update($input);
+    $self->render( json => { $r->get_inflated_columns } );
+}
+
+=head2 suggestion_resize
+
+    # clothes.resize.suggestion
+    GET /clothes/:code/suggestion
+
+=head3 params
+
+=over
+
+=item stretch
+
+unsigned int(cm)
+
+=item has_tuck
+
+boolean(1 or 0)
+
+=item has_dual_tuck
+
+boolean(1 or 0)
+
+=back
+
+=head3 Supports Categories
+
+=over
+
+=item PANTS
+
+=item SKIRT
+
+=back
+
+=cut
+
+sub suggestion_resize {
+    my $self = shift;
+    my $code = $self->param('code');
+
+    my $stretch       = $self->param('stretch') || 0;
+    my $has_tuck      = $self->param('has_tuck');
+    my $has_dual_tuck = $self->param('has_dual_tuck');
+    my $opts          = {
+        stretch       => $stretch,
+        has_tuck      => $has_tuck,
+        has_dual_tuck => $has_dual_tuck
+    };
+
+    my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
+    return $self->error( 404, "Clothes not found: $code" ) unless $rs;
+
+    my $category = $rs->category;
+    return $self->error( 400, "Not supported category: $category" ) unless "$JACKET $PANTS $SKIRT" =~ m/\b$category\b/;
+
+    my $clothes     = OpenCloset::Common::Clothes->new( clothes => $rs );
+    my $top         = $rs->top;
+    my $bottom      = $rs->bottom;
+    my $diff_bottom = '';
+    my $diff_top    = '';
+    my $messages;
+
+    my $r = $self->schema->resultset('RepairClothes')->find( { clothes_code => $rs->code } );
+    if ( $r && $r->done ) {
+        $diff_bottom = $self->clothesDiff($bottom);
+        $diff_top    = $self->clothesDiff($top);
+    }
+    else {
+        my $suggestion = $clothes->suggest_repair_size($opts);
+        $messages    = $suggestion->{messages};
+        $diff_bottom = $self->clothesDiff( $bottom, $suggestion->{bottom} );
+        $diff_top    = '';
+        if ($top) {
+            $diff_top = $self->clothesDiff( $top, $suggestion->{top} );
+        }
+    }
+
+    $self->render( json => { diff => { top => $diff_top, bottom => $diff_bottom }, messages => $messages || {} } );
+}
+
+=head2 update_resize
+
+    # clothes.resize.update
+    PUT /clothes/:code/suggestion
+
+=head3 params
+
+=over
+
+=item stretch
+
+unsigned int(cm)
+
+=item has_tuck
+
+boolean(1 or 0)
+
+=item has_dual_tuck
+
+boolean(1 or 0)
+
+=back
+
+=head3 Supports Categories
+
+=over
+
+=item PANTS
+
+=item SKIRT
+
+=back
+
+=cut
+
+sub update_resize {
+    my $self = shift;
+    my $code = $self->param('code');
+
+    my $stretch       = $self->param('stretch') || 0;
+    my $has_tuck      = $self->param('has_tuck');
+    my $has_dual_tuck = $self->param('has_dual_tuck');
+    my $opts          = {
+        stretch       => $stretch,
+        has_tuck      => $has_tuck,
+        has_dual_tuck => $has_dual_tuck
+    };
+
+    my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
+    return $self->error( 404, "Clothes not found: $code" ) unless $rs;
+
+    my $category = $rs->category;
+    return $self->error( 400, "Not supported category: $category" ) unless "$JACKET $PANTS $SKIRT" =~ m/\b$category\b/;
+
+    my $clothes    = OpenCloset::Common::Clothes->new( clothes => $rs );
+    my $top        = $rs->top;
+    my $bottom     = $rs->bottom;
+    my $suggestion = $clothes->suggest_repair_size($opts);
+
+    my $r = $self->schema->resultset('RepairClothes')->find_or_create( { clothes_code => $rs->code } );
+    unless ($r) {
+        my $err = "Couldn't find or create repair clothes";
+        $self->log->error($err);
+        return $self->error( 500, $err );
+    }
+
+    ## transaction
+    my $guard = $self->schema->txn_scope_guard;
+    try {
+        $bottom->update( $suggestion->{bottom} ) if $bottom;
+        $top->update( $suggestion->{top} )       if $top;
+        $r->update( { done => $DONE_RESIZED } );
+        $guard->commit;
+    }
+    catch {
+        my $err = $_;
+        $self->log->error("Transaction error: clothes.resize.update");
+        $self->log->error($err);
+
+        return $self->error( 500, $err );
+    };
+
+    $self->render(
+        json => {
+            top    => $top    ? { $top->get_inflated_columns }    : {},
+            bottom => $bottom ? { $bottom->get_inflated_columns } : {},
+            repair => { $r->get_inflated_columns }
+        }
+    );
 }
 
 1;
