@@ -16,13 +16,14 @@
   % my $bottom   = $row->bottom;
   % my $is_suit  = $top && $bottom;
   % my $category = $row->category;
+  % my $code     = $row->code;
   <li>
     % if ($is_suit) {
       %= clothes2link($row, { external => 1, class => ['label-success'] })
     % } else {
       % if ("$JACKET $PANTS $SKIRT" =~ m/\b$category\b/) {
       <label class="checkbox-inline">
-        <input type="checkbox">
+        <input type="checkbox" class="checkbox-suit" data-category="<%= $category %>" data-clothes-code="<%= $code %>">
         %= clothes2link($row, 1)
       </label>
       % } else {
