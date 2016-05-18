@@ -209,7 +209,7 @@ sub emphasis {
     #   </span>
     # </a>
 
-    %= clothes2link($clothes, { with_status => 1, external => 1 })    # external link with status
+    %= clothes2link($clothes, { with_status => 1, external => 1, class => ['label-success'] })    # external link with status
     # <a href="https://staff.theopencloset.net/J001" target="_blank">
     #   <span class="label label-primary"><i class="fa fa-external-link"></i>
     #     J001
@@ -239,6 +239,10 @@ Default 는 모두 off 입니다.
 
 외부링크로 제공할지에 대한 Bool 입니다.
 
+=item C<$class>
+
+label 태그에 추가될 css class 입니다.
+
 =back
 
 =back
@@ -254,9 +258,12 @@ sub clothes2link {
     my $prefix = $self->config->{opencloset}{root} . '/clothes';
     my $dom    = Mojo::DOM::HTML->new;
 
-    my $html = "$code";
+    my $html  = "$code";
+    my @class = qw/label label-primary/;
     if ($opts) {
         if ( ref $opts eq 'HASH' ) {
+            push @class, @{ $opts->{class} ||= [] };
+
             if ( $opts->{with_status} ) {
                 my $status = $clothes->status->name;
                 $html .= qq{ <small>$status</small>};
@@ -264,22 +271,22 @@ sub clothes2link {
 
             if ( $opts->{external} ) {
                 $html = qq{<i class="fa fa-external-link"></i> } . $html;
-                $html = qq{<span class="label label-primary">$html</span>};
+                $html = qq{<span class="@class">$html</span>};
                 $html = qq{<a href="$prefix/$code" target="_blank">$html</a>};
             }
             else {
-                $html = qq{<span class="label label-primary">$html</span>};
+                $html = qq{<span class="@class">$html</span>};
                 $html = qq{<a href="$prefix/$code">$html</a>};
             }
         }
         else {
             $html = qq{<i class="fa fa-external-link"></i> } . $html;
-            $html = qq{<span class="label label-primary">$html</span>};
+            $html = qq{<span class="@class">$html</span>};
             $html = qq{<a href="$prefix/$code" target="_blank">$html</a>};
         }
     }
     else {
-        $html = qq{<a href="$prefix/$code"><span class="label label-primary">$html</span></a>};
+        $html = qq{<a href="$prefix/$code"><span class="@class">$html</span></a>};
     }
 
     $dom->parse($html);
