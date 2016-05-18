@@ -339,4 +339,37 @@ sub update_resize {
     );
 }
 
+=head2 create_suit
+
+    # suit.create
+    POST /suit
+
+=cut
+
+sub create_suit {
+    my $self = shift;
+
+    my $v = $self->validation;
+    $v->required('code_top');
+    $v->required('code_bottom');
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $cookie = $self->cookie('opencloset');
+    return $self->error( 401, "Authorize required" ) unless $cookie;
+
+    my $input = $v->input;
+    map { $input->{$_} =~ s/^0// } keys %$input;
+
+    my $http = HTTP::Tiny->new;
+    my $root = $self->config->{opencloset}{root};
+    my $res  = $http->post_form( "$root/api/suit.json", $input, { headers => { cookie => "opencloset=$cookie" } } );
+
+    $self->res->code( $res->{status} );
+    $self->render( text => $res->{content} || $res->{reason} );
+}
+
 1;

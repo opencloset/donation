@@ -130,7 +130,7 @@ sub update_status {
 
     $form->update( { status => $to || undef } );
 
-    if ( $from eq $OpenCloset::Donation::Status::NULL && $to eq $OpenCloset::Donation::Status::DELIVERING ) {
+    if ( $from eq $NULL && $to eq $DELIVERING ) {
         my $msg = $self->render_to_string( 'sms/null2delivering', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
@@ -138,7 +138,7 @@ sub update_status {
         $form->update( { sms_bitmask => $bitmask | 2**0 } );
     }
 
-    if ( $from eq $OpenCloset::Donation::Status::WAITING && $to eq $OpenCloset::Donation::Status::DELIVERING ) {
+    if ( $from eq $WAITING && $to eq $DELIVERING ) {
         my $msg = $self->render_to_string( 'sms/waiting2delivering', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
@@ -146,7 +146,7 @@ sub update_status {
         $form->update( { sms_bitmask => $bitmask | 2**0 } );
     }
 
-    if ( $from eq $OpenCloset::Donation::Status::DELIVERING && $to eq $OpenCloset::Donation::Status::DELIVERED ) {
+    if ( $from eq $DELIVERING && $to eq $DELIVERED ) {
         my $msg = $self->render_to_string( 'sms/delivering2delivered', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
@@ -154,7 +154,7 @@ sub update_status {
         $form->update( { sms_bitmask => $bitmask | 2**1 } );
     }
 
-    if ( $from eq $OpenCloset::Donation::Status::RETURN_REQUESTED && $to eq $OpenCloset::Donation::Status::RETURNING ) {
+    if ( $from eq $RETURN_REQUESTED && $to eq $RETURNING ) {
         my $msg = $self->render_to_string( 'sms/returnrequested2returning', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
@@ -162,7 +162,7 @@ sub update_status {
         $form->update( { sms_bitmask => $bitmask | 2**2 } );
     }
 
-    if ( $from eq $OpenCloset::Donation::Status::RETURNING && $to eq $OpenCloset::Donation::Status::RETURNED ) {
+    if ( $from eq $RETURNING && $to eq $RETURNED ) {
         my $msg = $self->render_to_string( 'sms/returning2returned', format => 'txt', form => $form );
         chomp $msg;
         $self->sms( $form->phone, $msg );
@@ -209,7 +209,7 @@ sub emphasis {
     #   </span>
     # </a>
 
-    %= clothes2link($clothes, { with_status => 1, external => 1 })    # external link with status
+    %= clothes2link($clothes, { with_status => 1, external => 1, class => ['label-success'] })    # external link with status
     # <a href="https://staff.theopencloset.net/J001" target="_blank">
     #   <span class="label label-primary"><i class="fa fa-external-link"></i>
     #     J001
@@ -239,6 +239,10 @@ Default 는 모두 off 입니다.
 
 외부링크로 제공할지에 대한 Bool 입니다.
 
+=item C<$class>
+
+label 태그에 추가될 css class 입니다.
+
 =back
 
 =back
@@ -254,9 +258,12 @@ sub clothes2link {
     my $prefix = $self->config->{opencloset}{root} . '/clothes';
     my $dom    = Mojo::DOM::HTML->new;
 
-    my $html = "$code";
+    my $html  = "$code";
+    my @class = qw/label label-primary/;
     if ($opts) {
         if ( ref $opts eq 'HASH' ) {
+            push @class, @{ $opts->{class} ||= [] };
+
             if ( $opts->{with_status} ) {
                 my $status = $clothes->status->name;
                 $html .= qq{ <small>$status</small>};
@@ -264,22 +271,22 @@ sub clothes2link {
 
             if ( $opts->{external} ) {
                 $html = qq{<i class="fa fa-external-link"></i> } . $html;
-                $html = qq{<span class="label label-primary">$html</span>};
+                $html = qq{<span class="@class">$html</span>};
                 $html = qq{<a href="$prefix/$code" target="_blank">$html</a>};
             }
             else {
-                $html = qq{<span class="label label-primary">$html</span>};
+                $html = qq{<span class="@class">$html</span>};
                 $html = qq{<a href="$prefix/$code">$html</a>};
             }
         }
         else {
             $html = qq{<i class="fa fa-external-link"></i> } . $html;
-            $html = qq{<span class="label label-primary">$html</span>};
+            $html = qq{<span class="@class">$html</span>};
             $html = qq{<a href="$prefix/$code" target="_blank">$html</a>};
         }
     }
     else {
-        $html = qq{<a href="$prefix/$code"><span class="label label-primary">$html</span></a>};
+        $html = qq{<a href="$prefix/$code"><span class="@class">$html</span></a>};
     }
 
     $dom->parse($html);
@@ -493,6 +500,15 @@ __END__
 =item 2**3
 
 반송중(returning) -> 반송완료(returned)
+
+=item 2**4
+
+의류활용현황
+
+    총 기증의류: 자켓 3, 기타 1, 팬츠 2, 셔츠 1
+    열린옷장 사용의류: 자켓 1
+    옷캔 재기증 의류: 자켓 2, 팬츠 2, 셔츠 1
+    재활용 불가 의류: 기타 1
 
 =back
 

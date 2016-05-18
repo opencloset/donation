@@ -20,8 +20,8 @@ sub prefetch_status {
     my $self = shift;
 
     my $new       = $self->schema->resultset('DonationForm')->search( { status => undef } )->count;
-    my $requested = $self->schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::RETURN_REQUESTED } )->count;
-    my $waiting   = $self->schema->resultset('DonationForm')->search( { status => $OpenCloset::Donation::Status::WAITING } )->count;
+    my $requested = $self->schema->resultset('DonationForm')->search( { status => $RETURN_REQUESTED } )->count;
+    my $waiting   = $self->schema->resultset('DonationForm')->search( { status => $WAITING } )->count;
     $self->stash( new => $new, return_requested => $requested, waiting => $waiting );
     return 1;
 }
@@ -42,7 +42,7 @@ sub list {
     my $cond = $q ? $self->_search_cond($q) : $s eq '' ? undef : { status => $s eq 'null' ? undef : $s };
     my $attr = { page => $p, rows => 20, order_by => { -desc => 'update_date' } };
 
-    if ( $s eq $OpenCloset::Donation::Status::RETURN_REQUESTED ) {
+    if ( $s eq $RETURN_REQUESTED ) {
         $attr->{order_by} = 'return_date';
     }
 
@@ -180,7 +180,7 @@ sub create_sendback {
     ## changes made since the row was last read from storage.
     $form->discard_changes;
 
-    $self->update_status( $form, $OpenCloset::Donation::Status::RETURN_REQUESTED );
+    $self->update_status( $form, $RETURN_REQUESTED );
     $self->res->headers->location( $self->url_for( 'form', id => $form->id ) );
     $self->respond_to(
         html => sub {

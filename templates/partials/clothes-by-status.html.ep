@@ -1,5 +1,7 @@
+% use OpenCloset::Constants::Category qw/$JACKET $PANTS $SKIRT/;
+
 % if ($clothes1->count) {
-<ul class="list-inline">
+<ul class="list-inline clothes-inline">
   <li class="list-item-block">
     <p>
       <i class="fa fa-archive fa-fw"></i>
@@ -10,8 +12,24 @@
     </p>
   </li>
   % while ( my $row = $clothes1->next ) {
+  % my $top      = $row->top;
+  % my $bottom   = $row->bottom;
+  % my $is_suit  = $top && $bottom;
+  % my $category = $row->category;
+  % my $code     = $row->code;
   <li>
-    %= clothes2link($row, 1)
+    % if ($is_suit) {
+      %= clothes2link($row, { external => 1, class => ['label-success'] })
+    % } else {
+      % if ("$JACKET $PANTS $SKIRT" =~ m/\b$category\b/) {
+      <label class="checkbox-inline">
+        <input type="checkbox" class="checkbox-suit" data-category="<%= $category %>" data-clothes-code="<%= $code %>">
+        %= clothes2link($row, 1)
+      </label>
+      % } else {
+      %= clothes2link($row, 1)
+      % }
+    % }
   </li>
   % }
 </ul>
