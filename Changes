@@ -1,3 +1,4 @@
+v0.2.1    Wed, 18 May 2016 17:46:36 +0900
   - 의류의 활용 현황 SMS 내용 변경 (#28)
   - clothes2link helper support `class` option
   - 셋트의류를 입력가능 하도록 함 (#18)
