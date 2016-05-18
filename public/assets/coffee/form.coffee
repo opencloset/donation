@@ -50,3 +50,33 @@ $ ->
       complete: (jqXHR, textStatus) ->
         $this.find('textarea').val('')
         $this.find('.btn-cancel').trigger('click')
+
+  ## TODO: clothes-add.coffee 와 코드 중복
+  $('.checkbox-suit').change ->
+    code    = $(@).data('clothes-code')
+    checked = $(@).prop('checked')
+    return unless checked
+
+    code_top = code_bottom = ''
+    $('.checkbox-suit:checked').each (i, el) ->
+      code     = $(el).data('clothes-code')
+      category = $(el).data('category')
+      switch category
+        when 'jacket'
+          code_top = code
+        when 'pants', 'skirt'
+          code_bottom = code
+        else ''
+
+    return unless code_top
+    return unless code_bottom
+
+    $.ajax '/suit',
+      type: 'POST'
+      data: { code_top: code_top, code_bottom: code_bottom }
+      success: (data, textStatus, jqXHR) ->
+        location.reload()
+      error: (jqXHR, textStatus, errorThrown) ->
+        json = JSON.parse(jqXHR.responseText)
+        $.growl.error({ title: textStatus, message: json.error.str })
+      complete: (jqXHR, textStatus) ->
