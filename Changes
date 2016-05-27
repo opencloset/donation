@@ -1,3 +1,5 @@
+  - 수선장소를 입력하면 대여불가에서 수선으로 상태변경(#48)
+
 v0.2.1    Wed, 18 May 2016 17:46:36 +0900
   - 의류의 활용 현황 SMS 내용 변경 (#28)
   - clothes2link helper support `class` option
