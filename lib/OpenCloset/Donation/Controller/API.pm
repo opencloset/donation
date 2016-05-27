@@ -7,7 +7,7 @@ use Try::Tiny;
 
 use OpenCloset::Common::Clothes;
 use OpenCloset::Constants::Category;
-use OpenCloset::Constants::Status qw/$RENTABLE $RESERVATION $CLEANING $REPAIR $RETURNED/;
+use OpenCloset::Constants::Status qw/$RENTABLE $RENTALESS $RESERVATION $CLEANING $REPAIR $RETURNED/;
 
 ## repair_clothes.done
 our $DONE_RESIZED   = 1;
@@ -160,7 +160,7 @@ sub repair_clothes {
 
     if ( $input->{alteration_at} ) {
         my $status_id = $clothes->status_id;
-        if ( "$RENTABLE $RESERVATION $CLEANING $RETURNED" =~ m/\b$status_id\b/ ) {
+        if ( "$RENTABLE $RENTALESS $RESERVATION $CLEANING $RETURNED" =~ m/\b$status_id\b/ ) {
             $clothes->update( { status_id => $REPAIR } );
         }
     }
