@@ -82,7 +82,7 @@ sub create {
     $v->optional('hip')->size( 2, 3 );
     $v->optional('topbelly')->size( 2, 3 );
     $v->optional('belly')->size( 2, 3 );
-    $v->optional('arm')->size( 2, 3 );
+    $v->optional('arm')->size( 1, 3 );
     $v->optional('thigh')->size( 2, 3 );
     $v->optional('length')->size( 2, 3 );
     $v->optional('foot')->size( 3, 3 );
