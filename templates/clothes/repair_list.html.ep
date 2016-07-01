@@ -13,7 +13,7 @@
 
 <form class="form-inline" method="GET" action="<%= url_for('repair_clothes') %>">
   <div class="form-group">
-    <input name="q" type="text" class="form-control" placeholder="의류코드(TAB 키로 이동)" tabindex="1">
+    <input id="clothes-search" name="q" type="text" class="form-control" placeholder="의류코드(TAB 키로 이동)" tabindex="1">
   </div>
   <button type="submit" class="btn btn-primary">Search</button>
 </form>
