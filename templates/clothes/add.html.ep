@@ -55,7 +55,7 @@
 
     <form id="form-clothes" action="<%= url_for('clothes.create') %>" method="POST">
       <input id="discard" name="discard" type="hidden" value="0">
-      <input id="status-id" name="status-id" type="hidden" value="1">
+      <input id="status-id" name="status-id" type="hidden" value="3">
       <input id="category" name="category" type="hidden" value="">
       <fieldset>
         <div class="form-group">
