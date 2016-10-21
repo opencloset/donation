@@ -89,6 +89,7 @@ sub create {
     $v->optional('cuff')->like(qr/^\d{1,3}(\.)?(\d{1,2})?$/);
 
     $v->optional('comment');
+    $v->optional('quantity')->like(qr/^\d+$/);
 
     if ( $v->has_error ) {
         my $failed = $v->failed;
@@ -112,75 +113,40 @@ sub create {
     my $cuff     = $v->param('cuff');
     my $length   = $v->param('length') || $v->param('foot');
 
-    my $comment = $v->param('comment');
+    my $comment  = $v->param('comment');
+    my $quantity = $v->param('quantity');
 
-    ###
-    ### Adjust params
-    ###
-    $code = $self->generate_discard_code($category) if $discard;
-    $code = sprintf( '%05s', uc $code );
-    return $self->error( 500, "Failed to generate discard clothes code($category)" ) unless $code;
-
-    my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
-    return $self->error( 400, "Duplicate clothes code: $code" ) if $clothes;
-
-    my $price = $OpenCloset::Constants::Category::PRICE{$category};
-
-    ## transaction
-    my $guard = $self->schema->txn_scope_guard;
-    try {
-        my $group_id;
-        if ( my $clothes = $donation->clothes->next ) {
-            $group_id = $clothes->group_id;
-        }
-
-        unless ($group_id) {
-            my $group = $self->schema->resultset('Group')->create( {} );
-            $group_id = $group->id;
-        }
-
-        my $clothes = $self->schema->resultset('Clothes')->create(
-            {
-                donation_id => $donation->id,
-                status_id   => $status_id,
-                group_id    => $group_id,
-                code        => $code,
-                neck        => $neck,
-                bust        => $bust,
-                waist       => $waist,
-                hip         => $hip,
-                topbelly    => $topbelly,
-                belly       => $belly,
-                arm         => $arm,
-                thigh       => $thigh,
-                length      => $length,
-                cuff        => $cuff,
-                color       => $color,
-                gender      => $gender,
-                category    => $category,
-                price       => $price,
-                comment     => $comment
-            }
-        );
-
-        die "Failed to create a new clothes" unless $clothes;
-
-        if ( $status_id =~ /^4[567]$/ ) {
-            my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
-            die "Not found category: $category" unless $clothes_code;
-
-            $clothes_code->update( { code => sprintf( '%05s', $code ) } );
-        }
-
-        $guard->commit;
-    }
-    catch {
-        my $err = $_;
-        $self->log->error("Transaction error: clothes.create");
-        $self->log->error($err);
-
-        return $self->error( 500, $err );
+    my $input = {
+        donation_id => $donation->id,
+        status_id   => $status_id,
+        code        => $code,
+        neck        => $neck,
+        bust        => $bust,
+        waist       => $waist,
+        hip         => $hip,
+        topbelly    => $topbelly,
+        belly       => $belly,
+        arm         => $arm,
+        thigh       => $thigh,
+        length      => $length,
+        cuff        => $cuff,
+        color       => $color,
+        gender      => $gender,
+        category    => $category,
+        price       => $OpenCloset::Constants::Category::PRICE{$category},
+        comment     => $comment
     };
+
+    if ( $discard && $quantity ) {
+        for ( 1 .. $quantity ) {
+            my $success = $self->_create_clothes( $donation, $discard, $input );
+            return unless $success;
+        }
+    }
+    else {
+        my $success = $self->_create_clothes( $donation, $discard, $input );
+        return unless $success;
+    }
 
     $self->redirect_to('clothes.add');
 }
@@ -262,6 +228,69 @@ sub repair_list {
     );
 
     $self->render( clothes => $rs, pageset => $pageset, summary => $summary );
+}
+
+=sub _create_clothes
+
+=cut
+
+sub _create_clothes {
+    my ( $self, $donation, $discard, $input ) = @_;
+
+    my $code     = $input->{code};
+    my $category = $input->{category};
+    $code = $self->generate_discard_code($category) if $discard;
+    $code = sprintf( '%05s', uc $code );
+    unless ($code) {
+        $self->error( 500, "Failed to generate discard clothes code($category)" ) unless $code;
+        return;
+    }
+
+    my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
+    if ($clothes) {
+        $self->error( 400, "Duplicate clothes code: $code" );
+        return;
+    }
+
+    $input->{code} = $code;
+
+    ## transaction
+    my $guard = $self->schema->txn_scope_guard;
+    try {
+        my $group_id;
+        if ( my $clothes = $donation->clothes->next ) {
+            $group_id = $clothes->group_id;
+        }
+
+        unless ($group_id) {
+            my $group = $self->schema->resultset('Group')->create( {} );
+            $group_id = $group->id;
+        }
+
+        $input->{group_id} = $group_id;
+        my $clothes = $self->schema->resultset('Clothes')->create($input);
+
+        die "Failed to create a new clothes" unless $clothes;
+
+        if ( $input->{status_id} =~ /^4[567]$/ ) {
+            my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
+            die "Not found category: $category" unless $clothes_code;
+
+            $clothes_code->update( { code => sprintf( '%05s', $code ) } );
+        }
+
+        $guard->commit;
+    }
+    catch {
+        my $err = $_;
+        $self->log->error("Transaction error: clothes.create");
+        $self->log->error($err);
+
+        $self->error( 500, $err );
+        return;
+    };
+
+    return 1;
 }
 
 1;
