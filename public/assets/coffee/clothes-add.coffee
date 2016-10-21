@@ -98,3 +98,6 @@ $ ->
         json = JSON.parse(jqXHR.responseText)
         $.growl.error({ title: textStatus, message: json.error.str })
       complete: (jqXHR, textStatus) ->
+
+  $('#btn-quantity').click (e) ->
+    $('#fds-quantity').toggleClass('hide')
