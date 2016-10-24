@@ -90,6 +90,7 @@ sub create {
 
     $v->optional('comment');
     $v->optional('quantity')->like(qr/^\d+$/);
+    $v->optional('tags');
 
     if ( $v->has_error ) {
         my $failed = $v->failed;
@@ -115,6 +116,9 @@ sub create {
 
     my $comment  = $v->param('comment');
     my $quantity = $v->param('quantity');
+    my $tags     = $v->param('tags');
+
+    $tags =~ s/,/ /g if $tags;
 
     my $input = {
         donation_id => $donation->id,
@@ -139,12 +143,12 @@ sub create {
 
     if ( $discard && $quantity ) {
         for ( 1 .. $quantity ) {
-            my $success = $self->_create_clothes( $donation, $discard, $input );
+            my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
             return unless $success;
         }
     }
     else {
-        my $success = $self->_create_clothes( $donation, $discard, $input );
+        my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
         return unless $success;
     }
 
@@ -232,10 +236,12 @@ sub repair_list {
 
 =sub _create_clothes
 
+    $self->_create_clothes($donation, $discard, $input, $tags?)
+
 =cut
 
 sub _create_clothes {
-    my ( $self, $donation, $discard, $input ) = @_;
+    my ( $self, $donation, $discard, $input, $tags ) = @_;
 
     my $code     = $input->{code};
     my $category = $input->{category};
@@ -277,6 +283,14 @@ sub _create_clothes {
             die "Not found category: $category" unless $clothes_code;
 
             $clothes_code->update( { code => sprintf( '%05s', $code ) } );
+        }
+
+        if ($tags) {
+            my @tags = split / /, $tags;
+            for my $name (@tags) {
+                my $tag = $self->schema->resultset('Tag')->find_or_create( { name => $name } );
+                $clothes->create_related( 'clothes_tags', { tag_id => $tag->id } );
+            }
         }
 
         $guard->commit;

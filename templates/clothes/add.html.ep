@@ -133,6 +133,10 @@
         <div class="form-group">
           <input id="code" class="form-control" name="code" type="text" placeholder="의류코드">
         </div>
+
+        <div class="form-group">
+          <input class="form-control" name="tags" type="text" placeholder="태그1 태그2 태그3 ...">
+        </div>
       </fieldset>
       
       <fieldset id="category-toggle">
