@@ -37,9 +37,16 @@ sub add {
     );
     chomp $msg;
 
+    my @tags = $self->schema->resultset('Tag')->search->all;
+
     $self->render(
-        form     => $form,     clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3,
-        clothes4 => $clothes4, sms_body => $msg
+        form     => $form,
+        clothes1 => $clothes1,
+        clothes2 => $clothes2,
+        clothes3 => $clothes3,
+        clothes4 => $clothes4,
+        sms_body => $msg,
+        tags     => \@tags,
     );
 }
 
