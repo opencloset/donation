@@ -1,8 +1,13 @@
 % title '새옷등록';
 % layout 'private', jses => [
 %   '/assets/components/growl/javascripts/jquery.growl.js',
+%   '/assets/components/chosen/chosen.jquery.js',
 %   '/assets/dist/js/clothes-add.min.js'
-% ], csses => ['/assets/components/growl/stylesheets/jquery.growl.css'];
+% ], csses => [
+%   '/assets/components/growl/stylesheets/jquery.growl.css',
+%   '/assets/components/chosen/chosen.css',
+%   '/assets/dist/css/chosen-bootstrap.min.css'
+% ];
 % use OpenCloset::Constants::Category;
 % my $user_info = $user->user_info;
 
@@ -135,7 +140,11 @@
         </div>
 
         <div class="form-group">
-          <input class="form-control" name="tags" type="text" placeholder="태그1 태그2 태그3 ...">
+          <select multiple class="form-control" id="select-tags" name="tags" data-placeholder="태그1 태그2 태그3 ...">
+            % for my $tag (@$tags) {
+            <option value="<%= $tag->name %>"><%= $tag->name %></option>
+            % }
+          </select>
         </div>
       </fieldset>
       

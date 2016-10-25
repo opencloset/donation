@@ -101,3 +101,5 @@ $ ->
 
   $('#btn-quantity').click (e) ->
     $('#fds-quantity').toggleClass('hide')
+
+  $('#select-tags').chosen()

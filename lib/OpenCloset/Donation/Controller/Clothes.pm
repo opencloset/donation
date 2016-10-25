@@ -37,9 +37,16 @@ sub add {
     );
     chomp $msg;
 
+    my @tags = $self->schema->resultset('Tag')->search->all;
+
     $self->render(
-        form     => $form,     clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3,
-        clothes4 => $clothes4, sms_body => $msg
+        form     => $form,
+        clothes1 => $clothes1,
+        clothes2 => $clothes2,
+        clothes3 => $clothes3,
+        clothes4 => $clothes4,
+        sms_body => $msg,
+        tags     => \@tags,
     );
 }
 
@@ -116,9 +123,7 @@ sub create {
 
     my $comment  = $v->param('comment');
     my $quantity = $v->param('quantity');
-    my $tags     = $v->param('tags');
-
-    $tags =~ s/,/ /g if $tags;
+    my $tags     = $v->every_param('tags');
 
     my $input = {
         donation_id => $donation->id,
@@ -285,12 +290,9 @@ sub _create_clothes {
             $clothes_code->update( { code => sprintf( '%05s', $code ) } );
         }
 
-        if ($tags) {
-            my @tags = split / /, $tags;
-            for my $name (@tags) {
-                my $tag = $self->schema->resultset('Tag')->find_or_create( { name => $name } );
-                $clothes->create_related( 'clothes_tags', { tag_id => $tag->id } );
-            }
+        for my $name (@$tags) {
+            my $tag = $self->schema->resultset('Tag')->find_or_create( { name => $name } );
+            $clothes->create_related( 'clothes_tags', { tag_id => $tag->id } );
         }
 
         $guard->commit;
