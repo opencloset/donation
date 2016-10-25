@@ -29,6 +29,7 @@
     "bootstrap-spinner": "^1.1.1",
     "jquery-timeago": "^1.5.2",
     "x-editable": "^1.5.1",
-    "highlightjs": "^9.2.0"
+    "highlightjs": "^9.2.0",
+    "chosen": "^1.6.2"
   }
 }
