@@ -142,14 +142,37 @@ sub create {
     };
 
     if ( $discard && $quantity ) {
-        for ( 1 .. $quantity ) {
-            my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
-            return unless $success;
+        ## transaction
+        my $guard = $self->schema->txn_scope_guard;
+        try {
+            for ( 1 .. $quantity ) {
+                my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
+                die "Failed to create new clothes($quantity)" unless $success;
+            }
+            $guard->commit;
         }
+        catch {
+            my $err = $_;
+            $self->log->error("Transaction error: clothes.create");
+            $self->log->error($err);
+            $self->error( 500, $err );
+            return;
+        };
     }
     else {
-        my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
-        return unless $success;
+        my $guard = $self->schema->txn_scope_guard;
+        try {
+            my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
+            die "Failed to create a new clothes" unless $success;
+            $guard->commit;
+        }
+        catch {
+            my $err = $_;
+            $self->log->error("Transaction error: clothes.create");
+            $self->log->error($err);
+            $self->error( 500, $err );
+            return;
+        };
     }
 
     $self->redirect_to('clothes.add');
@@ -260,49 +283,35 @@ sub _create_clothes {
 
     $input->{code} = $code;
 
-    ## transaction
-    my $guard = $self->schema->txn_scope_guard;
-    try {
-        my $group_id;
-        if ( my $clothes = $donation->clothes->next ) {
-            $group_id = $clothes->group_id;
-        }
-
-        unless ($group_id) {
-            my $group = $self->schema->resultset('Group')->create( {} );
-            $group_id = $group->id;
-        }
-
-        $input->{group_id} = $group_id;
-        my $clothes = $self->schema->resultset('Clothes')->create($input);
-
-        die "Failed to create a new clothes" unless $clothes;
-
-        if ( $input->{status_id} =~ /^4[567]$/ ) {
-            my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
-            die "Not found category: $category" unless $clothes_code;
-
-            $clothes_code->update( { code => sprintf( '%05s', $code ) } );
-        }
-
-        if ($tags) {
-            my @tags = split / /, $tags;
-            for my $name (@tags) {
-                my $tag = $self->schema->resultset('Tag')->find_or_create( { name => $name } );
-                $clothes->create_related( 'clothes_tags', { tag_id => $tag->id } );
-            }
-        }
-
-        $guard->commit;
+    my $group_id;
+    if ( my $clothes = $donation->clothes->next ) {
+        $group_id = $clothes->group_id;
     }
-    catch {
-        my $err = $_;
-        $self->log->error("Transaction error: clothes.create");
-        $self->log->error($err);
 
-        $self->error( 500, $err );
-        return;
-    };
+    unless ($group_id) {
+        my $group = $self->schema->resultset('Group')->create( {} );
+        $group_id = $group->id;
+    }
+
+    $input->{group_id} = $group_id;
+    $clothes = $self->schema->resultset('Clothes')->create($input);
+
+    die "Failed to create a new clothes" unless $clothes;
+
+    if ( $input->{status_id} =~ /^4[567]$/ ) {
+        my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
+        die "Not found category: $category" unless $clothes_code;
+
+        $clothes_code->update( { code => sprintf( '%05s', $code ) } );
+    }
+
+    if ($tags) {
+        my @tags = split / /, $tags;
+        for my $name (@tags) {
+            my $tag = $self->schema->resultset('Tag')->find_or_create( { name => $name } );
+            $clothes->create_related( 'clothes_tags', { tag_id => $tag->id } );
+        }
+    }
 
     return 1;
 }
