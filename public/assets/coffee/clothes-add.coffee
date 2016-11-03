@@ -31,8 +31,9 @@ $ ->
     $(@).addClass('active')
     $("#color").val(color)
 
-  $('.btn-discard').click (e) ->
+  $('.btn-discard:not(.disabled)').click (e) ->
     e.preventDefault()
+    $(@).addClass('disabled')
     $('#status-id').val($(@).data('status-id'))
     $('#discard').val('1')
     $(@).closest('form').submit()
