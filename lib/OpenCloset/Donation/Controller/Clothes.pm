@@ -25,10 +25,10 @@ sub add {
     my $donation = $self->stash('donation');
 
     my $form     = $donation->donation_forms->next;
-    my $clothes1 = $donation->clothes( { status_id => { 'NOT IN' => [ 45, 46, 47 ] } }, { order_by => 'category' } );
-    my $clothes2 = $donation->clothes( { status_id => 45 }, { order_by => 'category' } );
-    my $clothes3 = $donation->clothes( { status_id => 46 }, { order_by => 'category' } );
-    my $clothes4 = $donation->clothes( { status_id => 47 }, { order_by => 'category' } );
+    my $clothes1 = $donation->clothes( { status_id => { 'NOT IN' => [ 45, 46, 47 ] } } );
+    my $clothes2 = $donation->clothes( { status_id => 45 } );
+    my $clothes3 = $donation->clothes( { status_id => 46 } );
+    my $clothes4 = $donation->clothes( { status_id => 47 } );
 
     my $all_clothes = $donation->clothes;
     my $msg         = $self->render_to_string(
