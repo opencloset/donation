@@ -136,15 +136,7 @@
         </div>
 
         <div class="form-group">
-          <input id="code" class="form-control" name="code" type="text" placeholder="의류코드">
-        </div>
-
-        <div class="form-group">
-          <select multiple class="form-control" id="select-tags" name="tags" data-placeholder="태그1 태그2 태그3 ...">
-            % for my $tag (@$tags) {
-            <option value="<%= $tag->name %>"><%= $tag->name %></option>
-            % }
-          </select>
+          <input id="code" class="form-control" name="code" type="text" placeholder="의류코드" style="ime-mode:disabled">
         </div>
       </fieldset>
       
@@ -183,6 +175,14 @@
         </div>
         <div class="form-group">
           <input id="cuff" class="form-control" name="cuff" type="text" placeholder="밑단둘레 inch">
+        </div>
+
+        <div class="form-group">
+          <select multiple class="form-control" id="select-tags" name="tags" data-placeholder="태그1 태그2 태그3 ...">
+            % for my $tag (@$tags) {
+            <option value="<%= $tag->name %>"><%= $tag->name %></option>
+            % }
+          </select>
         </div>
       </fieldset>
 
