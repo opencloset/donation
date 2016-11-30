@@ -56,6 +56,8 @@
       <td>
         % if (my $return_date = $form->return_date) {
           %= $return_date->ymd
+        % } else {
+          <a href="<%= url_for('form.return', id => $form->id)->query(authorized => 1) %>">반송신청</a>
         % }
       </td>
     </tr>
