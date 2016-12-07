@@ -183,9 +183,11 @@ sub create {
 
         ## upload photo
         my $photo = $v->param('photo');
-        my $temp = Path::Tiny->tempfile( UNLINK => 0 );
-        $photo->move_to("$temp");
-        $self->minion->enqueue( upload_clothes_photo => [ $code, $temp ] );
+        if ( $photo->size ) {
+            my $temp = Path::Tiny->tempfile( UNLINK => 0 );
+            $photo->move_to("$temp");
+            $self->minion->enqueue( upload_clothes_photo => [ $code, $temp ] );
+        }
     }
 
     $self->redirect_to('clothes.add');
