@@ -3,6 +3,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use Data::Pageset;
 use List::Util qw/uniq/;
+use Path::Tiny;
 use Try::Tiny;
 
 use OpenCloset::Constants::Category;
@@ -81,6 +82,7 @@ sub create {
     $v->required('status-id');
     $v->required('category')->in(@categories);
     $v->optional('color');
+    $v->optional('photo')->upload;
 
     ## TODO: category 별 size validation
     $v->optional('neck')->size( 2, 3 );
@@ -178,6 +180,12 @@ sub create {
             $self->error( 500, $err );
             return;
         };
+
+        ## upload photo
+        my $photo = $v->param('photo');
+        my $temp = Path::Tiny->tempfile( UNLINK => 0 );
+        $photo->move_to("$temp");
+        $self->minion->enqueue( upload_clothes_photo => [ $code, $temp ] );
     }
 
     $self->redirect_to('clothes.add');
