@@ -2,7 +2,10 @@ package OpenCloset::Donation::Controller::Clothes;
 use Mojo::Base 'Mojolicious::Controller';
 
 use Data::Pageset;
+use HTTP::Body::Builder::MultiPart;
+use HTTP::Tiny;
 use List::Util qw/uniq/;
+use Path::Tiny;
 use Try::Tiny;
 
 use OpenCloset::Constants::Category;
@@ -81,6 +84,7 @@ sub create {
     $v->required('status-id');
     $v->required('category')->in(@categories);
     $v->optional('color');
+    $v->optional('photo')->upload;
 
     ## TODO: category 별 size validation
     $v->optional('neck')->size( 2, 3 );
@@ -178,6 +182,35 @@ sub create {
             $self->error( 500, $err );
             return;
         };
+
+        ## upload photo
+        my $photo = $v->param('photo');
+
+        my $temp = Path::Tiny->tempfile;
+        $photo->move_to("$temp");
+
+        my $oavatar = $self->config->{oavatar};
+        my ( $token, $url ) = ( $oavatar->{token}, $oavatar->{url} );
+
+        my $multipart = HTTP::Body::Builder::MultiPart->new;
+        $multipart->add_content( token => $oavatar->{token} );
+        $multipart->add_content( key   => $code );
+        $multipart->add_file( img => $temp );
+
+        my $http = HTTP::Tiny->new;
+        my $res  = $http->request(
+            'POST', $url,
+            {
+                headers => { 'content-type' => 'multipart/form-data; boundary=' . $multipart->{boundary} },
+                content => $multipart->as_string
+            }
+        );
+
+        unless ( $res->{success} ) {
+            my $error = "의류사진을 등록하는데 문제가 발생했습니다: $res->{reason}";
+            $self->log->error($error);
+            $self->flash( alert => $error );
+        }
     }
 
     $self->redirect_to('clothes.add');
