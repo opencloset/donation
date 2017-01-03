@@ -328,4 +328,18 @@ sub _create_clothes {
     return 1;
 }
 
+=head2 tags
+
+    # clothes.tags
+    GET /tags
+
+=cut
+
+sub tags {
+    my $self = shift;
+
+    my $tags = $self->schema->resultset('Tag')->search( undef, { order_by => 'name' } );
+    $self->render( tags => $tags );
+}
+
 1;

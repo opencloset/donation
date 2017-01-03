@@ -1,0 +1,38 @@
+% title '의류태그관리';
+% layout 'private', jses => ['/assets/dist/js/clothes-tags.min.js'];
+
+<h3>
+  <i class="fa fa-tags" aria-hidden="true"></i>
+  의류태그
+  <button id="toggle-tags" class="btn btn-default btn-sm">
+    보이기/숨기기
+  </button>
+</h3>
+
+<table id="table-tags" class="table hide">
+  % while (my $tag = $tags->next) {
+  <tr>
+    <td>
+      %= $tag->name
+    </td>
+  </tr>
+  % }
+</table>
+
+<hr>
+
+<form id="form-search" class="form-inline" method="GET" action="/clothes/:code/tags">
+  <div class="form-group">
+    <input id="clothes-search" name="q" type="text" class="form-control" placeholder="의류코드">
+  </div>
+  <button type="submit" class="btn btn-primary">검색</button>
+</form>
+
+<hr>
+
+<ul id="clothes" class="list-group">
+</ul>
+
+<p>
+  선택된 의류를 xxx 로 변경
+</p>

@@ -109,6 +109,8 @@ sub _private_routes {
     $clothes->get('/code')->to('API#code');
     $clothes->get('/:code/suggestion')->to('API#suggestion_resize')->name('clothes.resize.suggestion');
     $clothes->put('/:code/suggestion')->to('API#update_resize')->name('clothes.resize.update');
+    $clothes->get('/tags')->to('Clothes#tags')->name('clothes.tags');
+    $clothes->get('/:code/tags')->to('API#clothes_tags')->name('clothes.code.tags');
 
     $r->post('/suit')->to('API#create_suit')->name('suit.create');
 }

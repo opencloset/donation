@@ -12,5 +12,9 @@
       <i class="fa fa-wrench" aria-hidden="true"></i>
       수선의류 목록
     </a>
+    <a class="btn btn-default navbar-btn" href="<%= url_for('clothes.tags') %>">
+      <i class="fa fa-tags" aria-hidden="true"></i>
+      의류태그
+    </a>
   </div>
 </nav>

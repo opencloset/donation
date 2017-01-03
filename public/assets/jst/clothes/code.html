@@ -1,0 +1,20 @@
+<li class="list-group-item" data-code="{{code}}">
+  <ul class="list-inline">
+    <li>
+      <input name="ddd" type="checkbox" checked>
+    </li>
+    <li>
+      <a href="https://staff.theopencloset.net/clothes/{{code}}" target="_blank">
+        <span class="label label-primary"><i class="fa fa-external-link"></i>
+          {{code}}
+          <small>{{status}}</small>
+        </span>
+      </a>
+    </li>
+    {{#each tags}}
+    <li>
+      <span class="label label-default">{{this}}</span>
+    </li>
+    {{/each}}
+  </ul>
+</li>

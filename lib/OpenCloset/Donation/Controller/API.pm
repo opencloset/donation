@@ -372,4 +372,29 @@ sub create_suit {
     $self->render( text => $res->{content} || $res->{reason} );
 }
 
+=head2 clothes_tags
+
+    # clothes.code.tags
+    GET /clothes/:code/tags
+
+=cut
+
+sub clothes_tags {
+    my $self = shift;
+    my $code = $self->param('code');
+
+    my $clothes = $self->schema->resultset('Clothes')->find( { code => sprintf( "%05s", $code ) } );
+    return $self->error( 404, "Clothes not found: $code" ) unless $clothes;
+
+    $code =~ s/^0//;
+    my $status = $clothes->status->name;
+    my @tags;
+    my $tags = $clothes->tags;
+    while ( my $tag = $tags->next ) {
+        push @tags, $tag->name;
+    }
+
+    $self->render( json => { code => $code, status => $status, tags => \@tags } );
+}
+
 1;
