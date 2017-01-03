@@ -387,14 +387,112 @@ sub clothes_tags {
     return $self->error( 404, "Clothes not found: $code" ) unless $clothes;
 
     $code =~ s/^0//;
-    my $status = $clothes->status->name;
+    my %status = $clothes->status->get_columns;
+    $status{rent} = $status{id} == 2;
     my @tags;
     my $tags = $clothes->tags;
     while ( my $tag = $tags->next ) {
-        push @tags, $tag->name;
+        push @tags, { $tag->get_columns };
     }
 
-    $self->render( json => { code => $code, status => $status, tags => \@tags } );
+    $self->render( json => { code => $code, status => \%status, tags => \@tags } );
+}
+
+=head2 update_clothes
+
+    # clothes.update
+    PUT /clothes
+
+=cut
+
+sub update_clothes {
+    my $self = shift;
+
+    my $v = $self->validation;
+    $v->required('code')->like(qr/^[A-Z0-9]{4,5}$/);
+    $v->required('status_id')->like(qr/^[0-9]+$/);
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $codes     = $v->every_param('code');
+    my $status_id = $v->param('status_id');
+    my $status    = $self->schema->resultset('Status')->find( { id => $status_id } );
+
+    return $self->error( 400, "Not found status: $status_id" ) unless $status;
+    my @codes = map { sprintf( '%05s', $_ ) } @$codes;
+    my $clothes = $self->schema->resultset('Clothes')->search( { code => { -in => \@codes } } );
+    $clothes->update( { status_id => $status_id } );
+
+    $self->render( json => { code => $codes, status => { $status->get_columns } } );
+}
+
+=head2 create_clothes_tag
+
+    # clothes.create.tag
+    POST /clothes/tags
+
+=cut
+
+sub create_clothes_tag {
+    my $self = shift;
+
+    my $v = $self->validation;
+    $v->required('code')->like(qr/^[A-Z0-9]{4,5}$/);
+    $v->required('tag_id')->like(qr/^[0-9]+$/);
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $codes  = $v->every_param('code');
+    my $tag_id = $v->param('tag_id');
+    my $tag    = $self->schema->resultset('Tag')->find( { id => $tag_id } );
+
+    return $self->error( 400, "Not found status: $tag_id" ) unless $tag;
+    my @codes = map { sprintf( '%05s', $_ ) } @$codes;
+    my $clothes = $self->schema->resultset('Clothes')->search( { code => { -in => \@codes } } );
+    while ( my $c = $clothes->next ) {
+        $c->find_or_create_related( 'clothes_tags', { tag_id => $tag_id } );
+    }
+
+    $self->render( json => { code => $codes, tag => { $tag->get_columns } } );
+}
+
+=head2 delete_clothes_tag
+
+    # clothes.delete.tag
+    DELETE /clothes/tags
+
+=cut
+
+sub delete_clothes_tag {
+    my $self = shift;
+
+    my $v = $self->validation;
+    $v->required('code')->like(qr/^[A-Z0-9]{4,5}$/);
+    $v->required('tag_id')->like(qr/^[0-9]+$/);
+
+    if ( $v->has_error ) {
+        my $failed = $v->failed;
+        return $self->error( 400, 'Parameter Validation Failed: ' . join( ', ', @$failed ) );
+    }
+
+    my $codes  = $v->every_param('code');
+    my $tag_id = $v->param('tag_id');
+    my $tag    = $self->schema->resultset('Tag')->find( { id => $tag_id } );
+
+    return $self->error( 400, "Not found status: $tag_id" ) unless $tag;
+    my @codes = map { sprintf( '%05s', $_ ) } @$codes;
+    my $clothes = $self->schema->resultset('Clothes')->search( { code => { -in => \@codes } } );
+    while ( my $c = $clothes->next ) {
+        $c->delete_related( 'clothes_tags', { tag_id => $tag_id } );
+    }
+
+    $self->render( json => { code => $codes, tag => { $tag->get_columns } } );
 }
 
 1;
