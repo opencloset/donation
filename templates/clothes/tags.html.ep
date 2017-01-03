@@ -1,5 +1,11 @@
 % title '의류태그관리';
-% layout 'private', jses => ['/assets/dist/js/clothes-tags.min.js'];
+% layout 'private', jses => [
+%   '/assets/components/growl/javascripts/jquery.growl.js',
+%   '/assets/dist/js/clothes-tags.min.js'
+% ], csses => [
+%   '/assets/components/growl/stylesheets/jquery.growl.css'
+% ];
+% use OpenCloset::Constants::Status qw/$CLEANING $RENTABLE $RENTALESS $RESERVATION $REPAIR $LOST $DISCARD/;
 
 <h3>
   <i class="fa fa-tags" aria-hidden="true"></i>
@@ -9,15 +15,13 @@
   </button>
 </h3>
 
-<table id="table-tags" class="table hide">
+<ol id="list-tags" class="hide">
   % while (my $tag = $tags->next) {
-  <tr>
-    <td>
-      %= $tag->name
-    </td>
-  </tr>
+  <li>
+    %= $tag->name
+  </li>
   % }
-</table>
+</ol>
 
 <hr>
 
@@ -30,9 +34,60 @@
 
 <hr>
 
-<ul id="clothes" class="list-group">
-</ul>
+<ul id="clothes" class="list-group"></ul>
 
-<p>
-  선택된 의류를 xxx 로 변경
-</p>
+<ul class="list-inline">
+  <li>
+    선택한 항목의(을)
+  </li>
+  <li>
+    <button id="btn-checkall" class="btn btn-default">모두 선택합니다</button>
+  </li>
+  <li>
+    <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" id="btn-udpate-status" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        상태를 변경합니다
+        <span class="caret"></span>
+      </button>
+      <ul id="list-dropdown-status" class="dropdown-menu" aria-labelledby="btn-update-status">
+        % for my $status ($CLEANING, $RENTABLE) {
+        <li><a href="#" data-status-id="<%= $status %>"><%= $OpenCloset::Constants::Status::LABEL_MAP{$status} %></a></li>
+        % }
+        <li role="separator" class="divider"></li>
+        % for my $status ($RENTALESS, $RESERVATION, $REPAIR, $LOST, $DISCARD) {
+        <li><a href="#" data-status-id="<%= $status %>"><%= $OpenCloset::Constants::Status::LABEL_MAP{$status} %></a></li>
+        % }
+      </ul>
+    </div>
+  </li>
+  <li>
+    <div class="dropdown">
+      <button class="btn btn-success dropdown-toggle" type="button" id="btn-add-tags" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <i class="fa fa-tags" aria-hidden="true"></i>
+        태그를 추가합니다
+        <span class="caret"></span>
+      </button>
+      % $tags->reset;
+      <ul id="list-dropdown-add-tags" class="dropdown-menu" aria-labelledby="btn-add-tags">
+        % while (my $tag = $tags->next) {
+        <li><a href="#" data-tag-id="<%= $tag->id %>"><%= $tag->name %></a></li>
+        % }
+      </ul>
+    </div>
+  </li>
+  <li>
+    <div class="dropdown">
+      <button class="btn btn-danger dropdown-toggle" type="button" id="btn-remove-tags" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <i class="fa fa-tags" aria-hidden="true"></i>
+        태그를 제거합니다
+        <span class="caret"></span>
+      </button>
+      % $tags->reset;
+      <ul id="list-dropdown-remove-tags" class="dropdown-menu" aria-labelledby="btn-remove-tags">
+        % while (my $tag = $tags->next) {
+        <li><a href="#" data-tag-id="<%= $tag->id %>"><%= $tag->name %></a></li>
+        % }
+      </ul>
+    </div>
+  </li>
+</ul>
