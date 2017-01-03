@@ -72,7 +72,7 @@ module.exports = (grunt) ->
           path.replace(/^public\/assets\/jst\//, '').replace(/\.hbs$/, '').replace(/\.html$/, '').replace(/\.jst$/, '')
       compile:
         files:
-          'public/assets/jst/templates.js': ['public/assets/jst/**/*.hbs', 'public/assets/jst/**/*.html', 'public/assets/jst/**/*.jst']
+          'public/assets/dist/js/templates.js': ['public/assets/jst/**/*.hbs', 'public/assets/jst/**/*.html', 'public/assets/jst/**/*.jst']
 
     watch:
       coffee:
