@@ -28,9 +28,10 @@ module.exports = (grunt) ->
         ext: '.min.js'
       jst:
         expand: true
-        cwd: 'public/assets/jst'
+        cwd: 'public/assets/dist/js'
         src: ['templates.js']
         dest: 'public/assets/dist/js'
+        ext: '.min.js'
 
     csscomb:
       options:
