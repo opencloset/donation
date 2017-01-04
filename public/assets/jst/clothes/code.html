@@ -1,0 +1,24 @@
+<li class="list-group-item" data-code="{{code}}">
+  <ul class="list-inline">
+    <li>
+      {{#if status.rent}}
+      <input name="code" type="checkbox" value="{{code}}" disabled>
+      {{else}}
+      <input name="code" type="checkbox" value="{{code}}" checked>
+      {{/if}}
+    </li>
+    <li>
+      <a href="https://staff.theopencloset.net/clothes/{{code}}" target="_blank">
+        <span class="label label-{{#if status.rent}}danger{{else}}primary{{/if}}"><i class="fa fa-external-link"></i>
+          {{code}}
+          <small>{{status.name}}</small>
+        </span>
+      </a>
+    </li>
+    {{#each tags}}
+    <li>
+      <span class="label label-default label-tag" data-tag-id="{{id}}">{{name}}</span>
+    </li>
+    {{/each}}
+  </ul>
+</li>
