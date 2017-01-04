@@ -218,12 +218,15 @@ sub repair_list {
     ## TODO: cookie 를 공유하기 때문에 service 별 namespace 를 붙이는 것이 좋겠다
     if ($q) {
         $q = sprintf( '%05s', uc $q );
-        return $self->error( 400, 'Not supported category' ) unless $q =~ /^0[JPK]/;
+        unless ( $q =~ /^0[JPK]/ ) {
+            $cond = { code => $q };
+        }
+        else {
+            my @repair_list = uniq( @{ $session->{donation}{repair_list} ||= [] }, $q );
+            $session->{donation}{repair_list} = [@repair_list];
 
-        my @repair_list = uniq( @{ $session->{donation}{repair_list} ||= [] }, $q );
-        $session->{donation}{repair_list} = [@repair_list];
-
-        $cond = { code => { -in => [@repair_list] } };
+            $cond = { code => { -in => [@repair_list] } };
+        }
     }
     elsif ($alteration_at) {
         $cond = { 'repair_clothes.alteration_at' => $alteration_at };
