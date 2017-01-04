@@ -57,7 +57,18 @@ sub list {
         }
     );
 
-    $self->render( forms => $rs, pageset => $pageset );
+    my $accept = $self->req->headers->accept;
+    if ( $accept =~ m/csv/ ) {
+        my $time     = time;
+        my $filename = "donation-list-$time.csv";
+        $self->res->headers->content_disposition("attachment; filename=$filename;");
+        $self->stash( forms => $rs );
+        my $csv = $self->render_to_string( 'list', format => 'csv' );
+        $self->render( data => $csv, format => 'csv' );
+    }
+    else {
+        $self->render( forms => $rs, pageset => $pageset );
+    }
 }
 
 =head2 prefetch_form
