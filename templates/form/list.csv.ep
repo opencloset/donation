@@ -1,0 +1,4 @@
+받는분 성명,받는분 전화번호,받는분 주소,배송메세지1
+% while ( my $row = $forms->next ) {
+%= join(',', $row->name, $row->phone, $row->address2 . ' ' . $row->address3, '')
+% }
