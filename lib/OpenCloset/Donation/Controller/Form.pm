@@ -38,9 +38,12 @@ sub list {
     my $p    = $self->param('p') || 1;
     my $s    = $self->param('s') || '';
     my $q    = $self->param('q');
+    my $t    = $self->param('talent');
 
     my $cond = $q ? $self->_search_cond($q) : $s eq '' ? undef : { status => $s eq 'null' ? undef : $s };
     my $attr = { page => $p, rows => 20, order_by => { -desc => 'update_date' } };
+
+    $cond = { talent_donation => 1 } if $t;
 
     if ( $s eq $RETURN_REQUESTED ) {
         $attr->{order_by} = 'return_date';
@@ -57,7 +60,18 @@ sub list {
         }
     );
 
-    $self->render( forms => $rs, pageset => $pageset );
+    my $accept = $self->req->headers->accept;
+    if ( $accept =~ m/csv/ ) {
+        my $time     = time;
+        my $filename = "donation-list-$time.csv";
+        $self->res->headers->content_disposition("attachment; filename=$filename;");
+        $self->stash( forms => $rs );
+        my $csv = $self->render_to_string( 'list', format => 'csv' );
+        $self->render( data => $csv, format => 'csv' );
+    }
+    else {
+        $self->render( forms => $rs, pageset => $pageset );
+    }
 }
 
 =head2 prefetch_form

@@ -112,6 +112,9 @@
         </a>
       </td>
       <td class="bottom" data-code="<%= $bottom ? $bottom->code : '' %>">
+        % if ($row->code !~ m/0[JPK]/) {
+        %= clothes2link($row, { with_status => 1, external => 1 })
+        % }
         % if ($bottom) {
           %= clothes2link($bottom, { with_status => 1, external => 1 })
           <div class="preview hidden">

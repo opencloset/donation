@@ -4,6 +4,13 @@
 % ];
 % my $q = param('q');
 
+<div class="pull-right">
+  % my $url = url_with()->path('/forms.csv');
+  <a href="<%= $url %>" class="btn btn-warning btn-sm" download>
+    <i class="fa fa-table" aria-hidden="true"></i>
+    운송장 다운로드
+  </a>
+</div>
 <h2>기증신청서 목록</h2>
 <table class="table table-bordered">
   <thead>

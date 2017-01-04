@@ -30,3 +30,11 @@
   </li>
   % }
 </ul>
+
+<ul class="list-inline">
+  <li>
+    <a href="<%= url_for('forms')->query(talent => 1) %>">
+      <span class="label label-default">재능나눔</span>
+    </a>
+  </li>
+</ul>
