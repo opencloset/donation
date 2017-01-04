@@ -38,9 +38,12 @@ sub list {
     my $p    = $self->param('p') || 1;
     my $s    = $self->param('s') || '';
     my $q    = $self->param('q');
+    my $t    = $self->param('talent');
 
     my $cond = $q ? $self->_search_cond($q) : $s eq '' ? undef : { status => $s eq 'null' ? undef : $s };
     my $attr = { page => $p, rows => 20, order_by => { -desc => 'update_date' } };
+
+    $cond = { talent_donation => 1 } if $t;
 
     if ( $s eq $RETURN_REQUESTED ) {
         $attr->{order_by} = 'return_date';
