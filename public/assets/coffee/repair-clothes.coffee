@@ -36,7 +36,8 @@ $ ->
     source: [
       {value: '밀라노', text: '밀라노'},
       {value: '단골', text: '단골'}
-      {value: '미도', text: '미도'}
+      {value: '자체수선', text: '자체수선'}
+      {value: '구서방네', text: '구서방네'}
       {value: '기타', text: '기타'}
     ]
     params: (params) ->
