@@ -7,7 +7,7 @@ use Try::Tiny;
 
 use OpenCloset::Common::Clothes;
 use OpenCloset::Constants::Category;
-use OpenCloset::Constants::Status qw/$RENTABLE $RENTALESS $RESERVATION $CLEANING $REPAIR $RETURNED/;
+use OpenCloset::Constants::Status qw/$RENTABLE $RENTALESS $RESERVATION $CLEANING $REPAIR $RETURNED $LOST $DISCARD/;
 
 ## repair_clothes.done
 our $DONE_RESIZED   = 1;
@@ -425,6 +425,12 @@ sub update_clothes {
     my @codes = map { sprintf( '%05s', $_ ) } @$codes;
     my $clothes = $self->schema->resultset('Clothes')->search( { code => { -in => \@codes } } );
     $clothes->update( { status_id => $status_id } );
+    ## 분실, 폐기일때에 의류의 모든 태그를 제거 #72
+    if ( $status_id == $LOST || $status_id == $DISCARD ) {
+        while ( my $c = $clothes->next ) {
+            $c->delete_related('clothes_tags');
+        }
+    }
 
     $self->render( json => { code => $codes, status => { $status->get_columns } } );
 }
