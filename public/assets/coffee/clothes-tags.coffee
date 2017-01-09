@@ -56,6 +56,9 @@ $ ->
           $ul = $(el)
           return true unless $ul.find('input:checked').length
           $ul.find('span.label > small').html(data.status.name)
+          if parseInt(data.status.id) in [7,8]
+            $ul.find('li.list-item-tag').remove()
+
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
