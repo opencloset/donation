@@ -20,5 +20,5 @@ requires 'Try::Tiny';
 
 # cpan.theopencloset.net
 requires 'OpenCloset::Common', 'v0.0.7';
-requires 'OpenCloset::Plugin::Helpers';
+requires 'OpenCloset::Plugin::Helpers', 'v0.0.9';
 requires 'OpenCloset::Schema', '0.031';

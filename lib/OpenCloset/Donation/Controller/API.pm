@@ -7,11 +7,12 @@ use Try::Tiny;
 
 use OpenCloset::Common::Clothes;
 use OpenCloset::Constants::Category;
-use OpenCloset::Constants::Status qw/$RENTABLE $RENTALESS $RESERVATION $CLEANING $REPAIR $RETURNED/;
+use OpenCloset::Constants::Status qw/$RENTABLE $RENTALESS $RESERVATION $CLEANING $REPAIR $RETURNED $LOST $DISCARD/;
 
 ## repair_clothes.done
 our $DONE_RESIZED   = 1;
 our $DONE_COMPLETED = 2;
+our $DONE_RESET     = 3;
 
 has schema => sub { shift->app->schema };
 
@@ -156,6 +157,18 @@ sub repair_clothes {
 
     if ( exists $input->{done} && $input->{done} == $DONE_COMPLETED && !exists $input->{pickup_date} ) {
         $input->{pickup_date} = DateTime->now;
+    }
+    elsif ( exists $input->{done} && $input->{done} == $DONE_RESET ) {
+        $r->update(
+            {
+                alteration_at => undef,
+                cost          => 0,
+                done          => undef,
+                comment       => undef,
+                assign_date   => undef,
+                pickup_date   => undef,
+            }
+        );
     }
 
     if ( $input->{alteration_at} ) {
@@ -395,7 +408,17 @@ sub clothes_tags {
         push @tags, { $tag->get_columns };
     }
 
-    $self->render( json => { code => $code, status => \%status, tags => \@tags } );
+    my $suit_code;
+    if ( $code =~ m/^[J]/ ) {
+        my $bottom = $clothes->bottom;
+        $suit_code = substr $bottom->code, 1 if $bottom;
+    }
+    elsif ( $code =~ m/^[PK]/ ) {
+        my $top = $clothes->top;
+        $suit_code = substr $top->code, 1 if $top;
+    }
+
+    $self->render( json => { code => $code, status => \%status, tags => \@tags, suit => { code => $suit_code } } );
 }
 
 =head2 update_clothes
@@ -425,6 +448,15 @@ sub update_clothes {
     my @codes = map { sprintf( '%05s', $_ ) } @$codes;
     my $clothes = $self->schema->resultset('Clothes')->search( { code => { -in => \@codes } } );
     $clothes->update( { status_id => $status_id } );
+    ## 분실, 폐기일때에 의류의 모든 태그를 제거 #72
+    ## 분실, 폐기일때에 셋트의류 해제 #73
+    if ( $status_id == $LOST || $status_id == $DISCARD ) {
+        while ( my $c = $clothes->next ) {
+            $c->delete_related('clothes_tags');
+            $c->delete_related('suit_code_top');
+            $c->delete_related('suit_code_bottom');
+        }
+    }
 
     $self->render( json => { code => $codes, status => { $status->get_columns } } );
 }

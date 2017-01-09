@@ -1,3 +1,5 @@
+Handlebars.registerPartial("list-item-tag", JST['clothes/list-item-tag'])
+
 $ ->
   $('#toggle-tags').click ->
     $('#list-tags').toggleClass('hide')
@@ -6,6 +8,11 @@ $ ->
     $('#clothes :checkbox').each ->
       return true if $(@).prop('disabled')
       $(@).prop('checked', true)
+
+  $('#btn-uncheckall').click ->
+    $('#clothes :checkbox').each ->
+      return true if $(@).prop('disabled')
+      $(@).prop('checked', false)
 
   $('#form-search').submit (e) ->
     e.preventDefault()
@@ -23,6 +30,7 @@ $ ->
       type: 'GET'
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
+        data.n   = $('#clothes > li').length + 1
         template = JST['clothes/code']
         html     = template(data)
         $('#clothes').append(html)
@@ -50,6 +58,10 @@ $ ->
           $ul = $(el)
           return true unless $ul.find('input:checked').length
           $ul.find('span.label > small').html(data.status.name)
+          if parseInt(data.status.id) in [7,8]
+            $ul.find('li.list-item-tag').remove()
+            $ul.find('li.list-item-suit').remove()
+
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
@@ -74,7 +86,9 @@ $ ->
           $ul = $(el)
           return true unless $ul.find('input:checked').length
           return true if $ul.find("span.label-tag[data-tag-id=#{tag_id}]").length
-          $ul.append("<li><span class=\"label label-default label-tag\" data-tag-id=\"#{data.tag.id}\">#{data.tag.name}</span></li>")
+          template = JST['clothes/list-item-tag']
+          html     = template(data)
+          $ul.append(html)
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
