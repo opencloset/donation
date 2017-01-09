@@ -10,4 +10,5 @@
   <li title="<%= include('sms/delivering2delivered', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**1 ? '' : '-o' %>"></i> <%= status2label($DELIVERING) %> <i class="fa fa-arrow-right"></i> <%= status2label($DELIVERED) %></li>
   <li title="<%= include('sms/returnrequested2returning', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**2 ? '' : '-o' %>"></i> <%= status2label($RETURN_REQUESTED) %> <i class="fa fa-arrow-right"></i> <%= status2label($RETURNING) %></li>
   <li title="<%= include('sms/returning2returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**3 ? '' : '-o' %>"></i> <%= status2label($RETURNING) %> <i class="fa fa-arrow-right"></i> <%= status2label($RETURNED) %></li>
+  <li title="<%= include('sms/delivered2returned', format => 'txt', form => $form) %>"><i class="fa fa-envelope<%= $mask & 2**4 ? '' : '-o' %>"></i> <%= status2label($DELIVERED) %> <i class="fa fa-arrow-right"></i> <%= status2label($RETURNED) %></li>
 </ul>

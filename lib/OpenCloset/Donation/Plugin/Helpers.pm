@@ -170,6 +170,14 @@ sub update_status {
         $form->update( { sms_bitmask => $bitmask | 2**3 } );
     }
 
+    if ( $from eq $DELIVERED && $to eq $RETURNED ) {
+        my $msg = $self->render_to_string( 'sms/delivered2returned', format => 'txt', form => $form );
+        chomp $msg;
+        $self->sms( $form->phone, $msg );
+        my $bitmask = $form->sms_bitmask;
+        $form->update( { sms_bitmask => $bitmask | 2**4 } );
+    }
+
     return 1;
 }
 
