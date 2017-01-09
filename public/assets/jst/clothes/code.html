@@ -17,9 +17,7 @@
       </a>
     </li>
     {{#each tags}}
-    <li>
-      <span class="label label-default label-tag" data-tag-id="{{id}}">{{name}}</span>
-    </li>
+      {{> list-item-tag}}
     {{/each}}
   </ul>
 </li>

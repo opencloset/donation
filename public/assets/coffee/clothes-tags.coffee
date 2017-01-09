@@ -80,7 +80,9 @@ $ ->
           $ul = $(el)
           return true unless $ul.find('input:checked').length
           return true if $ul.find("span.label-tag[data-tag-id=#{tag_id}]").length
-          $ul.append("<li><span class=\"label label-default label-tag\" data-tag-id=\"#{data.tag.id}\">#{data.tag.name}</span></li>")
+          template = JST['clothes/list-item-tag']
+          html     = template(data)
+          $ul.append(html)
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->
 
