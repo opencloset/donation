@@ -28,6 +28,7 @@ $ ->
       type: 'GET'
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
+        data.n   = $('#clothes > li').length + 1
         template = JST['clothes/code']
         html     = template(data)
         $('#clothes').append(html)
