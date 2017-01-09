@@ -1,3 +1,5 @@
+Handlebars.registerPartial("list-item-tag", JST['clothes/list-item-tag'])
+
 $ ->
   $('#toggle-tags').click ->
     $('#list-tags').toggleClass('hide')
