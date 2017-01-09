@@ -38,10 +38,13 @@
 
 <ul class="list-inline">
   <li>
-    선택한 항목의(을)
+    <button id="btn-checkall" class="btn btn-default btn-sm">선택</button>
   </li>
   <li>
-    <button id="btn-checkall" class="btn btn-default">모두 선택합니다</button>
+    <button id="btn-uncheckall" class="btn btn-default btn-sm">취소</button>
+  </li>
+  <li>
+    선택한 항목의
   </li>
   <li>
     <div class="dropdown">

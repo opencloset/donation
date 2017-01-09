@@ -7,6 +7,11 @@ $ ->
       return true if $(@).prop('disabled')
       $(@).prop('checked', true)
 
+  $('#btn-uncheckall').click ->
+    $('#clothes :checkbox').each ->
+      return true if $(@).prop('disabled')
+      $(@).prop('checked', false)
+
   $('#form-search').submit (e) ->
     e.preventDefault()
     $this = $(@)
