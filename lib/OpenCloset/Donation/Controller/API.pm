@@ -12,6 +12,7 @@ use OpenCloset::Constants::Status qw/$RENTABLE $RENTALESS $RESERVATION $CLEANING
 ## repair_clothes.done
 our $DONE_RESIZED   = 1;
 our $DONE_COMPLETED = 2;
+our $DONE_RESET     = 3;
 
 has schema => sub { shift->app->schema };
 
@@ -156,6 +157,18 @@ sub repair_clothes {
 
     if ( exists $input->{done} && $input->{done} == $DONE_COMPLETED && !exists $input->{pickup_date} ) {
         $input->{pickup_date} = DateTime->now;
+    }
+    elsif ( exists $input->{done} && $input->{done} == $DONE_RESET ) {
+        $r->update(
+            {
+                alteration_at => undef,
+                cost          => 0,
+                done          => undef,
+                comment       => undef,
+                assign_date   => undef,
+                pickup_date   => undef,
+            }
+        );
     }
 
     if ( $input->{alteration_at} ) {

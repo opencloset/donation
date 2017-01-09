@@ -142,6 +142,9 @@
       <td>
         <button class="btn btn-default btn-sm btn-preview" data-code="<%= $row->code %>">미리보기</button>
         <button class="btn btn-success btn-resize btn-sm" data-code="<%= $row->code %>"<%= $done ? ' disabled="disabled"' : '' %>>치수변경</button>
+        <button class="btn btn-danger btn-sm btn-reset-row" title="reset" data-code="<%= $row->code %>">
+          <i class="fa fa-repeat fa-fw" aria-hidden="true"></i>
+        </button>
         <div class="options hidden">
           <hr>
           <form id="form-<%= $row->code %>" action="<%= url_for('clothes.resize.suggestion', code => $row->code) %>">
