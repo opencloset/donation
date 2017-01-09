@@ -148,3 +148,15 @@ $ ->
       error: (jqXHR, textStatus, errorThrown) ->
         console.log textStatus and alert 'error'
       complete: (jqXHR, textStatus) ->
+
+  $('.btn-reset-row').click ->
+    code = $(@).data('code')
+    $.ajax "/clothes/repair/#{code}",
+      type: 'PUT'
+      dataType: 'json'
+      data: { done: 3 }
+      success: (data, textStatus, jqXHR) ->
+        location.reload()
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log textStatus and alert 'error'
+      complete: (jqXHR, textStatus) ->
