@@ -60,6 +60,7 @@ $ ->
           $ul.find('span.label > small').html(data.status.name)
           if parseInt(data.status.id) in [7,8]
             $ul.find('li.list-item-tag').remove()
+            $ul.find('li.list-item-suit').remove()
 
       error: (jqXHR, textStatus, errorThrown) ->
       complete: (jqXHR, textStatus) ->

@@ -395,7 +395,17 @@ sub clothes_tags {
         push @tags, { $tag->get_columns };
     }
 
-    $self->render( json => { code => $code, status => \%status, tags => \@tags } );
+    my $suit_code;
+    if ( $code =~ m/^[J]/ ) {
+        my $bottom = $clothes->bottom;
+        $suit_code = substr $bottom->code, 1 if $bottom;
+    }
+    elsif ( $code =~ m/^[PK]/ ) {
+        my $top = $clothes->top;
+        $suit_code = substr $top->code, 1 if $top;
+    }
+
+    $self->render( json => { code => $code, status => \%status, tags => \@tags, suit => { code => $suit_code } } );
 }
 
 =head2 update_clothes
@@ -426,9 +436,12 @@ sub update_clothes {
     my $clothes = $self->schema->resultset('Clothes')->search( { code => { -in => \@codes } } );
     $clothes->update( { status_id => $status_id } );
     ## 분실, 폐기일때에 의류의 모든 태그를 제거 #72
+    ## 분실, 폐기일때에 셋트의류 해제 #73
     if ( $status_id == $LOST || $status_id == $DISCARD ) {
         while ( my $c = $clothes->next ) {
             $c->delete_related('clothes_tags');
+            $c->delete_related('suit_code_top');
+            $c->delete_related('suit_code_bottom');
         }
     }
 

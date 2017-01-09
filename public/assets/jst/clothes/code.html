@@ -1,6 +1,15 @@
 <li class="list-group-item" data-code="{{code}}">
   <ul class="list-inline">
     <li><strong>{{n}}</strong></li>
+    {{#if suit.code}}
+    <li class="list-item-suit pull-right">
+      <a href="https://staff.theopencloset.net/clothes/{{suit.code}}" target="_blank">
+        <span class="label label-success"><i class="fa fa-external-link"></i>
+          {{suit.code}}
+        </span>
+      </a>
+    </li>
+    {{/if}}
     <li>
       {{#if status.rent}}
       <input name="code" type="checkbox" value="{{code}}" disabled>
