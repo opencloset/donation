@@ -7,6 +7,11 @@ $ ->
       return true if $(@).prop('disabled')
       $(@).prop('checked', true)
 
+  $('#btn-uncheckall').click ->
+    $('#clothes :checkbox').each ->
+      return true if $(@).prop('disabled')
+      $(@).prop('checked', false)
+
   $('#form-search').submit (e) ->
     e.preventDefault()
     $this = $(@)
@@ -23,6 +28,7 @@ $ ->
       type: 'GET'
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
+        data.n   = $('#clothes > li').length + 1
         template = JST['clothes/code']
         html     = template(data)
         $('#clothes').append(html)
