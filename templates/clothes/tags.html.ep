@@ -27,7 +27,7 @@
 
 <form id="form-search" class="form-inline" method="GET" action="/clothes/:code/tags">
   <div class="form-group">
-    <input id="clothes-search" name="q" type="text" class="form-control" placeholder="의류코드">
+    <input id="clothes-search" name="q" type="text" class="form-control" placeholder="의류코드" autofocus>
   </div>
   <button type="submit" class="btn btn-primary">검색</button>
 </form>
