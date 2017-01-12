@@ -6,7 +6,7 @@
 
 <div class="pull-right">
   % my $url = url_with()->path('/forms.csv');
-  <a href="<%= $url %>" class="btn btn-warning btn-sm" download>
+  <a href="<%= $url %>" class="btn btn-warning btn-sm" download="<%= $today->ymd('') %>.csv">
     <i class="fa fa-table" aria-hidden="true"></i>
     운송장 다운로드
   </a>
