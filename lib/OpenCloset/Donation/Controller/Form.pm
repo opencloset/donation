@@ -164,7 +164,7 @@ sub sendback {
 
     return $self->error( 401, "Authorize required" ) unless $authorized;
 
-    my $now = DateTime->now( time_zone => 'Asia/Seoul' );
+    my $now = DateTime->now( time_zone => $self->config->{timezone} );
     $self->render( form => $form, holidays => [ $self->holidays( $now->year ) ] );
 }
 
