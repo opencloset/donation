@@ -64,7 +64,7 @@ sub create {
     $v->optional('ever-use');
     $v->optional('birth-date')->like(qr/\d{4}-\d{2}-\d{2}/); # YYYY-mm-dd
     $v->optional('gender');
-    $v->required('phone')->like(qr/^01[0-9]-\d{4}-\d{4}$/);
+    $v->required('phone')->like(qr/^01[0-9]-\d{4}-\d{3,4}$/);
     $v->required('email')->email;
     $v->required('address1');
     $v->required('address2');
@@ -129,9 +129,7 @@ sub create {
         header => [
             From    => $self->config->{email}{notify}{from},
             To      => $self->config->{email}{notify}{to},
-            Subject => sprintf(
-                "[열린옷장] 새로운 기증신청서 - %s님", $name
-            ),
+            Subject => sprintf( "[열린옷장] 새로운 기증신청서 - %s님", $name ),
         ],
         body => $self->url_for( "form", id => $form->id )->to_abs,
     );
