@@ -127,6 +127,10 @@ sub create {
     my $quantity = $v->param('quantity');
     my $tags     = $v->every_param('tags');
 
+    if ( $self->schema->resultset('Clothes')->find( { code => sprintf( '%05s', $code ) } ) ) {
+        return $self->error( 400, "Duplicate clothes code: $code" );
+    }
+
     my $input = {
         donation_id => $donation->id,
         status_id   => $status_id,
