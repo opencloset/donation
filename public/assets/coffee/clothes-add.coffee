@@ -104,4 +104,4 @@ $ ->
   $('#btn-quantity').click (e) ->
     $('#fds-quantity').toggleClass('hide')
 
-  $('#select-tags').chosen()
+  $('#select-tags').chosen({ search_contains: true })
