@@ -105,3 +105,13 @@ $ ->
     $('#fds-quantity').toggleClass('hide')
 
   $('#select-tags').chosen({ search_contains: true })
+
+  $('#btn-girth-x2').click (e) ->
+    $('#neck,#bust,#waist,#hip,#topbelly,#belly,#thigh').each (i, el) ->
+      val = $(el).val()
+      return true unless val
+      $(el).val(parseInt(val)*2)
+
+    val = $('#cuff').val()
+    return unless val
+    $('#cuff').val(parseFloat(val) * 2)
