@@ -17,7 +17,7 @@
 % }
 % if ($status_in_46->count) {
 % $recycle = 1;
-[비백] 업싸이클링 활용 의류: <%= clothes2text($status_in_46) %>
+- [비백] 업싸이클링 활용 의류: <%= clothes2text($status_in_46) %>
 비백 (http://www.b-bag.kr)은 다양한 소재를 가방, 쿠션 등으로 업싸이클링하는 친환경 사회적기업입니다.
 % }
 % if($recycle) {
