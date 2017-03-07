@@ -110,8 +110,4 @@ $ ->
     $('#neck,#bust,#waist,#hip,#topbelly,#belly,#thigh').each (i, el) ->
       val = $(el).val()
       return true unless val
-      $(el).val(parseInt(val)*2)
-
-    val = $('#cuff').val()
-    return unless val
-    $('#cuff').val(parseFloat(val) * 2)
+      $(el).val(parseInt(parseFloat(val) * 2))
