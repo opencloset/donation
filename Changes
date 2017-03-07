@@ -1,3 +1,5 @@
+  - requires OpenCloset::Common v0.0.14
+
 v0.4.5    Mon, 06 Mar 2017 11:29:28 +0900
   - 둘레의 크기를 2배로 늘여주는 버튼을 추가 (#80)
   - footer 의 대표번호 변경 (#75)
