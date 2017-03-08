@@ -38,6 +38,7 @@ $ ->
       {value: '단골', text: '단골'}
       {value: '자체수선', text: '자체수선'}
       {value: '구서방네', text: '구서방네'}
+      {value: '라이벌', text: '라이벌'}
       {value: '기타', text: '기타'}
     ]
     params: (params) ->
