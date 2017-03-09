@@ -108,7 +108,7 @@ sub create {
 
     my $status_id = $v->param('status-id');
     my $category  = $v->param('category');
-    my $code      = $v->param('code');
+    my $code      = $v->param('code') || '';
     my $gender    = $v->param('gender');
     my $color     = $v->param('color');
 
