@@ -205,15 +205,15 @@
 
       <div class="pull-right">
         <button type="reset" class="btn btn-default btn-sm">취소</button>
-        <button type="submit" class="btn btn-warning btn-sm btn-discard" data-status-id="45">
+        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="45">
           <i class="fa fa-recycle fa-lg"></i>
           옷캔
         </button>
-        <button type="submit" class="btn btn-warning btn-sm btn-discard" data-status-id="46">
+        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="46">
           <i class="fa fa-recycle fa-lg"></i>
           비백
         </button>
-        <button type="submit" class="btn btn-warning btn-sm btn-discard" data-status-id="47">사용못함</button>
+        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="47">사용못함</button>
         <button type="submit" class="btn btn-success btn-sm">추가</button>
         <button type="button" id="btn-girth-x2" class="btn btn-default btn-sm">둘레 x 2</button>
       </div>
