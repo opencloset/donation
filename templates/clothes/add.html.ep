@@ -153,8 +153,6 @@
       
       <fieldset id="category-toggle">
         <div class="form-group">
-        </div>
-        <div class="form-group">
           <input id="neck" class="form-control" name="neck" type="text" placeholder="목둘레 cm">
         </div>
         <div class="form-group">
