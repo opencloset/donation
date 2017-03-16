@@ -5,7 +5,7 @@ $ ->
 
   $('.js-category').click ->
     $('.js-category').removeClass('active')
-    $('#category-toggle input').hide()
+    $('#category-toggle > .form-group > input').hide()
     $('#form-clothes button').show()
     $(@).addClass('active')
     category = $(@).data('category')
