@@ -296,6 +296,16 @@ boolean(1 or 0)
 
 =cut
 
+our %HANGUL_PART_MAP = (
+    '허벅지' => 'thigh',
+    '밑단'    => 'cuff',
+    '허리'    => 'waist',
+    '길이'    => 'length',
+    '치마폭' => 'unknown', # 이게 뭐지?
+    '윗배'    => 'topbelly',
+    '팔길이' => 'arm',
+);
+
 sub update_resize {
     my $self = shift;
     my $code = $self->param('code');
@@ -309,6 +319,9 @@ sub update_resize {
         has_dual_tuck => $has_dual_tuck
     };
 
+    my $ignore = $self->every_param('ignore');
+    my @ignore = map { $HANGUL_PART_MAP{$_} } @$ignore;
+
     my $rs = $self->schema->resultset('Clothes')->find( { code => $code } );
     return $self->error( 404, "Clothes not found: $code" ) unless $rs;
 
@@ -319,6 +332,11 @@ sub update_resize {
     my $top        = $rs->top;
     my $bottom     = $rs->bottom;
     my $suggestion = $clothes->suggest_repair_size($opts);
+
+    for my $ignore (@ignore) {
+        delete $suggestion->{bottom}{$ignore};
+        delete $suggestion->{top}{$ignore};
+    }
 
     my $r = $self->schema->resultset('RepairClothes')->find_or_create( { clothes_code => $rs->code } );
     unless ($r) {

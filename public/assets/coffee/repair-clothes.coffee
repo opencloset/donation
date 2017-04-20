@@ -112,7 +112,10 @@ $ ->
 
           $desc = $preview_top.children('.desc').empty()
           _.each data.messages.top, (el) ->
-            $desc.append("<li>#{el}</li>")
+            if /수선/.test(el)
+              $desc.append("<li class=\"ignore-item\">#{el}</li>")
+            else
+              $desc.append("<li>#{el}</li>")
 
         if data.diff.bottom
           $hljs = $preview_bottom.find('.hljs')
@@ -121,7 +124,10 @@ $ ->
 
           $desc = $preview_bottom.children('.desc').empty()
           _.each data.messages.bottom, (el) ->
-            $desc.append("<li>#{el}</li>")
+            if /수선/.test(el)
+              $desc.append("<li class=\"ignore-item\">#{el}</li>")
+            else
+              $desc.append("<li>#{el}</li>")
 
       error: (jqXHR, textStatus, errorThrown) ->
         console.log textStatus and alert 'error'
@@ -139,6 +145,11 @@ $ ->
     code  = $this.data('code')
 
     params = $form.serialize()
+
+    ignore = $this.closest('tr').find('.ignore-item.ignore')
+    _.each ignore, (el) ->
+      params = "#{params}&ignore=#{$(el).text().substring(5)}"
+
     $.ajax "/clothes/#{code}/suggestion",
       type: 'PUT'
       dataType: 'json'
@@ -162,3 +173,13 @@ $ ->
       error: (jqXHR, textStatus, errorThrown) ->
         console.log textStatus and alert 'error'
       complete: (jqXHR, textStatus) ->
+
+  $('.table').on 'click', '.ignore-item', (e) ->
+    ignore = $(@).hasClass('ignore')
+    text = $(@).text()
+    if ignore
+      $(@).html("#{text}")
+    else
+      $(@).html("<s>#{text}</s>")
+
+    $(@).toggleClass('ignore')
