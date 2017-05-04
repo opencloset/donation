@@ -132,6 +132,8 @@ sub _extend_validator {
 sub _add_task {
     my $self   = shift;
     my $minion = $self->minion;
+    $minion->reset;
+
     $minion->add_task(
         upload_clothes_photo => sub {
             my ( $job, $key, $img ) = @_;
