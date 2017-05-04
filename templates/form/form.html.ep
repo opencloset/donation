@@ -20,28 +20,28 @@
   </small>
   % if ($user) {
     % my $user_info = $user->user_info;
-  <a class="btn btn-default btn-sm" href="<%= config->{opencloset}{root} %>/user/<%= $user->id %>" target="_blank">
-    <i class="fa fa-external-link"></i>
-    사용자정보
-  </a>
-  <a class="btn btn-default btn-sm" href="<%= url_for('user.donations', id => $user->id) %>">
-    기부현황
-  </a>
-  <p class="text-muted">
-    <small>
-      <%= $user->donations->count %> 건의 기부와
-      <%= $user->orders->count %> 건의 대여이력이 있습니다
-    </small>
-  </p>
+    <a class="btn btn-default btn-sm" href="<%= config->{opencloset}{root} %>/user/<%= $user->id %>" target="_blank">
+      <i class="fa fa-external-link"></i>
+      사용자정보
+    </a>
+    <a class="btn btn-default btn-sm" href="<%= url_for('user.donations', id => $user->id) %>">
+      기부현황
+    </a>
+    <p class="text-muted">
+      <small>
+        <%= $user->donations->count %> 건의 기부와
+        <%= $user->orders->count %> 건의 대여이력이 있습니다
+      </small>
+    </p>
     % if ($user->email ne $form->email) {
-    <span class="text-danger">
-      <small>이메일이 다릅니다 <strong><%= $user->email %></strong></small>
-    </span>
+      <span class="text-danger">
+        <small>이메일이 다릅니다 <strong><%= $user->email %></strong></small>
+      </span>
     % } elsif ($user_info->phone ne $form->phone) {
     <span class="text-danger">
       <small>폰번호가 다릅니다 <strong><%= $user_info->phone %></strong></small>
     </span>
-    % }
+  % }
   % } else {
   <button id="btn-user-add" class="btn btn-info btn-sm" type="button">
     사용자등록
@@ -53,37 +53,37 @@
 % my $status = $form->status || '';
 <ul class="list-inline status-menu">
   % for my $s (@OpenCloset::Donation::Status::ALL) {
-  <li>
-    % if ($status eq $s) {
-    <a class="status" href="#"><%= status2label($s, 1) %></a>
-    % } else {
-    <a class="status" href="#"><%= status2label($s) %></a>
-    % }
-  </li>
+    <li>
+      % if ($status eq $s) {
+        <a class="status" href="#"><%= status2label($s, 1) %></a>
+      % } else {
+        <a class="status" href="#"><%= status2label($s) %></a>
+      % }
+    </li>
   % }
 </ul>
 
 <p title="신청일">신청일 <%= $form->create_date->ymd %></p>
 % if (my $return_date = $form->return_date) {
-<p title="반송일">반송일 <%= $return_date->ymd %></p>
+  <p title="반송일">반송일 <%= $return_date->ymd %></p>
 % }
 
 % if ($form->waybill) {
-<p title="운송장">운송장 <samp><%= $form->waybill %></samp></p>
+  <p title="운송장">운송장 <samp><%= $form->waybill %></samp></p>
 
-<a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
-  <i class="fa fa-external-link"></i>
-  배송조회
-</a>
-<button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장변경</button>
+  <a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->waybill) %>" target="_blank">
+    <i class="fa fa-external-link"></i>
+    배송조회
+  </a>
+  <button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장변경</button>
 % } else {
-<button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장입력</button>
+  <button id="btn-toggle-parcel" class="btn btn-default btn-sm" type="button">운송장입력</button>
 % }
 % if ($form->return_waybill) {
-<a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->return_waybill) %>" target="_blank">
-  <i class="fa fa-external-link"></i>
-  반송조회
-</a>
+  <a class="btn btn-default btn-sm" href="<%= parcel($form->parcel_service, $form->return_waybill) %>" target="_blank">
+    <i class="fa fa-external-link"></i>
+    반송조회
+  </a>
 % }
 <button id="btn-comment" class="btn btn-default btn-sm" type="button">Comment</button>
 <button id="btn-sms" class="btn btn-default btn-sm" type="button">SMS</button>
