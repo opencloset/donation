@@ -7,7 +7,7 @@ use HTTP::Tiny;
 
 use OpenCloset::Schema;
 
-use version; our $VERSION = qv("v0.4.9");
+use version; our $VERSION = qv("v0.4.10");
 
 has schema => sub {
     my $self = shift;
