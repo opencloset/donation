@@ -7,7 +7,7 @@ use Path::Tiny;
 use Try::Tiny;
 
 use OpenCloset::Constants::Category;
-use OpenCloset::Constants::Status qw/$REPAIR/;
+use OpenCloset::Constants::Status qw/$REPAIR $RECYCLE_1 $RECYCLE_2 $RECYCLE_3 $UNRECYCLE/;
 
 has schema => sub { shift->app->schema };
 
@@ -25,29 +25,37 @@ sub add {
     my $user     = $self->stash('user');
     my $donation = $self->stash('donation');
 
-    my $form     = $donation->donation_forms->next;
-    my $clothes1 = $donation->clothes( { status_id => { 'NOT IN' => [ 45, 46, 47 ] } } );
-    my $clothes2 = $donation->clothes( { status_id => 45 } );
-    my $clothes3 = $donation->clothes( { status_id => 46 } );
-    my $clothes4 = $donation->clothes( { status_id => 47 } );
+    my $form      = $donation->donation_forms->next;
+    my $available = $donation->clothes( { status_id => { 'NOT IN' => [ $RECYCLE_1, $RECYCLE_2, $RECYCLE_3, $UNRECYCLE ] } } );
+    my $recycle1  = $donation->clothes( { status_id => $RECYCLE_1 } );
+    my $recycle2  = $donation->clothes( { status_id => $RECYCLE_2 } );
+    my $recycle3  = $donation->clothes( { status_id => $RECYCLE_3 } );
+    my $unrecycle = $donation->clothes( { status_id => $UNRECYCLE } );
 
     my $all_clothes = $donation->clothes;
     my $msg         = $self->render_to_string(
-        'sms/clothes_info', format => 'txt', all => $all_clothes, available => $clothes1,
-        status_in_45 => $clothes2, status_in_46 => $clothes3, status_in_47 => $clothes4
+        'sms/clothes_info',
+        format    => 'txt',
+        all       => $all_clothes,
+        available => $available,
+        recycle1  => $recycle1,
+        recycle2  => $recycle2,
+        recycle3  => $recycle3,
+        unrecycle => $unrecycle
     );
     chomp $msg;
 
     my @tags = $self->schema->resultset('Tag')->search->all;
 
     $self->render(
-        form     => $form,
-        clothes1 => $clothes1,
-        clothes2 => $clothes2,
-        clothes3 => $clothes3,
-        clothes4 => $clothes4,
-        sms_body => $msg,
-        tags     => \@tags,
+        form      => $form,
+        available => $available,
+        recycle1  => $recycle1,
+        recycle2  => $recycle2,
+        recycle3  => $recycle3,
+        unrecycle => $unrecycle,
+        sms_body  => $msg,
+        tags      => \@tags,
     );
 }
 

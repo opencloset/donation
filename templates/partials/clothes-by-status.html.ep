@@ -1,17 +1,17 @@
 % use OpenCloset::Constants::Category qw/$JACKET $PANTS $SKIRT/;
 
-% if ($clothes1->count) {
+% if ($available->count) {
 <ul class="list-inline clothes-inline">
   <li class="list-item-block">
     <p>
       <i class="fa fa-archive fa-fw"></i>
       <span class="text-success">사용가능</span>
       <small class="text-muted">
-        %= clothes2text($clothes1)
+        %= clothes2text($available)
       </small>
     </p>
   </li>
-  % while ( my $row = $clothes1->next ) {
+  % while ( my $row = $available->next ) {
   % my $top      = $row->top;
   % my $bottom   = $row->bottom;
   % my $is_suit  = $top && $bottom;
@@ -37,18 +37,18 @@
 <hr>
 % }
 
-% if ($clothes2->count) {
+% if ($recycle1->count) {
 <ul class="list-inline">
   <li class="list-item-block">
     <p>
       <i class="fa fa-recycle fa-fw"></i>
       <span class="text-warning">옷캔</span>
       <small class="text-muted">
-        %= clothes2text($clothes2)
+        %= clothes2text($recycle1)
       </small>
     </p>
   </li>
-  % while ( my $row = $clothes2->next ) {
+  % while ( my $row = $recycle1->next ) {
   <li>
     %= clothes2link($row, 1)
   </li>
@@ -58,39 +58,60 @@
 <hr>
 % }
 
-% if ($clothes3->count) {
+% if ($recycle2->count) {
 <ul class="list-inline">
   <li class="list-item-block">
     <p>
       <i class="fa fa-recycle fa-fw"></i>
       <span class="text-warning">비백</span>
       <small class="text-muted">
-        %= clothes2text($clothes3)
+        %= clothes2text($recycle2)
       </small>
     </p>
   </li>
-  % while ( my $row = $clothes3->next ) {
-  <li>
-    %= clothes2link($row, 1)
-  </li>
+  % while ( my $row = $recycle2->next ) {
+    <li>
+      %= clothes2link($row, 1)
+    </li>
   % }
 </ul>
 
 <hr>
 % }
 
-% if ($clothes4->count) {
+% if ($recycle3->count) {
+  <ul class="list-inline">
+    <li class="list-item-block">
+      <p>
+        <i class="fa fa-recycle fa-fw"></i>
+        <span class="text-warning">비전</span>
+        <small class="text-muted">
+          %= clothes2text($recycle3)
+        </small>
+      </p>
+    </li>
+    % while ( my $row = $recycle3->next ) {
+      <li>
+        %= clothes2link($row, 1)
+      </li>
+    % }
+  </ul>
+
+  <hr>
+% }
+
+% if ($unrecycle->count) {
 <ul class="list-inline">
   <li class="list-item-block">
     <p>
       <i class="fa fa-trash fa-fw"></i>
       <span class="text-danger">사용못함</span>
       <small class="text-muted">
-        %= clothes2text($clothes4)
+        %= clothes2text($unrecycle)
       </small>
     </p>
   </li>
-  % while ( my $row = $clothes4->next ) {
+  % while ( my $row = $unrecycle->next ) {
   <li>
     %= clothes2link($row, 1)
   </li>

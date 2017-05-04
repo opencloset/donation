@@ -4,6 +4,7 @@
 %   '/assets/dist/js/form.min.js'
 % ], csses => ['/assets/components/growl/stylesheets/jquery.growl.css'];
 % use OpenCloset::Donation::Status;
+% use OpenCloset::Constants::Status qw/$REPAIR $RECYCLE_1 $RECYCLE_2 $RECYCLE_3 $UNRECYCLE/;
 % my $email  = $form->email;
 
 <div class="pull-right text-muted">
@@ -93,12 +94,13 @@
     </a>
     <hr>
     <h4>등록된 의류정보</h4>
-    % my $clothes1 = $donation->clothes( { status_id => { 'NOT IN' => [ 45, 46, 47 ] } }, { order_by => 'category' } );
-    % my $clothes2 = $donation->clothes( { status_id => 45 },                             { order_by => 'category' } );
-    % my $clothes3 = $donation->clothes( { status_id => 46 },                             { order_by => 'category' } );
-    % my $clothes4 = $donation->clothes( { status_id => 47 },                             { order_by => 'category' } );
+    % my $available = $donation->clothes( { status_id => { 'NOT IN' => [ $RECYCLE_1, $RECYCLE_2, $RECYCLE_3, $UNRECYCLE ] } }, { order_by => 'category' } );
+    % my $recycle1  = $donation->clothes( { status_id => $RECYCLE_1 }, { order_by => 'category' } );
+    % my $recycle2  = $donation->clothes( { status_id => $RECYCLE_2 }, { order_by => 'category' } );
+    % my $recycle3  = $donation->clothes( { status_id => $RECYCLE_3 }, { order_by => 'category' } );
+    % my $unrecycle = $donation->clothes( { status_id => $UNRECYCLE }, { order_by => 'category' } );
     % if ($donation->clothes->count) {
-      %= include 'partials/clothes-by-status', clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3, clothes4 => $clothes4;
+      %= include 'partials/clothes-by-status', available => $available, recycle1 => $recycle1, recycle2 => $recycle2, recycle3 => $recycle3, unrecycle => $unrecycle;
     % } else {
       <p>등록된 의류가 없습니다</p>
     % }
