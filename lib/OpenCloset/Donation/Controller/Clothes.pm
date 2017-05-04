@@ -328,7 +328,8 @@ sub _create_clothes {
 
     die "Failed to create a new clothes" unless $clothes;
 
-    if ( $input->{status_id} =~ /^4[567]$/ ) {
+    my $status_id = $input->{status_id};
+    if ( "$RECYCLE_1 $RECYCLE_2 $RECYCLE_3 $UNRECYCLE" =~ m/\b$status_id\b/ ) {
         my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
         die "Not found category: $category" unless $clothes_code;
 
