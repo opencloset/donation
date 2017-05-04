@@ -23,7 +23,7 @@
 % if ($recycle3->count) {
 % $recycle = 1;
 - [비전] 트레이닝센터 활용 의류: <%= clothes2text($recycle3) %>
-비전 (http://www.vtc.or.kr/)은 서울시립 노숙인 재활센터입니다.
+비전트레이닝센터 (http://www.vtc.or.kr/)는 서울시립 노숙인 재활센터입니다.
 % }
 % if($recycle) {
 
