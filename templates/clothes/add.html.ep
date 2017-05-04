@@ -9,6 +9,7 @@
 %   '/assets/dist/css/chosen-bootstrap.min.css'
 % ];
 % use OpenCloset::Constants::Category;
+% use OpenCloset::Constants::Status qw/$RECYCLE_1 $RECYCLE_2 $RECYCLE_3 $UNRECYCLE/;
 % my $user_info = $user->user_info;
 
 % if (my $alert = flash('alert')) {
@@ -203,15 +204,19 @@
 
       <div class="pull-right">
         <button type="reset" class="btn btn-default btn-sm">취소</button>
-        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="45">
+        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="<%= $RECYCLE_1 %>">
           <i class="fa fa-recycle fa-lg"></i>
           옷캔
         </button>
-        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="46">
+        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="<%= $RECYCLE_2 %>">
           <i class="fa fa-recycle fa-lg"></i>
           비백
         </button>
-        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="47">사용못함</button>
+        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="<%= $RECYCLE_3 %>">
+          <i class="fa fa-recycle fa-lg"></i>
+          비전
+        </button>
+        <button type="button" class="btn btn-warning btn-sm btn-discard" data-status-id="<%= $UNRECYCLE %>">사용못함</button>
         <button type="submit" class="btn btn-success btn-sm">추가</button>
         <button type="button" id="btn-girth-x2" class="btn btn-default btn-sm">둘레 x 2</button>
       </div>
@@ -237,7 +242,7 @@
       등록된 의류
     </h5>
 
-    %= include 'partials/clothes-by-status', clothes1 => $clothes1, clothes2 => $clothes2, clothes3 => $clothes3, clothes4 => $clothes4;
+    %= include 'partials/clothes-by-status', available => $available, recycle1 => $recycle1, recycle2 => $recycle2, recycle3 => $recycle3, unrecycle => $unrecycle;
 
     % if (my $message = $donation->message) {
     <h5>
