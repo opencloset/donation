@@ -22,3 +22,4 @@ requires 'Try::Tiny';
 requires 'OpenCloset::Common',          'v0.1.1';
 requires 'OpenCloset::Plugin::Helpers', 'v0.0.14';
 requires 'OpenCloset::Schema',          '0.047';
+requires 'OpenCloset::Calculator::LateFee';
