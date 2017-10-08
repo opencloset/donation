@@ -32,7 +32,7 @@ my $STAFF_URI = $ENV{OPENCLOSET_STAFF_URI} || 'https://staff.theopencloset.net';
     },
     smtp => { host => $ENV{OPENCLOSET_SMTP_HOST} || 'localhost' },
     minion => {
-        SQLite => 'sqlite:minion.db',
+        SQLite => 'sqlite:db/minion.db',
     },
     oavatar => {
         token => $ENV{OPENCLOSET_AVATAR_TOKEN} || 's3cr3t',
