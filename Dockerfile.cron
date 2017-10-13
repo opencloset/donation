@@ -11,20 +11,16 @@ RUN cpanm --notest \
     --mirror http://cpan.theopencloset.net \
     --installdeps .
 
-# Give opencloset acess
-RUN echo "opencloset" > /etc/cron.allow
-
-# Add job to crontabs
-RUN echo '* * * * * echo "`date`: hello world" >> /var/log/opencloset.cron.log 2>&1' > /var/spool/cron/crontabs/opencloset
-RUN echo "" >> /var/spool/cron/crontabs/opencloset
-RUN touch /var/log/opencloset.cron.log && chown opencloset:opencloset /var/log/opencloset.cron.log
-
-RUN chown opencloset:crontab /var/spool/cron/crontabs/opencloset && \
-    chmod 0600 /var/spool/cron/crontabs/opencloset
-
 # Everything up to cached.
 WORKDIR /home/opencloset/service/donation.theopencloset.net
 COPY . .
 RUN chown -R opencloset:opencloset .
 
-ENTRYPOINT ["cron", "-f"]
+# set env
+ENV MOJO_HOME=/home/opencloset/service/donation.theopencloset.net
+ENV MOJO_CONFIG=donation.conf
+
+# Install cronjob
+RUN crontab -u opencloset .crontab
+
+ENTRYPOINT ["./docker-entrypoint-cron.sh"]
