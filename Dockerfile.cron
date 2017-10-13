@@ -1,0 +1,30 @@
+FROM opencloset/perl:latest
+
+RUN groupadd opencloset && useradd -g opencloset opencloset
+
+RUN apt-get update && apt-get -y install cron
+
+WORKDIR /tmp
+COPY cpanfile cpanfile
+RUN cpanm --notest \
+    --mirror http://www.cpan.org \
+    --mirror http://cpan.theopencloset.net \
+    --installdeps .
+
+# Give opencloset acess
+RUN echo "opencloset" > /etc/cron.allow
+
+# Add job to crontabs
+RUN echo '* * * * * echo "`date`: hello world" >> /var/log/opencloset.cron.log 2>&1' > /var/spool/cron/crontabs/opencloset
+RUN echo "" >> /var/spool/cron/crontabs/opencloset
+RUN touch /var/log/opencloset.cron.log && chown opencloset:opencloset /var/log/opencloset.cron.log
+
+RUN chown opencloset:crontab /var/spool/cron/crontabs/opencloset && \
+    chmod 0600 /var/spool/cron/crontabs/opencloset
+
+# Everything up to cached.
+WORKDIR /home/opencloset/service/donation.theopencloset.net
+COPY . .
+RUN chown -R opencloset:opencloset .
+
+ENTRYPOINT ["cron", "-f"]
