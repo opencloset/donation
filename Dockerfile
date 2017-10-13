@@ -41,6 +41,7 @@ USER opencloset
 ENV MOJO_HOME=/home/opencloset/service/donation.theopencloset.net
 ENV MOJO_CONFIG=donation.conf
 
-ENTRYPOINT ["hypnotoad", "-f", "./script/donation"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD ["hypnotoad"]
 
 EXPOSE 5000
