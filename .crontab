@@ -1,0 +1,4 @@
+*/5 * * * * . /home/opencloset/.env.sh; cd /home/opencloset/service/donation.theopencloset.net; script/donation update_status delivering delivered >> /home/opencloset/service/donation.theopencloset.net/cron.log 2>&1
+*/30 * * * * . /home/opencloset/.env.sh; cd /home/opencloset/service/donation.theopencloset.net; script/donation update_status return-requested returning >> /home/opencloset/service/donation.theopencloset.net/cron.log 2>&1
+0 * * * * . /home/opencloset/.env.sh; cd /home/opencloset/service/donation.theopencloset.net; script/donation update_status returning returned >> /home/opencloset/service/donation.theopencloset.net/cron.log 2>&1
+0 8 * * * . /home/opencloset/.env.sh; cd /home/opencloset/service/donation.theopencloset.net; script/donation update_status delivered do-not-return >> /home/opencloset/service/donation.theopencloset.net/cron.log 2>&1

@@ -1,4 +1,8 @@
 #!/usr/bin/env perl
+
+my $PORT = $ENV{PORT} || 5000;
+my $STAFF_URI = $ENV{OPENCLOSET_STAFF_URI} || 'https://staff.theopencloset.net';
+
 {
     database => {
         dsn  => $ENV{OPENCLOSET_DATABASE_DSN}  || "dbi:mysql:opencloset:127.0.0.1",
@@ -13,18 +17,25 @@
             AutoCommit        => 1,
         },
     },
-    secrets       => [ $ENV{OPENCLOSET_SECRET} ],                                                # must set secret of staff.theopencloset.net
+    hypnotoad => { listen => ["http://*:$PORT"] },
+    secrets       => [ $ENV{OPENCLOSET_SECRET} ],                                   # must set secret of staff.theopencloset.net
     cookie_domain => $ENV{OPENCLOSET_DOMAIN} || 'localhost' || '.theopencloset.net',
-    opencloset    => { login => 'http://localhost:5001/login', root => 'http://localhost:5001' },
-    email         => {
+    opencloset    => {
+        login => "$STAFF_URI/login",
+        root  => $STAFF_URI,
+    },
+    email => {
         notify => {
             from => 'donation@theopencloset.net',
             to   => 'info@theopencloset.net'
         },
     },
-    smtp   => { host => 'localhost' },
+    smtp => {
+        host => $ENV{OPENCLOSET_SMTP_HOST} || 'localhost',
+        port => $ENV{OPENCLOSET_SMTP_PORT} || 25,
+    },
     minion => {
-        SQLite => 'sqlite:minion.db',
+        SQLite => 'sqlite:db/minion.db',
     },
     oavatar => {
         token => $ENV{OPENCLOSET_AVATAR_TOKEN} || 's3cr3t',

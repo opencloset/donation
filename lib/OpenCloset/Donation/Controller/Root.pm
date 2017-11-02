@@ -134,7 +134,12 @@ sub create {
         body => $self->url_for( "form", id => $form->id )->to_abs,
     );
 
-    my $transport = Email::Sender::Transport::SMTP->new( { host => $self->config->{smtp}{host} } );
+    my $transport = Email::Sender::Transport::SMTP->new(
+        {
+            host => $self->config->{smtp}{host},
+            port => $self->config->{smtp}{port}
+        }
+    );
     sendmail( encode_utf8( $content->as_string ), { transport => $transport } );
 
     $self->flash( name => $name );
