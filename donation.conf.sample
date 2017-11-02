@@ -30,7 +30,10 @@ my $STAFF_URI = $ENV{OPENCLOSET_STAFF_URI} || 'https://staff.theopencloset.net';
             to   => 'info@theopencloset.net'
         },
     },
-    smtp => { host => $ENV{OPENCLOSET_SMTP_HOST} || 'localhost' },
+    smtp => {
+        host => $ENV{OPENCLOSET_SMTP_HOST} || 'localhost',
+        port => $ENV{OPENCLOSET_SMTP_PORT} || 25,
+    },
     minion => {
         SQLite => 'sqlite:db/minion.db',
     },
