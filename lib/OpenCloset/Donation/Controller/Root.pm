@@ -97,7 +97,7 @@ sub create {
     my $talent          = $v->param('talent');
 
     $phone =~ s/-//g;
-    my @categories = qw(자켓 바지/스커트 셔츠/블라우스 구두 코트 기타);
+    my @categories = qw(자켓 바지/스커트 셔츠/블라우스 구두 타이/벨트 코트 기타);
     for ( my $i = 0; $i < @categories; $i++ ) {
         my $quantity = $categories->[$i] || '0';
         $categories->[$i] = $categories[$i] . ' ' . $categories->[$i];
