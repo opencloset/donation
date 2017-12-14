@@ -182,6 +182,23 @@
       </div>
 
       <div class="form-group">
+        <label for="shoes-spinner">타이/벨트</label>
+        <div class="input-group col-sm-4">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="decrease" data-target="#tie-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-minus"></span>
+            </button>
+          </span>
+          <input type="text" name="category" data-ride="spinner" id="tie-spinner" class="form-control input-number" value="0">
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-value="increase" data-target="#tie-spinner" data-toggle="spinner">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label for="coat-spinner">코트</label>
         <div class="input-group col-sm-4">
           <span class="input-group-btn">
