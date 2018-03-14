@@ -166,7 +166,7 @@ sub create {
         my ( $success, $error ) = try {
             for ( 1 .. $quantity ) {
                 my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
-                die "Failed to call _create_clothes with quantity($quantity)" unless $success;
+                die "Failed to create clothes($quantity)" unless $success;
             }
             $guard->commit;
             return 1;
@@ -183,7 +183,7 @@ sub create {
         my $guard = $self->schema->txn_scope_guard;
         my ( $success, $error ) = try {
             my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
-            die "Failed to call _create_clothes" unless $success;
+            die "Failed to create a clothes" unless $success;
             $guard->commit;
             return 1;
         }
@@ -302,16 +302,10 @@ sub _create_clothes {
     my $category = $input->{category};
     $code = $self->generate_discard_code($category) if $discard;
     $code = sprintf( '%05s', uc $code );
-    unless ($code) {
-        $self->log->error("Failed to generate discard clothes code($category)") unless $code;
-        return;
-    }
+    die "Failed to generate discard clothes code($category)\n" unless $code;
 
     my $clothes = $self->schema->resultset('Clothes')->find( { code => $code } );
-    if ($clothes) {
-        $self->log->error("Duplicate clothes code: $code");
-        return;
-    }
+    die "Duplicate clothes code: $code\n" if $clothes;
 
     $input->{code} = $code;
 
@@ -328,18 +322,12 @@ sub _create_clothes {
     $input->{group_id} = $group_id;
     $clothes = $self->schema->resultset('Clothes')->create($input);
 
-    unless ($clothes) {
-        $self->log->error("Failed to create a new clothes");
-        return;
-    }
+    die "Failed to create a new clothes\n" unless $clothes;
 
     my $status_id = $input->{status_id};
     if ( "$RECYCLE_1 $RECYCLE_2 $RECYCLE_3 $UNRECYCLE" =~ m/\b$status_id\b/ ) {
         my $clothes_code = $self->schema->resultset('ClothesCode')->find( { category => $category } );
-        unless ($clothes_code) {
-            $self->log->error("Not found clothes category in ClothesCode: $category");
-            return;
-        }
+        die "Not found clothes category in ClothesCode: $category\n" unless $clothes_code;
 
         $clothes_code->update( { code => sprintf( '%05s', $code ) } );
     }
