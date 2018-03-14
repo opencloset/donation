@@ -1,0 +1,5 @@
+% title "Internal Server Error";
+% layout 'error';
+
+<h2>내부 서버 오류입니다.</h2>
+<p><%= $error %></p>

@@ -163,35 +163,39 @@ sub create {
     if ( $discard && $quantity ) {
         ## transaction
         my $guard = $self->schema->txn_scope_guard;
-        try {
+        my ( $success, $error ) = try {
             for ( 1 .. $quantity ) {
                 my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
                 die "Failed to create new clothes($quantity)" unless $success;
             }
             $guard->commit;
+            return 1;
         }
         catch {
             my $err = $_;
             $self->log->error("Transaction error: clothes.create");
             $self->log->error($err);
-            $self->error( 500, $err );
-            return;
+            return ( undef, $err );
         };
+
+        return $self->error( 500, $error ) unless $success;
     }
     else {
         my $guard = $self->schema->txn_scope_guard;
-        try {
+        my ( $success, $error ) = try {
             my $success = $self->_create_clothes( $donation, $discard, $input, $tags );
             die "Failed to create a new clothes" unless $success;
             $guard->commit;
+            return 1;
         }
         catch {
             my $err = $_;
             $self->log->error("Transaction error: clothes.create");
             $self->log->error($err);
-            $self->error( 500, $err );
-            return;
+            return ( undef, $err );
         };
+
+        return $self->error( 500, $error ) unless $success;
 
         ## upload photo
         my $photo = $v->param('photo');
