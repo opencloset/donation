@@ -1,5 +1,9 @@
 # donation.theopencloset.net #
 
+[![Build Status](https://travis-ci.org/opencloset/donation.svg?branch=v0.5.3)](https://travis-ci.org/opencloset/donation)
+[![Build Status](https://travis-ci.org/opencloset/donation.svg?branch=v0.5.3)](https://travis-ci.org/opencloset/donation)
+[![Build Status](https://travis-ci.org/opencloset/donation.svg?branch=v0.5.3)](https://travis-ci.org/opencloset/donation)
+
 ## deps ##
 
     $ cpanm --installdeps .
