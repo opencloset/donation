@@ -34,6 +34,7 @@ RUN cpanm --notest \
 WORKDIR /home/opencloset/service/donation.theopencloset.net
 COPY --from=builder /build .
 COPY . .
+RUN mv donation.conf.sample donation.conf
 RUN mkdir db
 RUN chown -R opencloset:opencloset .
 
