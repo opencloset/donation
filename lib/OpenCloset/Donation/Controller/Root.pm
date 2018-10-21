@@ -36,7 +36,7 @@ sub redirect {
 
 =cut
 
-sub home {
+sub index {
 }
 
 =head2 guide1
