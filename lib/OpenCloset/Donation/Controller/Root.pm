@@ -1,6 +1,7 @@
 package OpenCloset::Donation::Controller::Root;
 use Mojo::Base 'Mojolicious::Controller';
 
+use DateTime;
 use Email::Sender::Simple qw(sendmail);
 use Email::Sender::Transport::SMTP qw();
 use Email::Simple;
@@ -64,6 +65,16 @@ sub guide2 {
 =cut
 
 sub add {
+    my $self = shift;
+
+    my $today = DateTime->today(time_zone => $self->config->{timezone})->ymd;
+    my $event_id = $self->session('event');
+
+    my $event = $self->schema->resultset('Event')->find({
+        id => $event_id
+    });
+
+    $self->render(event => $event);
 }
 
 =head2 create
@@ -92,6 +103,7 @@ sub create {
     $v->optional('terms');
     $v->optional('talent-donation');
     $v->optional('talent');
+    $v->optional('event_id');
 
     if ( $v->has_error ) {
         my $failed = $v->failed;
@@ -113,6 +125,7 @@ sub create {
     my $terms           = $v->param('terms');
     my $talent_donation = $v->param('talent-donation');
     my $talent          = $v->param('talent');
+    my $event_id        = $v->param('event_id');
 
     $phone =~ s/-//g;
     my @categories = qw(자켓 바지/스커트 셔츠/블라우스 구두 타이/벨트 코트 기타);
@@ -137,7 +150,8 @@ sub create {
             quantity        => $quantity,
             terms           => $terms,
             talent_donation => $talent_donation,
-            talent          => $talent
+            talent          => $talent,
+            event_id        => $event_id,
         }
     );
 

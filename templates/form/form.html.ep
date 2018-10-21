@@ -27,6 +27,14 @@
     <a class="btn btn-default btn-sm" href="<%= url_for('user.donations', id => $user->id) %>">
       기부현황
     </a>
+    % if (my $event = $form->event) {
+      <span class="label label-success">
+        % if ($event->sponsor) {
+          %= $event->sponsor
+        % }
+        %= $event->name
+      </span>
+    % }
     <p class="text-muted">
       <small>
         <%= $user->donations->count %> 건의 기부와
