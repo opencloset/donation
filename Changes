@@ -1,3 +1,5 @@
+  - GET /redirect route 추가
+
 v0.5.4    Fri, 04 May 2018 20:43:11 +0900
   - Set default config file in docker image
 

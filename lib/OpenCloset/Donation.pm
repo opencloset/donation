@@ -62,6 +62,9 @@ sub _public_routes {
     my $self = shift;
     my $r    = $self->routes;
 
+    # will redirect to root#index
+    $r->get('/redirect')->to('root#redirect');
+
     $r->get('/')->to('root#index')->name('home');
     $r->get('/guide1')->to('root#guide1');
     $r->get('/guide2')->to('root#guide2');

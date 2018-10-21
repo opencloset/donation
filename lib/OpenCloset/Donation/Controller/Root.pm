@@ -10,6 +10,24 @@ has schema => sub { shift->app->schema };
 
 =head1 METHODS
 
+=head2 redirect
+
+    GET /redirect?event=1
+
+=cut
+
+sub redirect {
+    my $self = shift;
+
+    my $event_id = $self->param('event_id');
+    if ($event_id) {
+        my $event = $self->schema->resultset('Event')->find({ id => $event_id });
+        $self->session(event => $event_id) if $event;
+    }
+
+    $self->redirect_to('home');
+}
+
 =head2 index
 
     # home
