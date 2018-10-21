@@ -17,7 +17,7 @@ has schema => sub { shift->app->schema };
 
 =cut
 
-sub home {
+sub index {
 }
 
 =head2 guide1
