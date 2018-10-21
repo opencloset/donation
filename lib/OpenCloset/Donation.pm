@@ -9,7 +9,7 @@ use Try::Tiny;
 
 use OpenCloset::Schema;
 
-use version; our $VERSION = qv("v0.5.4");
+use version; our $VERSION = qv("v0.5.5");
 
 has schema => sub {
     my $self = shift;
@@ -61,6 +61,9 @@ sub _assets {
 sub _public_routes {
     my $self = shift;
     my $r    = $self->routes;
+
+    # will redirect to root#index
+    $r->get('/redirect')->to('root#redirect');
 
     $r->get('/')->to('root#index')->name('home');
     $r->get('/guide1')->to('root#guide1');
