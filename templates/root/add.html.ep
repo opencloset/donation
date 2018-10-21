@@ -291,6 +291,20 @@
           <textarea class="form-control" name="talent"></textarea>
         </div>
       </div>
+
+      <hr>
+
+      <div class="form-group">
+        % if ($event) {
+          <div class="checkbox">
+            <label>
+              <input name="event_id" type="checkbox" value="<%= $event->id %>" checked>
+              <%= $event->name %> 기증캠페인에 참여하는 임직원이십니까?
+              <small>(해당하는 경우만 체크해주세요.)</small>
+            </label>
+          </div>
+        % }
+      </div>
     </fieldset>
 
     <button class="btn btn-danger" type="reset">다시 입력하겠습니다</button>

@@ -1,4 +1,5 @@
   - GET /redirect route 추가
+  - 이벤트를 통한 기증임을 추적하는 기능 추가 (#107)
 
 v0.5.4    Fri, 04 May 2018 20:43:11 +0900
   - Set default config file in docker image
