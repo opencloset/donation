@@ -1,3 +1,5 @@
+v0.5.6
+
 v0.5.5
 
     $ mysql -u opencloset -p opencloset < OpenCloset-Schema/db/alter/140-event.sql

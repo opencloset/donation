@@ -299,7 +299,11 @@
           <div class="checkbox">
             <label>
               <input name="event_id" type="checkbox" value="<%= $event->id %>" checked>
-              <%= $event->name %> 기증캠페인에 참여하는 임직원이십니까?
+              % if ($event->desc) {
+                %= $event->desc
+              % } else {
+                <%= $event->name %> 기증캠페인에 참여하는 임직원이십니까?
+              % }
               <small>(해당하는 경우만 체크해주세요.)</small>
             </label>
           </div>
