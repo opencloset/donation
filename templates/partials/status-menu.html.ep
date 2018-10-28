@@ -37,4 +37,11 @@
       <span class="label label-default">재능나눔</span>
     </a>
   </li>
+  % while (my $event = $events->next) {
+    <li>
+      <a href="<%= url_for('forms')->query(event_id => $event->id) %>">
+        <span class="label label-default"><%= $event->name %></span>
+      </a>
+    </li>
+  % }
 </ul>
