@@ -39,11 +39,13 @@ sub list {
     my $s    = $self->param('s') || '';
     my $q    = $self->param('q');
     my $t    = $self->param('talent');
+    my $e    = $self->param('event_id');
 
     my $cond = $q ? $self->_search_cond($q) : $s eq '' ? undef : { status => $s eq 'null' ? undef : $s };
     my $attr = { page => $p, rows => 20, order_by => { -desc => 'update_date' } };
 
     $cond = { talent_donation => 1 } if $t;
+    $cond = { event_id => $e } if $e;
 
     if ( $s eq $RETURN_REQUESTED ) {
         $attr->{order_by} = 'return_date';
@@ -60,8 +62,14 @@ sub list {
         }
     );
 
-    my $today = DateTime->today( time_zone => $self->config->{timezone} );
-    $self->render( forms => $rs, pageset => $pageset, today => $today );
+    my $today  = DateTime->today( time_zone => $self->config->{timezone} );
+    my $events = $self->schema->resultset('Event')->search;
+    $self->render(
+        forms   => $rs,
+        pageset => $pageset,
+        today   => $today,
+        events  => $events
+    );
 }
 
 =head2 prefetch_form
