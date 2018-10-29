@@ -23,7 +23,10 @@ sub redirect {
     my $event_id = $self->param('event_id');
     if ($event_id) {
         my $event = $self->schema->resultset('Event')->find({ id => $event_id });
-        $self->session(event => $event_id) if $event;
+        if ($event) {
+            $self->session(event => $event_id) if $event;
+            $self->session(expiration => 60 * 10); # 10 minutes
+        }
     }
 
     $self->redirect_to('home');
