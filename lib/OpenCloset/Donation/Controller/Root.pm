@@ -25,7 +25,7 @@ sub redirect {
         my $event = $self->schema->resultset('Event')->find({ id => $event_id });
         if ($event) {
             $self->session(event => $event_id) if $event;
-            $self->session(expiration => 60 * 10); # 10 minutes
+            $self->session(expiration => 60 * 60 * 24 * 7); # 7일
         }
     }
 
