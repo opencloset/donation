@@ -9,7 +9,7 @@ use Try::Tiny;
 
 use OpenCloset::Schema;
 
-use version; our $VERSION = qv("v0.5.8");
+use version; our $VERSION = qv("v0.5.9");
 
 has schema => sub {
     my $self = shift;
