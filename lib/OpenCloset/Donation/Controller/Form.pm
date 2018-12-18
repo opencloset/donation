@@ -63,7 +63,12 @@ sub list {
     );
 
     my $today  = DateTime->today( time_zone => $self->config->{timezone} );
-    my $events = $self->schema->resultset('Event')->search;
+    my $events = $self->schema->resultset('Event')->search({
+        'event_type.domain' => 'donation',
+    }, {
+        join => 'event_type'
+    });
+
     $self->render(
         forms   => $rs,
         pageset => $pageset,
