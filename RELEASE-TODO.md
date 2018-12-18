@@ -1,3 +1,9 @@
+v0.5.10
+
+    mysql> INSERT INTO `event_type` (`type`, `domain`, `desc`, `create_date`, `update_date`) VALUES
+             ('', 'donation', 'default 기증 이벤트 타입', NOW(), NOW());
+    mysql> UPDATE event SET event_type_id = 5 WHERE id IN (1, 2);
+
 v0.5.9
 v0.5.8
 v0.5.7
