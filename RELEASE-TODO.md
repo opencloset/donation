@@ -1,3 +1,4 @@
+v0.5.11
 v0.5.10
 
     mysql> INSERT INTO `event_type` (`type`, `domain`, `desc`, `create_date`, `update_date`) VALUES
