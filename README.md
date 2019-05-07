@@ -1,6 +1,6 @@
 # donation.theopencloset.net #
 
-[![Build Status](https://travis-ci.org/opencloset/donation.svg?branch=v0.5.10)](https://travis-ci.org/opencloset/donation)
+[![Build Status](https://travis-ci.org/opencloset/donation.svg?branch=v0.5.11)](https://travis-ci.org/opencloset/donation)
 
 ## deps ##
 
