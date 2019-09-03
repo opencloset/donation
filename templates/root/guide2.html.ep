@@ -6,87 +6,84 @@
 
 <h2>기증품목 안내</h2>
 <p>
-  누구나 멋질 권리가 있다!<br><br>
-
-  열린옷장은 삶의 특별한 순간, 정장이 필요한 이들을 응원하기 위한 곳입니다.<br>
-  입사면접, 졸업식, 결혼식, 사진촬영에 적합하다고 판단되는 옷을 보내주세요.
+  열린옷장 이용자 대분분은 입사면접을 준비하는 20대 청년입니다.<br>
+  청년에게 적합한 의류인지 한 번 더 체크해서 보내주세요.
 </p>
 
 <hr>
-
-<p>
-  <i class="fa fa-check" aria-hidden="true"></i>
-  기증가능 의류 체크리스트
-</p>
 
 <table id="info-detail" class="table table-bordered">
   <thead>
     <tr>
       <th></th>
-      <th>
-        이런 옷을 기증해주세요
-        <i class="fa fa-smile-o" aria-hidden="true"></i>
+      <th class="text-primary">
+        남성
       </th>
-      <th>
-        이런 옷은 사용하기 힘들어요
-        <i class="fa fa-frown-o" aria-hidden="true"></i>
+      <th class="text-danger">
+        여성
       </th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <th>
+        기본정장
+      </th>
       <td>
-        <i class="fa fa-male" title="남성"></i>
-        남성의류
-      </td>
-      <td>
-        <ul class="list-unstyled">
-          <li><strong>수트</strong> - 취업면접에 적합한 단색 정장</li>
-          <li><strong>셔츠</strong> - 정장용 기본 단색 셔츠</li>
-          <li><strong>타이</strong> - 면접에 어울리는 심플한 타이</li>
-          <li><strong>구두</strong> - 정장용 블랙, 브라운 구두</li>
-          <li><strong>벨트</strong> - 정장용 블랙, 브라운 벨트</li>
-          <li><strong>코트</strong> - 정장용 코트</li>
+        <ul>
+          <li>정장 (투버튼 정장)</li>
+          <li>셔츠</li>
+          <li>넥타이</li>
+          <li>구두</li>
+          <li>벨트</li>
+          <li>코트</li>
         </ul>
       </td>
       <td>
         <ul>
-          <li>캐쥬얼한 스타일의 정장</li>
-          <li>버튼이 3개인 오래된 스타일 정장</li>
-          <li>광택이 심한 은갈치 수트</li>
-          <li>상하의 세트가 아닌 정장</li>
-          <li>사용흔적이 많이 남아있는 셔츠</li>
-          <li>오염, 손상이 심한 옷</li>
+          <li>정장 (자켓/바지/치마)</li>
+          <li>원피스</li>
+          <li>블라우스</li>
+          <li>구두</li>
+          <li>코트</li>
         </ul>
       </td>
     </tr>
     <tr>
+      <th>
+        비지니스 캐주얼
+      </th>
       <td>
-        <i class="fa fa-female" title="여성"></i>
-        여성의류
-      </td>
-      <td>
-        <ul class="list-unstyled">
-          <li><strong>자켓</strong> - 면접에 적합한 기본 단색자켓</li>
-          <li><strong>치마</strong> - 단색의 H 라인 기본 스커트</li>
-          <li><strong>블라우스</strong> - 심플한 화이트 블라우스</li>
-          <li><strong>구두</strong> - 장식없는 검정색 기본 펌프스</li>
-          <li><strong>원피스</strong> - 면접에 적합한 심플 원피스</li>
-          <li><strong>코트</strong> - 정장용 코트</li>
+        <ul>
+          <li>캐주얼 정장</li>
+          <li>블레이져</li>
+          <li>슬랙스</li>
+          <li>로퍼</li>
+          <li>패턴 셔츠</li>
         </ul>
       </td>
       <td>
         <ul>
-          <li>유행이 많이 지난 여성정장</li>
-          <li>폭이 넓은 A 라인 스커트</li>
-          <li>화려한 장식과 색상의 정장, 블라우스</li>
-          <li>면접에 어울리지 않는 화려한 구두</li>
-          <li>무릎 아래의 긴 길이 원피스</li>
-          <li>오염, 손상이 심한 옷</li>
+          <li>캐주얼 정장</li>
+          <li>캐주얼 자켓</li>
+          <li>슬랙스</li>
+          <li>로퍼</li>
         </ul>
       </td>
   </tbody>
 </table>
+
+<div>
+  <h4><i class="fa fa-ban text-danger" aria-hidden="true"></i> 사용이 불가능한 의류는 보내지 말아주세요</h4>
+  <ul>
+    <li>10년 넘은 오래된 옷</li>
+    <li>원버튼/쓰리버튼 남성정장</li>
+    <li>광이 나는 은갈치 정장</li>
+    <li>면접에 어울리지 않는 화려한 스타일</li>
+    <li>스포티한 캐주얼 의류</li>
+    <li>오염/손상이 심한 옷</li>
+  </ul>
+</div>
 
 <hr>
 
