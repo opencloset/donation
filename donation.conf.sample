@@ -3,7 +3,7 @@
 my $PORT = $ENV{PORT} || 5000;
 my $STAFF_URI = $ENV{OPENCLOSET_STAFF_URI} || 'https://staff.theopencloset.net';
 
-{
+return {
     database => {
         dsn  => $ENV{OPENCLOSET_DATABASE_DSN}  || "dbi:mysql:opencloset:127.0.0.1",
         name => $ENV{OPENCLOSET_DATABASE_NAME} || 'opencloset',
