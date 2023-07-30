@@ -6,20 +6,8 @@
 </div>
 
 <div>
-  <img src="/assets/img/intro2.png" alt="300x300" class="img-responsive">
+  <img src="/assets/img/intro3.png" alt="300x300" class="img-responsive center-block">
 </div>
-
-<p class="text-center">
-  옷을 통해 응원을 공유하는 열린옷장 사업구조
-</p>
-
-<h3 class="text-center">
-  열린옷장은 응원이 담긴 옷과 이야기를 기증받아 필요한 이들에게 공유합니다.
-</h3>
-
-<h3 class="text-center">
-  공유옷장을 통해 발생한 수익은 청년의 시작을 응원하는 다양한 활동에 사용됩니다.
-</h3>
 
 <p class="text-center">
   <a class="btn btn-default btn-lg" href="<%= url_for('/guide1') %>">다음</a>
